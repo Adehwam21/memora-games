@@ -1,0 +1,29 @@
+# Frontend (React)
+guess-what-frontend/node_modules/
+guess-what-frontend/build/
+
+# Backend (Node.js)
+guess-what-backend/node_modules/
+
+# AI Server (FastAPI)
+guess-what-ai-server/venv/
+guess-what-ai-server/__pycache__/
+
+# IDEs
+.idea/
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Environment files
+*.env
+
+# Log files
+*.log
+npm-debug.log
+yarn-debug.log
+
+# Database files (if using SQLite)
+*.db
