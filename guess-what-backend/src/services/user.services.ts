@@ -16,10 +16,11 @@ export default class UserService extends IService {
             throw e;
         }
     }
-    async getOne(input: { username: string }): Promise<IUser> {
+
+    async getOne(input: { username: string }): Promise<IUser | null> {
         try {
             const user = await this.db.UserModel.findOne({ username: input.username });
-            return user;
+            return user || null; // Explicitly returning null if no user is found
         } catch (e) {
             throw e;
         }
@@ -37,7 +38,7 @@ export default class UserService extends IService {
         }
     }
 
-    async updateOne({ input }, { user }: { user: any }): Promise<IUser> {
+    async updateOne(input: Partial<IUser>, { user }: { user: any }): Promise<IUser | null> {
         try {
             console.log(user);
             if (!user) {
@@ -54,17 +55,16 @@ export default class UserService extends IService {
                 { new: true }
             );
 
-            if (!user) throw new Error("User Not Found");
+            if (!_user) throw new Error("User Not Found");
 
             console.log(_user);
-
             return _user;
         } catch (err) {
             throw err;
         }
     }
 
-    async deleteOne({ input }, { context }: { context: any }): Promise<IUser> {
+    async deleteOne(input: Partial<IUser>, { context }: { context: any }): Promise<IUser> {
         try {
             if (!context.user) {
                 throw new Error("Not authenticated");

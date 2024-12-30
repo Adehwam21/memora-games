@@ -5,6 +5,7 @@ export interface IRegisterUserInput {
   smokingStatus: boolean;
   drinkingStatus: boolean;
   medicalCondition: string;
+  educationLevel: string;
   email: string;
   password: string;
 }
