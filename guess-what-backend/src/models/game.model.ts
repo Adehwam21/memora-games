@@ -31,46 +31,52 @@ export interface IGameSessionModel extends Model<IGameSessionDocument> { }
 // Schema definition
 const GameSessionSchema = new Schema<IGameSessionDocument>(
   {
-    userId: { type: String, required: true },
-    sessionDate: { type: Date, default: Date.now },
+    userId: { type: String, required: true, index: true },
+    sessionDate: { type: Date, default: Date.now, index: true },
     sessionNumber: { type: Number, required: true },
     levelScores: [
       {
-        level: { type: Number, required: true },
-        accuracy: { type: Number, required: true },
-        errors: { type: Number, required: true },
-        responseTime: { type: Number, required: true },
+        level: { type: Number, required: false },
+        accuracy: { type: Number, required: false },
+        errors: { type: Number, required: false },
+        responseTime: { type: Number, required: false },
       },
     ],
     totalScore: {
-      avgAccuracy: { type: Number, required: true },
-      totalErrors: { type: Number, required: true },
-      totalResponseTime: { type: Number, required: true },
+      avgAccuracy: { type: Number, required: false },
+      totalErrors: { type: Number, required: false },
+      totalResponseTime: { type: Number, required: false },
     },
   },
   { timestamps: true }
 );
 
-// Pre-save middleware to calculate totalScore dynamically
+GameSessionSchema.index({ userId: 1, sessionNumber: 1 }, { unique: true });
+
 GameSessionSchema.pre<IGameSessionDocument>("save", function (next) {
   const levelScores = this.levelScores;
 
-  // Calculate the aggregate scores
-  const totalAccuracy = levelScores.reduce((sum, level) => sum + level.accuracy, 0);
-  const totalErrors = levelScores.reduce((sum, level) => sum + level.errors, 0);
-  const totalResponseTime = levelScores.reduce((sum, level) => sum + level.responseTime, 0);
+  if (levelScores.length === 0) { // Tp ensure no division by zero
+    this.totalScore = {
+      avgAccuracy: 0,
+      totalErrors: 0,
+      totalResponseTime: 0,
+    };
+  } else {
+    const totalAccuracy = levelScores.reduce((sum, level) => sum + level.accuracy, 0);
+    const totalErrors = levelScores.reduce((sum, level) => sum + level.errors, 0);
+    const totalResponseTime = levelScores.reduce((sum, level) => sum + level.responseTime, 0);
 
-  // Update totalScore with computed values
-  this.totalScore = {
-    avgAccuracy: totalAccuracy / levelScores.length,
-    totalErrors,
-    totalResponseTime,
-  };
+    this.totalScore = {
+      avgAccuracy: totalAccuracy / levelScores.length,
+      totalErrors,
+      totalResponseTime,
+    };
+  }
 
   next();
 });
 
-// Model creation
 export const GameSessionModel = mongoose.model<IGameSessionDocument, IGameSessionModel>(
   "GameSession",
   GameSessionSchema

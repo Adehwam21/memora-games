@@ -3,11 +3,13 @@ import dotenv from 'dotenv';
 import { IUserModel } from './models/user.model';
 import { Config } from './types/config';
 import { UserModel } from './models/user.model';
+import { GameSessionModel, IGameSessionModel } from './models/game.model';
 
 dotenv.config();
 
 export interface IDb {
     UserModel: IUserModel;
+    GameSessionModel: IGameSessionModel;
 }
 
 export default async function InitDB(config: Config["db"]): Promise<IDb> {
@@ -19,6 +21,7 @@ export default async function InitDB(config: Config["db"]): Promise<IDb> {
 
         return {
             UserModel,
+            GameSessionModel
         };
     } catch (e) {
         throw e;
