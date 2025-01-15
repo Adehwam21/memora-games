@@ -9,3 +9,9 @@ export interface IRegisterUserInput {
   email: string;
   password: string;
 }
+
+export interface _User {
+  userId: string;
+  username: string;
+  role: string;
+}

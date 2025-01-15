@@ -1,15 +1,12 @@
 import * as express from 'express';
 import { IAppContext } from "../app";
+import { _User } from '../user';
 
 declare global {
   namespace Express {
     interface Request {
       context: IAppContext;
-      user: {
-        userId: string;
-        username: string;
-        role: string;
-      };
+      user?: _User;
     }
   }
 }

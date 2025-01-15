@@ -22,10 +22,7 @@ export interface IGameSession {
   totalScore: ITotalScore; // Aggregated score for the session
 }
 
-// Extend Document for Mongoose compatibility
 export interface IGameSessionDocument extends Document, IGameSession { }
-
-// Extend Model for Mongoose compatibility
 export interface IGameSessionModel extends Model<IGameSessionDocument> { }
 
 // Schema definition
@@ -38,7 +35,7 @@ const GameSessionSchema = new Schema<IGameSessionDocument>(
       {
         level: { type: Number, required: false },
         accuracy: { type: Number, required: false },
-        errors: { type: Number, required: false },
+        sessionErrors: { type: Number, required: false },
         responseTime: { type: Number, required: false },
       },
     ],
@@ -50,32 +47,6 @@ const GameSessionSchema = new Schema<IGameSessionDocument>(
   },
   { timestamps: true }
 );
-
-GameSessionSchema.index({ userId: 1, sessionNumber: 1 }, { unique: true });
-
-GameSessionSchema.pre<IGameSessionDocument>("save", function (next) {
-  const levelScores = this.levelScores;
-
-  if (levelScores.length === 0) { // Tp ensure no division by zero
-    this.totalScore = {
-      avgAccuracy: 0,
-      totalErrors: 0,
-      totalResponseTime: 0,
-    };
-  } else {
-    const totalAccuracy = levelScores.reduce((sum, level) => sum + level.accuracy, 0);
-    const totalErrors = levelScores.reduce((sum, level) => sum + level.errors, 0);
-    const totalResponseTime = levelScores.reduce((sum, level) => sum + level.responseTime, 0);
-
-    this.totalScore = {
-      avgAccuracy: totalAccuracy / levelScores.length,
-      totalErrors,
-      totalResponseTime,
-    };
-  }
-
-  next();
-});
 
 export const GameSessionModel = mongoose.model<IGameSessionDocument, IGameSessionModel>(
   "GameSession",

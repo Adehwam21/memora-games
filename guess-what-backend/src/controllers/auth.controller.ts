@@ -68,7 +68,7 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
     try {
         const user = req.user;
 
-        const _user = await req.context!.services!.user!.getOne({ username: user.username });
+        const _user = await req.context!.services!.user!.getOne({ username: user!.username });
         if (!_user) {
             res.status(404).json({ message: 'User not found' });
             return;
