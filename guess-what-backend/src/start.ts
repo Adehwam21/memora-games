@@ -64,7 +64,7 @@ export default async function start(config: Config) {
 
     // start server
     app.listen(config.app.port, () => {
-      console.log(`🚀 Server ready at http://localhost/:${config.app.port}`);
+      console.log(`🚀 Server ready at http://localhost:${config.app.port}`);
     });
   } catch (err) {
     console.error(err);

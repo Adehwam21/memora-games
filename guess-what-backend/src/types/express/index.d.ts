@@ -6,7 +6,7 @@ declare global {
   namespace Express {
     interface Request {
       context: IAppContext;
-      user?: _User;
+      user: _User;
     }
   }
 }

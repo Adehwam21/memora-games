@@ -34,24 +34,21 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
             return;
         }
 
-        // Add the user information to req.user
         req.user = decoded as _User;
         next();
     });
 };
 
-export const admin = (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user || !req.user.role.includes('admin')) {
-        res.status(403).json({ error: 'Access Denied' });
-        return;
-    }
-    next();
+const checkRole = (requiredRole: string) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        if (!req.user || req.user.role !== requiredRole) {
+            return res.status(403).json({ error: 'Access Denied' });
+        }
+        next();
+    };
 };
 
-export const player = (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user || !req.user.role.includes('player')) {
-        res.status(403).json({ error: 'Access Denied' });
-        return;
-    }
-    next();
-};
+// Usage:
+export const admin = checkRole('admin');
+export const player = checkRole('player');
+

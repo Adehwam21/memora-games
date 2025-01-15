@@ -104,3 +104,24 @@ export const deleteGameSession = async (req: Request, res: Response): Promise<vo
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+/**
+ * Get all game sessions
+*/
+export const getAllGameSessions = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const gameSessions = await req.context!.services!.gameSession.getAll();
+
+        if (gameSessions.length === 0) {
+            res.status(404).json({ message: "No game sessions found" });
+            return;
+        }
+
+        res.status(200).json({ gameSessions });
+        return;
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+        return;
+    }
+};

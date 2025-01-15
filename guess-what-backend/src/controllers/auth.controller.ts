@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { IRegisterUserInput } from '../types/user';
+import { _User, IRegisterUserInput } from '../types/user';
 import { config } from '../config';
 import { comparePassword, hashPassword } from '../utils/authUtils';
 
@@ -52,8 +52,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             res.status(400).json({ message: 'Invalid credentials' });
             return;
         }
-
-        const token = jwt.sign({ user }, config.auth.secret, { expiresIn: config.auth.expiresIn });
+        ;
+        const token = jwt.sign({userId: user. userId, username: user!.username, role: user.role}, config.auth.secret, { expiresIn: config.auth.expiresIn });
 
         res.json({ token, user, message: 'Logged in successfully' });
     } catch (error) {
