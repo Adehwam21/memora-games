@@ -2,7 +2,8 @@ export interface IGame {
     start(): void;
     reset(): void;
     getCurrentLevel(): number;
-    getGameState(): any;
+    getCurrentGameState(): any;
+    // getCurrentLevelMetrics(): any;
     isSessionEnded(): boolean;
   }
   

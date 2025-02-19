@@ -1,4 +1,5 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 interface ILevelScore {
   level: number;
@@ -17,6 +18,7 @@ interface ITotalScore {
 export interface IGameSession {
   userId: string; // Reference to the user
   sessionDate: Date; // Date of the session
+  ssid: string; // Session ID
   gameType: string // The type of game user took a session on
   initConfig: {}, // The initial configurations of the game type
   levelScores: ILevelScore[]; // Scores for individual levels
@@ -30,6 +32,7 @@ export interface IGameSessionModel extends Model<IGameSessionDocument> { }
 const GameSessionSchema = new Schema<IGameSessionDocument>(
   {
     userId: { type: String, required: true, index: true },
+    ssid: { type: String, required: true, index: true, default: uuidv4 },
     sessionDate: { type: Date, default: Date.now, index: true },
     gameType: { type: String, required: true },
     initConfig: {},

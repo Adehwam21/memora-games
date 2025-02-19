@@ -1,4 +1,4 @@
-"use strict";
+import "dotenv/config";
 
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
@@ -13,6 +13,8 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import routes from "./routes/rotues";
 
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+
 
 export default async function start(config: Config) {
   try {
@@ -22,7 +24,11 @@ export default async function start(config: Config) {
     appContext.services = await initServices(appContext);
     const app = express();
     app.use(cors({
-      origin: '*',
+      origin: [
+      FRONTEND_URL,
+      "http://localhost:3000",
+      "http://192.168.43.48:5173",
+      ]
     }));
     app.use(morgan('dev'));
     app.use(express.json(), bodyParser.json());

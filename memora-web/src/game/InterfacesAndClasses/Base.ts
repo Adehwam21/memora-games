@@ -14,7 +14,8 @@ export abstract class BaseGame implements IGame {
     abstract start(): void;
     abstract reset(): void;
     abstract nextLevel(): any;
-    abstract getGameState(): any;
+    abstract getCurrentGameState(): any;
+    // abstract getCurrentLevelMetrics(): any;
 
     getCurrentLevel(): number {
         return this.currentLevel;

@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
-import { GameInitialConfig, GameTypeEnum } from "types/game";
+import { GameInitialConfig, GameTypeEnum } from "../types/game";
 
 /**
  * Create a new game session
  */
 export const createGameSession = async (req: Request, res: Response): Promise<void> => {
-    const { userId, gameType, levelScores } = req.body;
+    const { gameType } = req.body;
+    const { userId } = req.user!;
 
     try {
         const newGameSession = await req.context!.services!.gameSession.addOne({
             userId,
-            gameType,
-            levelScores,
+            gameType
         });
 
         if (gameType === GameTypeEnum.GuessWhat){

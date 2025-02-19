@@ -53,7 +53,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         ;
-        const token = jwt.sign({userId: user. userId, username: user!.username, role: user.role}, config.auth.secret, { expiresIn: config.auth.expiresIn });
+        const token = jwt.sign({userId: user.userId, username: user!.username, role: user.role}, config.auth.secret, { expiresIn: config.auth.expiresIn });
 
         res.json({ token, user, message: 'Logged in successfully' });
     } catch (error) {

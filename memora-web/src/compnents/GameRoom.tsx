@@ -1,18 +1,31 @@
-import React from "react";
-import GuessWhat from "./Games/GuessWhatGame";
+import React, { useState } from "react";
 import axios from "axios";
+import GuessWhat from "./Games/GuessWhatGame";
+import { GuessWhatInitConfig } from "../game/gameModes/GuessWhat/types";
 
 
 export const GameRoom: React.FC = () => {
-    const handleStartGame = () => {
-        axios.get()
-    }
+    const [config, setConfig] = useState<GuessWhatInitConfig | null>(null);
+
+    const handleStartGame = async () => {
+        try {
+            const response = await axios.post(import.meta.env.VITE_BASE_URL+"/api/v1/game/game-session", {
+                gameType: "guessWhat",
+            });
+
+            setConfig(response.data.gameSession.initConfig);
+        } catch (error) {
+            console.error("Failed to start game:", error);
+        }
+    };
+
     return (
         <div>
-            <button>
-
+            <button onClick={handleStartGame} className="p-2 bg-blue-500 text-white hover:cursor-pointer m-2 rounded">
+                GuessWhat Game
             </button>
-            <GuessWhat/>
+
+            {config && <GuessWhat config={config} />}
         </div>
-    )
+    );
 };
