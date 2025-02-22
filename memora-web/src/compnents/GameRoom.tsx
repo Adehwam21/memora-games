@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../config/axiosConfig"
 import GuessWhat from "./Games/GuessWhatGame";
 import { GuessWhatInitConfig } from "../game/gameModes/GuessWhat/types";
 
@@ -9,7 +9,7 @@ export const GameRoom: React.FC = () => {
 
     const handleStartGame = async () => {
         try {
-            const response = await axios.post(import.meta.env.VITE_BASE_URL+"/api/v1/game/game-session", {
+            const response = await axios.post(import.meta.env.VITE_SERVER_URL+"/api/v1/game/game-session", {
                 gameType: "guessWhat",
             });
 

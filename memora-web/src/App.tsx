@@ -1,13 +1,15 @@
-import './App.css'
-import { GameRoom } from './compnents/GameRoom'
+import './App.css';
+import { Toaster } from 'react-hot-toast';
+import { Outlet } from 'react-router-dom';
+
 
 function App() {
-
   return (
-    <div>
-      <GameRoom/>
-    </div>
-  )
+    <>
+      <Toaster />
+      <Outlet />
+    </>
+  );
 }
 
-export default App
+export default App;

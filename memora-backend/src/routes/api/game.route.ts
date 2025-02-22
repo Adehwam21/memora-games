@@ -12,7 +12,7 @@ import { verifyToken, admin, player } from '../../middleware/auth';
 export const gameRouter = Router();
 
 gameRouter.route("/game-session")
-    .post([verifyToken], createGameSession); // Create a game session
+    .post( verifyToken, createGameSession); // Create a new game session
 
 gameRouter.route("/game-session/user/:userId")
     .get([verifyToken], getGameSessionsByUser); // Get all game sessions for a user

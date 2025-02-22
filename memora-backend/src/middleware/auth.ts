@@ -19,25 +19,29 @@ export const generateRefreshToken = (userId: string) => {
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization!;
+    console.log("Headers received:", req.headers); // Debugging step
+
+    const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        res.status(401).json({ status: false, message: 'Unauthorized' });
-        return;
+        res.status(401).json({ status: false, message: 'Unauthorized - Missing or Invalid Token' });
+        return
     }
 
-    const token = authHeader.split(' ')[1];
+    const token = authHeader!.split(' ')[1];
 
     jwt.verify(token, config.auth.secret, (err, decoded) => {
         if (err) {
-            res.status(403).json({ status: false, message: 'Forbidden' });
-            return;
+            res.status(403).json({ status: false, message: 'Forbidden - Invalid Token' });
+            return
         }
 
+        console.log("Decoded Token:", decoded); // Debugging step
         req.user = decoded as _User;
         next();
     });
 };
+
 
 const checkRole = (requiredRole: string) => {
     return (req: Request, res: Response, next: NextFunction) => {

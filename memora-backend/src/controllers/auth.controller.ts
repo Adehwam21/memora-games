@@ -6,7 +6,8 @@ import { comparePassword, hashPassword } from '../utils/authUtils';
 
 // Register User
 export const register = async (req: Request, res: Response): Promise<void> => {
-    const { username, email, password, age, gender, smokingStatus, medicalCondition, educationLevel, drinkingStatus }: IRegisterUserInput = req.body;
+    // const { username, email, password, age, gender, smokingStatus, medicalCondition, educationLevel, drinkingStatus }: IRegisterUserInput = req.body;
+    const { username, password, email } = req.body;
 
     try {
         const existingUser = await req.context!.services!.user.getOne({ username });
@@ -16,16 +17,17 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         }
 
         const hashedPassword = await hashPassword(password);
+
         await req.context!.services!.user.addOne({
             username,
             email,
             password: hashedPassword,
-            age,
-            gender,
-            smokingStatus,
-            medicalCondition,
-            educationLevel,
-            drinkingStatus,
+            age:0,
+            gender:'Other',
+            smokingStatus: false,
+            medicalCondition:'',
+            educationLevel:'',
+            drinkingStatus: false,
         });
 
         res.status(201).json({ message: 'User registered successfully' });
@@ -55,7 +57,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         ;
         const token = jwt.sign({userId: user.userId, username: user!.username, role: user.role}, config.auth.secret, { expiresIn: config.auth.expiresIn });
 
-        res.json({ token, user, message: 'Logged in successfully' });
+        res.status(200).json({ token, user, message: 'Logged in successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
