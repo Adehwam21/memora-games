@@ -15,7 +15,7 @@ export const createGameSession = async (req: Request, res: Response): Promise<vo
         });
 
         if (gameType === GameTypeEnum.GuessWhat){
-            newGameSession.initConfig = GameInitialConfig.guessWhat
+            newGameSession.initConfig = GameInitialConfig.guessWhat;
         }
 
         res.status(201).json({ message: "Game session created successfully", gameSession: newGameSession });

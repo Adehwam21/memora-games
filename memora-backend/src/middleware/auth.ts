@@ -19,7 +19,6 @@ export const generateRefreshToken = (userId: string) => {
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-    console.log("Headers received:", req.headers); // Debugging step
 
     const authHeader = req.headers.authorization;
 
@@ -36,7 +35,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
             return
         }
 
-        console.log("Decoded Token:", decoded); // Debugging step
         req.user = decoded as _User;
         next();
     });

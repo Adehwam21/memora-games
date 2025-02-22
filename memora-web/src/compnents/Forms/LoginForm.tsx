@@ -1,17 +1,18 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { loginStart, loginSuccess, loginFailure } from '../../redux/authSlice';
+import API from '../../config/axiosConfig';
 import { FormProps, LoginFormData } from '../../types/props';
 
-
 const Login: React.FC<FormProps> = () => {
-  const API_BASE_URL = import.meta.env.VITE_SERVER_URL;
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.auth);
 
   const [formData, setFormData] = useState<LoginFormData>({ username: '', password: '' });
-  const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -25,40 +26,27 @@ const Login: React.FC<FormProps> = () => {
 
   const handleLogIn = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(loginStart());
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/v1/auth/login`, formData);
-      
-      if (response.status == 200) {
-        const { token } = response.data;
-        toast.success(response.data!.message)
+      const response = await API.post('/auth/login', formData);
+
+      if (response.status === 200) {
+        const { token, user, message } = response.data;
+        toast.success(message);
+
+        // Store token in local storage (for persistence)
         localStorage.setItem('token', token);
-        setTimeout(() => navigate('/lobby'), 1000);
+
+        // Dispatch Redux action
+        dispatch(loginSuccess({ token, user }));
+
+        setTimeout(() => navigate('/lobby'), 2000);
         setFormData({ username: '', password: '' });
       }
-      
-    } catch (error) {
-      handleLoginError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLoginError = (error: any) => {
-    if (error.response) {
-      const { status } = error.response;
-      if (status === 400) {
-        toast.error(error.response.data.message);
-      } else if (status === 409) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('An error occurred on the server. Try again later.');
-      }
-    } else if (error.request) {
-      toast.error('Internal server error. Try again later.');
-    } else {
-      toast.error('An error occurred. Check your internet connection or try again later.');
+    } catch (error: any) {
+      dispatch(loginFailure(error.response?.data?.message || 'Login failed.'));
+      toast.error(error.response?.data?.message || 'An error occurred.');
     }
   };
 

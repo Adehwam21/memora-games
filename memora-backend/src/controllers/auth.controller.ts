@@ -55,9 +55,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         ;
-        const token = jwt.sign({userId: user.userId, username: user!.username, role: user.role}, config.auth.secret, { expiresIn: config.auth.expiresIn });
+        const token = jwt.sign({userId: user!.userId, email: user!.email, username: user!.username, role: user!.role}, config.auth.secret, { expiresIn: config.auth.expiresIn });
 
-        res.status(200).json({ token, user, message: 'Logged in successfully' });
+        res.status(200).json({ 
+            token, 
+            user:{
+                userId: user.userId,
+                email: user!.email,
+                username: user!.username, 
+                role: user.role
+            },
+            message: 'Logged in successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });

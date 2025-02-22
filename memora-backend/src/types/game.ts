@@ -4,11 +4,12 @@ export enum GameTypeEnum {
 
 export const GameInitialConfig = {
     guessWhat: {
-        name: "GuessWhat",
+        name: "guessWhat",
         maxLevels: 10,
-        defaultMemorizationTime: 20000,
+        defaultMemorizationTime: 25000,
         memorizationTimeReductionPerLevel: 1500,
         minMemorizationTime: 5000,
+        maxAttempts:3,
         basePairs: 4,
         imageSet: [
             "https://cdn.pixabay.com/photo/2012/04/15/20/53/cherries-35288_960_720.png",

@@ -12,6 +12,7 @@ export interface IRegisterUserInput {
 
 export interface _User {
   userId: string;
+  email: string;
   username: string;
   role: string;
 }

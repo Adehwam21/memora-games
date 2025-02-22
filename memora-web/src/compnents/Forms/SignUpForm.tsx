@@ -47,7 +47,7 @@ const SignUp: React.FC<FormProps> = () => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/v1/auth/register`, formData);
+      const response = await axios.post(`${API_BASE_URL}/auth/register`, formData);
       console.log(response);
 
       response.status == 201 ? toast.success(response.data!.message) : toast.error(response.data!.message);
