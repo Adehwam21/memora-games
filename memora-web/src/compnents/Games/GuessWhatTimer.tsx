@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { decrementTimer, revealCards } from "../../redux/gameSlice";
+import {motion} from "framer-motion";
 import { Card } from "../../game/InterfacesAndClasses/Card";
 
 export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize: Card[] }) {
@@ -31,11 +32,9 @@ export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize:
 
     return (
         <div>
-            <p className="text-lg font-semibold">Memorization Phase</p>
-            <p className="text-lg">You have: {timeLeft}s left</p>
-
             {/* Progress Bar */}
-            <div className="w-full h-4 bg-gray-300 rounded overflow-hidden mt-2">
+            <div className="w-full h-10 bg-gray-300 rounded overflow-hidden mt-4 relative">
+                {/* Progress fill */}
                 <div
                     className={`h-full ${progressColor} transition-all duration-1000`}
                     style={{ 
@@ -43,11 +42,27 @@ export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize:
                         transition: "width 1s linear"
                     }}
                 ></div>
+    
+                {/* Static time text */}
+                <span className="absolute inset-0 flex items-center justify-center text-gray-700 font-bold text-lg">
+                    {timeLeft}s
+                </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mt-4">
+            <p className="flex justify-center items-center text-lg my-6 font-semibold">Memorize these images and their positions</p>
+    
+            <div className="grid grid-cols-3 gap-10 mt-3">
                 {imagesToMemorize.map((card) => (
-                    <img key={card.id} src={card.image} alt="Memorize" className="w-16 h-16" />
+                    <div className=" bg-white rounded-lg p-5 shadow flex justify-center items-center text-center  ">
+                        <motion.img
+                            src={card.image}
+                            alt="Card"
+                            className="w-16 h-16"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3 }}
+                        />
+                    </div>
                 ))}
             </div>
         </div>
