@@ -16,6 +16,7 @@ interface GameState {
         maxAttempts: number;
     } | null;
     isPlaying: boolean;
+    isMuted: boolean;
 }
 
 const initialState: GameState = {
@@ -23,6 +24,7 @@ const initialState: GameState = {
     config: null,
     gameState: null,
     isPlaying: false,
+    isMuted: false,
 };
 
 const guessWhatGameSlice = createSlice({
