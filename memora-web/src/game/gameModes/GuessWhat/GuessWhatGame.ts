@@ -1,17 +1,17 @@
-// Optimized GuessWhatGame.ts
+import { UseDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 import { BaseGame } from "../../InterfacesAndClasses/Base";
 import { Card } from "../../InterfacesAndClasses/Card";
 import { GuessWhatInitConfig } from "./types";
 
 export class GuessWhatGame extends BaseGame {
-    private config: GuessWhatInitConfig;
-    private cards: Card[] = [];
-    private imagesToMemorize: number[] = [];
-    private levelStartTime = 0;
-    private currentImagesToFind: string[] = [];
-    private attempts = 0;
-    private isMemorizationPhase = true;
-    
+    public config: GuessWhatInitConfig;
+    public cards: Card[] = [];
+    public imagesToMemorize: number[] = [];
+    public levelStartTime = 0;
+    public currentImagesToFind: string[] = [];
+    public attempts = 0;
+    public isMemorizationPhase = true;
     public maxAttempts = 3;
     public memorizationTime: number;
 
@@ -24,20 +24,27 @@ export class GuessWhatGame extends BaseGame {
 
     private initializeLevel(): void {
         const numImages = this.currentLevel + this.config.basePairs;
-        this.imagesToMemorize = this.shuffleArray([...Array(this.config.imageSet.length).keys()]).slice(0, numImages);
-        this.attempts = 0;
+        this.imagesToMemorize = this.shuffleArray([...Array(this.config.imageSet.length).keys()])
+            .slice(0, numImages);
+        
+        console.log("Images to memorize (indexes):", this.imagesToMemorize);
+    
         this.cards = this.generateCards(this.imagesToMemorize);
         this.memorizationTime = Math.max(this.config.minMemorizationTime, this.memorizationTime - this.currentLevel * 1500);
         this.isMemorizationPhase = true;
+    
+        // Select images to find immediately
+        const numImagesToFind = this.currentLevel <= 3 ? 1 : this.currentLevel <= 6 ? 2 : 3;
+        this.currentImagesToFind = this.shuffleArray(this.imagesToMemorize.map(index => this.config.imageSet[index]))
+            .slice(0, numImagesToFind);
     }
+    
 
     start(): void {
         this.isMemorizationPhase = true;
         setTimeout(() => {
             this.isMemorizationPhase = false;
             this.levelStartTime = Date.now();
-            const numImagesToFind = this.currentLevel <= 3 ? 1 : this.currentLevel <= 6 ? 2 : 3;
-            this.currentImagesToFind = this.shuffleArray(this.imagesToMemorize.map(index => this.config.imageSet[index])).slice(0, numImagesToFind);
         }, this.memorizationTime);
     }
 
@@ -51,16 +58,22 @@ export class GuessWhatGame extends BaseGame {
             this.currentLevel++;
             this.initializeLevel();
             this.start();
-        }
+        } else {
+            this.endGame();
+        }   
     }
 
     getCurrentGameState() {
         return {
-            level: this.currentLevel,
-            cards: this.cards.map(({ id, image, matched }) => ({ id, image, matched })),
-            currentImagesToFind: this.currentImagesToFind,
-            isMemorizationPhase: this.isMemorizationPhase,
-            memorizationTime: this.memorizationTime,
+            gameState: {
+                level: this.currentLevel,
+                cards: this.cards.map(({ id, image, matched }) => ({ id, image, matched })),
+                currentImagesToFind: this.currentImagesToFind,
+                isMemorizationPhase: this.isMemorizationPhase,
+                memorizationTime: this.memorizationTime,
+                attempts: this.attempts,
+                maxAttepmts: this.maxAttempts
+            }
         };
     }
 
@@ -71,6 +84,7 @@ export class GuessWhatGame extends BaseGame {
         if (!card || card.matched) return false;
 
         this.attempts++;
+        console.log(`Attempts: ${this.attempts}`)
         if (this.currentImagesToFind.includes(card.image)) {
             card.matched = true;
             this.currentImagesToFind = this.currentImagesToFind.filter(image => image !== card.image);
@@ -92,7 +106,7 @@ export class GuessWhatGame extends BaseGame {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                userId: "some_user_id",
+                sessionId: "some_user_id",
                 level: this.currentLevel,
                 accuracy,
                 sessionErrors,
@@ -102,6 +116,8 @@ export class GuessWhatGame extends BaseGame {
 
         setTimeout(() => this.nextLevel(), 5000);
     }
+
+    private endGame(): void {}
 
     private generateCards(imgIdx: number[]): Card[] {
         return this.shuffleArray(imgIdx.map((index, id) => ({ id, image: this.config.imageSet[index], matched: false })));
