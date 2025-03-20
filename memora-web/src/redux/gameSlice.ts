@@ -1,6 +1,27 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { GuessWhatInitConfig } from "../game/gameModes/GuessWhat/types";
 import { Card } from "../game/InterfacesAndClasses/Card";
+import { RootState } from "./store";
+
+
+export const selectCardThunk = createAsyncThunk<boolean, number, { state: RootState }>(
+    "guessWhat/selectCardThunk",
+    async (cardId, { dispatch, getState }): Promise<boolean> => {
+        const state = getState().guessWhat;
+        const gameState = state.gameState;
+
+        if (!gameState || gameState.isMemorizationPhase) return false;
+
+        const card = gameState.cards.find((card) => card.id === cardId);
+        if (!card || card.matched) return false;
+
+        const isMatch = gameState.currentImagesToFind.includes(card.image);
+
+        dispatch(selectCard(cardId)); // ✅ Dispatch actual reducer
+
+        return isMatch; // ✅ Returns true if correct, false otherwise
+    }
+);
 
 interface GameState {
     sessionId: string | null;
@@ -43,8 +64,6 @@ const guessWhatGameSlice = createSlice({
             state.sessionId = action.payload.sessionId;
             state.config = action.payload.config;
             state.isPlaying = true;
-
-            // Initialize game state
             state.gameState = initializeGameState(action.payload.config, 1);
         },
 
@@ -68,7 +87,6 @@ const guessWhatGameSlice = createSlice({
             }
         },
         
-
         nextLevel(state) {
             if (!state.config || !state.gameState) return;
 
@@ -105,12 +123,11 @@ function initializeGameState(config: GuessWhatInitConfig, level: number) {
         currentImagesToFind: selectImagesToFind(imagesToMemorize, config.imageSet, level <= 3 ? 1 : level <= 6 ? 2 : 3),
         isMemorizationPhase: true,
         memorizationTime,
-        timeLeft: Math.floor(memorizationTime / 1000),  // Initialize timeLeft
+        timeLeft: Math.floor(memorizationTime / 1000),
         attempts: 0,
         maxAttempts: 3,
     };
 }
-
 
 function shuffleArray<T>(array: T[]): T[] {
     return array.sort(() => Math.random() - 0.5);
