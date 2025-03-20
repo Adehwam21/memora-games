@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
-import { revealCards, selectCard, nextLevel, endGame } from "../../redux/gameSlice";
+import { revealCards, nextLevel, endGame } from "../../redux/gameSlice";
 import GuessWhatTimer from './GuessWhatTimer';
 import Card from './AnimatedClickableCard'; 
 
@@ -25,7 +25,7 @@ export default function GuessWhat() {
                 dispatch(nextLevel());
             }, 1000);
         }
-    }, [gameState?.currentImagesToFind.length, gameState?.attempts]);
+    }, [gameState, dispatch, gameState?.currentImagesToFind.length, gameState?.attempts]);
 
     if (!isPlaying) {
         return (
@@ -74,9 +74,6 @@ export default function GuessWhat() {
                                 id={card.id}
                                 image={card.image}
                                 matched={card.matched}
-                                onClick={() => {
-                                    dispatch(selectCard(card.id))
-                                }}
                             />
                         ))}
                     </div>
