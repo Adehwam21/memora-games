@@ -4,10 +4,12 @@ import { RootState } from "../redux/store"; // Import your store's RootState typ
 import { startGame } from "../redux/gameSlice"; // Import Redux actions
 import API from "../config/axiosConfig";
 import GuessWhat from "./Games/GuessWhatGame";
+import MetricsTable from "./Games/MetricsTable";
 
 export const GameRoom: React.FC = () => {
     const dispatch = useDispatch();
     const { config, isPlaying } = useSelector((state: RootState) => state.guessWhat); // Select state from Redux
+    const metrics = useSelector((state: RootState) => state.guessWhat.metrics);
 
     const handleStartGame = async () => {
         try {
@@ -23,7 +25,7 @@ export const GameRoom: React.FC = () => {
     };
 
     return (
-        <div>
+        <div className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto">
             <button 
                 onClick={handleStartGame} 
                 className="p-2 bg-blue-500 text-white hover:cursor-pointer m-2 rounded"
@@ -33,6 +35,10 @@ export const GameRoom: React.FC = () => {
             </button>
 
             {config && <GuessWhat />}
+
+            <div className="mt-10 flex justify-center items-center">
+                <MetricsTable metrics={metrics} />
+            </div>
         </div>
     );
 };

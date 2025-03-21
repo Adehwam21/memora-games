@@ -1,18 +1,26 @@
 import { useEffect } from "react";
 import { RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { decrementTimer, revealCards } from "../../redux/gameSlice";
-import {motion} from "framer-motion";
+import { decrementTimer, revealCards, setLevelStartTime } from "../../redux/gameSlice";
+import { motion } from "framer-motion";
 import { Card } from "../../game/InterfacesAndClasses/Card";
 
 export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize: Card[] }) {
     const dispatch = useDispatch();
     const timeLeft = useSelector((state: RootState) => state.guessWhat.gameState?.timeLeft);
     const totalTime = useSelector((state: RootState) => state.guessWhat.gameState?.memorizationTime) || 1;
+    const levelStartTime = useSelector((state: RootState) => state.guessWhat.gameState?.levelStartTime);
 
     useEffect(() => {
-        if (timeLeft === undefined || timeLeft <= 0) {
+        if (timeLeft === undefined || timeLeft < 0) return; // Prevent unnecessary calls
+
+        if (timeLeft === 0) {
+            const startTime = Date.now();
+            console.log("⏳ Memorization phase over, dispatching revealCards...", startTime);
+
+            dispatch(setLevelStartTime(startTime));
             dispatch(revealCards());
+            
             return;
         }
 
@@ -22,6 +30,12 @@ export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize:
 
         return () => clearInterval(interval);
     }, [timeLeft, dispatch]);
+
+    useEffect(() => {
+        if (levelStartTime) {
+            console.log(`🚀 Level Start Time (Redux): ${levelStartTime}`);
+        }
+    }, [levelStartTime]);
 
     // Calculate progress percentage
     const progressPercentage = (timeLeft! / Math.floor(totalTime / 1000)) * 100;
@@ -53,7 +67,7 @@ export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize:
     
             <div className="grid grid-cols-3 gap-10 mt-3">
                 {imagesToMemorize.map((card) => (
-                    <div className=" bg-white rounded-lg p-5 shadow flex justify-center items-center text-center  ">
+                    <div key={card.id} className="bg-white rounded-lg p-5 shadow flex justify-center items-center text-center">
                         <motion.img
                             src={card.image}
                             alt="Card"

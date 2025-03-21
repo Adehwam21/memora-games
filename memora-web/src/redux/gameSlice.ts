@@ -34,8 +34,17 @@ interface GameState {
         memorizationTime: number;
         timeLeft: number;
         attempts: number;
+        levelStartTime: number;
+        levelEndTime: number;
         maxAttempts: number;
     } | null;
+    metrics: { 
+        level: number; 
+        attempts: number, 
+        totalResponseTime: number, 
+        accuracy: number, 
+        error: number 
+    }[];
     isPlaying: boolean;
     isMuted: boolean;
 }
@@ -44,6 +53,7 @@ const initialState: GameState = {
     sessionId: null,
     config: null,
     gameState: null,
+    metrics: [],
     isPlaying: false,
     isMuted: false,
 };
@@ -56,8 +66,12 @@ const guessWhatGameSlice = createSlice({
             if (state.gameState && state.gameState.timeLeft > 0) {
                 state.gameState.timeLeft -= 1;
             } else if (state.gameState?.timeLeft === 0) {
-                state.gameState.isMemorizationPhase = false;  // End memorization phase
+                state.gameState.isMemorizationPhase = false;
             }
+        },
+
+        setLevelStartTime(state, action: PayloadAction<number>) { 
+            state.gameState!.levelStartTime = action.payload;
         },
         
         startGame(state, action: PayloadAction<{ sessionId: string; config: GuessWhatInitConfig }>) {
@@ -71,30 +85,57 @@ const guessWhatGameSlice = createSlice({
             if (state.gameState && state.gameState.timeLeft === 0) {
                 state.gameState.isMemorizationPhase = false;
             }
-        },        
+        },
 
         selectCard(state, action: PayloadAction<number>) {
             if (!state.gameState || state.gameState.isMemorizationPhase) return;
-        
+
             const card = state.gameState.cards.find(card => card.id === action.payload);
             if (!card || card.matched) return;
-        
-            state.gameState.attempts++;
-        
+
+            state.gameState.attempts++; 
+
             if (state.gameState.currentImagesToFind.includes(card.image)) {
                 card.matched = true;
-                state.gameState.currentImagesToFind = state.gameState.currentImagesToFind.filter(image => image !== card.image);
+                state.gameState.currentImagesToFind = state.gameState.currentImagesToFind.filter(
+                    image => image !== card.image
+                );
             }
         },
         
         nextLevel(state) {
             if (!state.config || !state.gameState) return;
 
+            // Capture end time and calculate total response time
+            state.gameState.levelEndTime = Date.now();
+            const totalResponseTime = (state.gameState.levelEndTime - state.gameState.levelStartTime) / 1000;
+
+            // Compute accuracy and errors
+            const correctAttempts = state.gameState.cards.filter(card => card.matched).length;
+            const totalAttempts = state.gameState.attempts;
+            const accuracy = totalAttempts > 0 ? (correctAttempts / totalAttempts) * 100 : 0;
+            const errors = totalAttempts - correctAttempts;
+
+            console.log('startTime', state.gameState.levelStartTime);
+            console.log('endTime', state.gameState.levelEndTime);
+            console.log('totalResponseTime', totalResponseTime);
+            console.log(errors)
+
+            // Store level metrics
+            state.metrics.push({
+                level: state.gameState.level,
+                attempts: totalAttempts,
+                totalResponseTime,
+                accuracy,
+                error: errors,
+            });
+
             if (state.gameState.level >= state.config.maxLevels) {
                 guessWhatGameSlice.caseReducers.endGame(state);
                 return;
             }
 
+            // Start the next level
             state.gameState = initializeGameState(state.config, state.gameState.level + 1);
         },
 
@@ -103,11 +144,20 @@ const guessWhatGameSlice = createSlice({
             state.config = null;
             state.isPlaying = false;
             state.gameState = null;
-        },
+            state.metrics = [];
+        }
     },
 });
 
-export const { startGame, revealCards, selectCard, nextLevel, endGame, decrementTimer } = guessWhatGameSlice.actions;
+export const { 
+    startGame, 
+    revealCards, 
+    selectCard, 
+    nextLevel, 
+    endGame, 
+    decrementTimer, 
+    setLevelStartTime
+ } = guessWhatGameSlice.actions;
 export const guessWhatGameReducer = guessWhatGameSlice.reducer;
 
 // Helper functions
@@ -124,6 +174,8 @@ function initializeGameState(config: GuessWhatInitConfig, level: number) {
         isMemorizationPhase: true,
         memorizationTime,
         timeLeft: Math.floor(memorizationTime / 1000),
+        levelStartTime: 0,
+        levelEndTime: 0,
         attempts: 0,
         maxAttempts: 3,
     };

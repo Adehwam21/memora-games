@@ -7,6 +7,8 @@ export interface GuessWhatInitConfig {
     memorizationTimeReductionPerLevel: number;
     minMemorizationTime: number;
     basePairs: number;
+    levelStartTime: number;
+    levelEndTime: number;
     imageSet: [];
 }
 

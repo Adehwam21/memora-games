@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { playSound } from "../../utils/sound";
 import { selectCardThunk } from "../../redux/gameSlice";
 import { useDispatch } from "react-redux";
@@ -12,14 +13,21 @@ interface CardProps {
 }
 
 const Card = ({ index, id, image, matched }: CardProps) => {
-    const dispatch = useDispatch<AppDispatch>(); // ✅ Move inside the component
-  
+    const dispatch = useDispatch<AppDispatch>();
+    const [wrongSelection, setWrongSelection] = useState(false);
 
     const handleClick = async () => {
-        if (!matched) {
+        if (!matched && !wrongSelection) {
             try {
                 const isMatch: boolean = await dispatch(selectCardThunk(id)).unwrap();
-                playSound(isMatch ? "/sounds/correct.mp3" : "/sounds/wrong.mp3");
+
+                if (isMatch) {
+                    playSound("/sounds/correct.mp3");
+                } else {
+                    playSound("/sounds/wrong.mp3");
+                    setWrongSelection(true); // Set wrongSelection to true
+                    setTimeout(() => setWrongSelection(false), 1000); // Reset after 1 second
+                }
             } catch (error) {
                 console.error("Error selecting card:", error);
             }
@@ -28,8 +36,14 @@ const Card = ({ index, id, image, matched }: CardProps) => {
 
     return (
         <motion.div
-            className={`p-6 border rounded-lg flex justify-center items-center text-center text-5xl text-white font-bold 
-                ${matched ? "bg-green-400 pointer-events-none opacity-50" : "bg-blue-400"}`}
+            className={`p-6 border rounded-lg flex justify-center items-center text-center text-5xl text-white font-bold transition-colors
+                ${
+                    matched
+                        ? "bg-green-400 pointer-events-none opacity-50"
+                        : wrongSelection
+                        ? "bg-red-500"
+                        : "bg-blue-400"
+                }`}
             onClick={handleClick}
             initial={{ scale: 1 }}
             animate={{
@@ -43,7 +57,7 @@ const Card = ({ index, id, image, matched }: CardProps) => {
                 <motion.img
                     src={image}
                     alt="Card"
-                    className="w-12 h-12"
+                    className="w-16 h-16"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
