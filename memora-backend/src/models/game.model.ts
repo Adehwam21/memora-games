@@ -1,11 +1,12 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
-interface ILevelScore {
+interface IMetric {
   level: number;
+  attempts: number;
   accuracy: number; // e.g., percentage of correct answers
-  errors: number; // number of errors
-  responseTime: number; // total response time for this level in milliseconds
+  levelErrors: number; // number of errors
+  totalResponseTime: number; // total response time for this level in milliseconds
 }
 
 interface ITotalScore {
@@ -21,7 +22,7 @@ export interface IGameSession {
   ssid: string; // Session ID
   gameType: string // The type of game user took a session on
   initConfig: {}, // The initial configurations of the game type
-  levelScores: ILevelScore[]; // Scores for individual levels
+  metrics: IMetric[]; // Scores for individual levels
   totalScore: ITotalScore; // Aggregated score for the session
 }
 
@@ -36,19 +37,22 @@ const GameSessionSchema = new Schema<IGameSessionDocument>(
     sessionDate: { type: Date, default: Date.now, index: true },
     gameType: { type: String, required: true },
     initConfig: {},
-    levelScores: [
+    metrics: [
       {
         level: { type: Number, required: false },
+        attempt: { type: Number, required: false },
         accuracy: { type: Number, required: false },
-        sessionErrors: { type: Number, required: false },
-        responseTime: { type: Number, required: false },
+        levelErrors: { type: Number, required: false },
+        totalResponseTime: { type: Number, required: false },
       },
     ],
     totalScore: {
+      avgAttempts: { type: Number, required: false },
       avgAccuracy: { type: Number, required: false },
-      totalErrors: { type: Number, required: false },
-      totalResponseTime: { type: Number, required: false },
-    },
+      avgErrors: { type: Number, required: false },
+      avgResponseTime: { type: Number, required: false },
+      mmeScore: { type: Number, required: false },
+    }
   },
   { timestamps: true }
 );

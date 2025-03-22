@@ -9,14 +9,12 @@ export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize:
     const dispatch = useDispatch();
     const timeLeft = useSelector((state: RootState) => state.guessWhat.gameState?.timeLeft);
     const totalTime = useSelector((state: RootState) => state.guessWhat.gameState?.memorizationTime) || 1;
-    const levelStartTime = useSelector((state: RootState) => state.guessWhat.gameState?.levelStartTime);
 
     useEffect(() => {
         if (timeLeft === undefined || timeLeft < 0) return; // Prevent unnecessary calls
 
         if (timeLeft === 0) {
             const startTime = Date.now();
-            console.log("⏳ Memorization phase over, dispatching revealCards...", startTime);
 
             dispatch(setLevelStartTime(startTime));
             dispatch(revealCards());
@@ -30,12 +28,6 @@ export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize:
 
         return () => clearInterval(interval);
     }, [timeLeft, dispatch]);
-
-    useEffect(() => {
-        if (levelStartTime) {
-            console.log(`🚀 Level Start Time (Redux): ${levelStartTime}`);
-        }
-    }, [levelStartTime]);
 
     // Calculate progress percentage
     const progressPercentage = (timeLeft! / Math.floor(totalTime / 1000)) * 100;

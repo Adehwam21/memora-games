@@ -1,20 +1,13 @@
 // src/components/MetricsTable.tsx
 import React from "react";
-
-interface Metric {
-    level: number;
-    attempts: number;
-    totalResponseTime: number;
-    accuracy: number;
-    error: number;
-}
+import { Metric } from "../../types/props";
 
 interface MetricsTableProps {
     metrics: Metric[];
 }
 
 const MetricsTable: React.FC<MetricsTableProps> = ({ metrics }) => {
-    if (!metrics || metrics.length === 0) return <p className="text-center text-gray-500">No metrics available.</p>;
+    if (!metrics || metrics.length === 0) return <p className="text-center text-gray-500"></p>;
 
     return (
         <div className="mt-10 w-full">
@@ -36,7 +29,7 @@ const MetricsTable: React.FC<MetricsTableProps> = ({ metrics }) => {
                             <td className="border p-2">{metric.attempts}</td>
                             <td className="border p-2">{metric.totalResponseTime.toFixed(2)}</td>
                             <td className="border p-2">{metric.accuracy.toFixed(2)}%</td>
-                            <td className="border p-2">{metric.error}</td>
+                            <td className="border p-2">{metric.totalErrors}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -25,8 +25,7 @@ const Card = ({ index, id, image, matched }: CardProps) => {
                     playSound("/sounds/correct.mp3");
                 } else {
                     playSound("/sounds/wrong.mp3");
-                    setWrongSelection(true); // Set wrongSelection to true
-                    setTimeout(() => setWrongSelection(false), 1000); // Reset after 1 second
+                    setWrongSelection(true);
                 }
             } catch (error) {
                 console.error("Error selecting card:", error);
@@ -36,14 +35,13 @@ const Card = ({ index, id, image, matched }: CardProps) => {
 
     return (
         <motion.div
-            className={`p-6 border rounded-lg flex justify-center items-center text-center text-5xl text-white font-bold transition-colors
-                ${
-                    matched
-                        ? "bg-green-400 pointer-events-none opacity-50"
-                        : wrongSelection
-                        ? "bg-red-500"
-                        : "bg-blue-400"
-                }`}
+            className={`p-6 border rounded-lg flex justify-center items-center text-center text-5xl text-white font-bold transition-colors ${
+                matched
+                    ? "bg-green-400 pointer-events-none opacity-50"
+                    : wrongSelection
+                    ? "bg-red-500"
+                    : "bg-blue-400"
+            }`}
             onClick={handleClick}
             initial={{ scale: 1 }}
             animate={{

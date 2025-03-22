@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { GuessWhatInitConfig } from "../game/gameModes/GuessWhat/types";
+import { initializeGameState, updateGameSessionMetrics,  } from "../utils/guessWhatUtils";
 import { Card } from "../game/InterfacesAndClasses/Card";
 import { RootState } from "./store";
+import { Metric } from "../types/props";
 
 
 export const selectCardThunk = createAsyncThunk<boolean, number, { state: RootState }>(
@@ -17,9 +19,21 @@ export const selectCardThunk = createAsyncThunk<boolean, number, { state: RootSt
 
         const isMatch = gameState.currentImagesToFind.includes(card.image);
 
-        dispatch(selectCard(cardId)); // ✅ Dispatch actual reducer
+        dispatch(selectCard(cardId));
 
-        return isMatch; // ✅ Returns true if correct, false otherwise
+        return isMatch;
+    }
+);
+
+export const sendGameMetrics = createAsyncThunk(
+    "game/sendGameMetrics",
+    async ({ sessionId, performance }: { sessionId: string | null; performance: Metric[] }, { rejectWithValue }) => {
+        try {
+            await updateGameSessionMetrics(sessionId!, performance);
+            return performance;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
     }
 );
 
@@ -42,8 +56,8 @@ interface GameState {
         level: number; 
         attempts: number, 
         totalResponseTime: number, 
-        accuracy: number, 
-        error: number 
+        accuracy: number,   
+        totalErrors: number 
     }[];
     isPlaying: boolean;
     isMuted: boolean;
@@ -116,18 +130,12 @@ const guessWhatGameSlice = createSlice({
             const accuracy = totalAttempts > 0 ? (correctAttempts / totalAttempts) * 100 : 0;
             const errors = totalAttempts - correctAttempts;
 
-            console.log('startTime', state.gameState.levelStartTime);
-            console.log('endTime', state.gameState.levelEndTime);
-            console.log('totalResponseTime', totalResponseTime);
-            console.log(errors)
-
-            // Store level metrics
             state.metrics.push({
                 level: state.gameState.level,
                 attempts: totalAttempts,
                 totalResponseTime,
                 accuracy,
-                error: errors,
+                totalErrors: errors,
             });
 
             if (state.gameState.level >= state.config.maxLevels) {
@@ -159,36 +167,3 @@ export const {
     setLevelStartTime
  } = guessWhatGameSlice.actions;
 export const guessWhatGameReducer = guessWhatGameSlice.reducer;
-
-// Helper functions
-function initializeGameState(config: GuessWhatInitConfig, level: number) {
-    const numImages = level + config.basePairs;
-    const imagesToMemorize = shuffleArray([...Array(config.imageSet.length).keys()]).slice(0, numImages);
-    
-    const memorizationTime = Math.max(config.minMemorizationTime, config.defaultMemorizationTime - level * 1000);
-    
-    return {
-        level,
-        cards: generateCards(imagesToMemorize, config.imageSet),
-        currentImagesToFind: selectImagesToFind(imagesToMemorize, config.imageSet, level <= 3 ? 1 : level <= 6 ? 2 : 3),
-        isMemorizationPhase: true,
-        memorizationTime,
-        timeLeft: Math.floor(memorizationTime / 1000),
-        levelStartTime: 0,
-        levelEndTime: 0,
-        attempts: 0,
-        maxAttempts: 3,
-    };
-}
-
-function shuffleArray<T>(array: T[]): T[] {
-    return array.sort(() => Math.random() - 0.5);
-}
-
-function generateCards(imgIdx: number[], imageSet: string[]): Card[] {
-    return shuffleArray(imgIdx.map((index, id) => ({ id, image: imageSet[index], matched: false })));
-}
-
-function selectImagesToFind(imagesToMemorize: number[], imageSet: string[], numImagesToFind: number): string[] {
-    return shuffleArray(imagesToMemorize.map(index => imageSet[index])).slice(0, numImagesToFind);
-}

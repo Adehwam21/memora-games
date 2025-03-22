@@ -1,20 +1,28 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../redux/store";
-import { revealCards, nextLevel, endGame } from "../../redux/gameSlice";
+import { AppDispatch, RootState } from "../../redux/store";
+import { revealCards, nextLevel, sendGameMetrics } from "../../redux/gameSlice";
 import GuessWhatTimer from "./GuessWhatTimer";
 import Card from "./AnimatedClickableCard";
 
 export default function GuessWhat() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
+    const metrics = useSelector((state: RootState) => state.guessWhat.metrics);
+    const sessionId = useSelector((state: RootState) => state.guessWhat.sessionId);
     const gameState = useSelector((state: RootState) => state.guessWhat.gameState);
-    const isPlaying = useSelector((state: RootState) => state.guessWhat.isPlaying);
+    const sessionEnded = !useSelector((state: RootState) => state.guessWhat.isPlaying);
+    
 
+    useEffect(() => {
+        if (!sessionEnded || !gameState) return;
+
+        dispatch(sendGameMetrics({ sessionId, performance: metrics }));
+    }, [sessionId, sessionEnded, gameState, dispatch, metrics]);
 
     useEffect(() => {
         if (!gameState) return;
         setTimeout(() => dispatch(revealCards()), gameState.memorizationTime);
-    }, [gameState, dispatch]);
+    }, [gameState, gameState?.memorizationTime, dispatch]); 
 
     useEffect(() => {
         if (!gameState) return;
@@ -24,22 +32,7 @@ export default function GuessWhat() {
                 dispatch(nextLevel());
             }, 1000);
         }
-    }, [gameState, dispatch, gameState?.currentImagesToFind.length, gameState?.attempts]);
-
-    if (!isPlaying) {
-        return (
-            <div className="p-4">
-                <h1 className="text-xl font-bold">Game Over!</h1>
-                <p className="text-sm">Congratulations! You've completed all levels.</p>
-                <button
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-                    onClick={() => dispatch(endGame())}
-                >
-                    Restart Game
-                </button>
-            </div>
-        );
-    }
+    }, [gameState, dispatch]); 
 
     if (!gameState) return <p>Loading...</p>;
 
@@ -57,7 +50,7 @@ export default function GuessWhat() {
             </div>
 
             {gameState.isMemorizationPhase ? (
-                <GuessWhatTimer imagesToMemorize={gameState.cards} />
+                <GuessWhatTimer imagesToMemorize={gameState.cards} /> 
             ) : (
                 <div>
                     <div className="flex justify-center items-center space-x-16 mt-7">

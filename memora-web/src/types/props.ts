@@ -23,3 +23,11 @@ export interface FormErrors {
 export interface ProtectedRouteProps {
     children: ReactNode;
 }
+
+export interface Metric {
+    level: number;
+    attempts: number;
+    totalResponseTime: number;
+    accuracy: number;
+    totalErrors: number;
+}
