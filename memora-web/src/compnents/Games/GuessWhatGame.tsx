@@ -1,23 +1,14 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { revealCards, nextLevel, sendGameMetrics } from "../../redux/gameSlice";
+import { revealCards, nextLevel } from "../../redux/gameSlice";
 import GuessWhatTimer from "./GuessWhatTimer";
 import Card from "./AnimatedClickableCard";
 
 export default function GuessWhat() {
     const dispatch = useDispatch<AppDispatch>();
-    const metrics = useSelector((state: RootState) => state.guessWhat.metrics);
-    const sessionId = useSelector((state: RootState) => state.guessWhat.sessionId);
     const gameState = useSelector((state: RootState) => state.guessWhat.gameState);
-    const sessionEnded = !useSelector((state: RootState) => state.guessWhat.isPlaying);
     
-
-    useEffect(() => {
-        if (!sessionEnded || !gameState) return;
-
-        dispatch(sendGameMetrics({ sessionId, performance: metrics }));
-    }, [sessionId, sessionEnded, gameState, dispatch, metrics]);
 
     useEffect(() => {
         if (!gameState) return;

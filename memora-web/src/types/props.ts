@@ -26,8 +26,8 @@ export interface ProtectedRouteProps {
 
 export interface Metric {
     level: number;
-    attempts: number;
+    attempt: number;
     totalResponseTime: number;
     accuracy: number;
-    totalErrors: number;
+    levelErrors: number;
 }

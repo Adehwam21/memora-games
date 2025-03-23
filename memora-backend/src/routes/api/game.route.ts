@@ -24,7 +24,7 @@ gameRouter.route("/game-session/:id")
     .get([verifyToken], getGameSessionById); // Get a specific game session by ID
 
 gameRouter.route("/game-session/update/:id")
-    .put([verifyToken, player], updateGameSession); // Update a specific game session
+    .put(verifyToken, updateGameSession); // Update a specific game session
 
 gameRouter.route("/game-session/del/:id")
     .delete([verifyToken, admin], deleteGameSession); // Delete a specific game session

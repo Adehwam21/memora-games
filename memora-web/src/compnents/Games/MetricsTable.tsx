@@ -11,7 +11,6 @@ const MetricsTable: React.FC<MetricsTableProps> = ({ metrics }) => {
 
     return (
         <div className="mt-10 w-full">
-            <h2 className="text-lg font-bold mb-2 text-center">Game Performance Metrics</h2>
             <table className="w-full border-collapse border border-gray-300">
                 <thead>
                     <tr className="bg-gray-200">
@@ -26,10 +25,10 @@ const MetricsTable: React.FC<MetricsTableProps> = ({ metrics }) => {
                     {metrics.map((metric, index) => (
                         <tr key={index} className="text-center">
                             <td className="border p-2">{metric.level}</td>
-                            <td className="border p-2">{metric.attempts}</td>
+                            <td className="border p-2">{metric.attempt}</td>
                             <td className="border p-2">{metric.totalResponseTime.toFixed(2)}</td>
-                            <td className="border p-2">{metric.accuracy.toFixed(2)}%</td>
-                            <td className="border p-2">{metric.totalErrors}</td>
+                            <td className="border p-2">{metric.accuracy.toFixed(1)}%</td>
+                            <td className="border p-2">{metric.levelErrors}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -3,8 +3,8 @@ import App from "../App";
 import ProtectedRoute from "../compnents/ProtectedRoute";
 import LandingPage from "../pages/LandingPage/LandingPage";
 import { GameRoom } from "../compnents/GameRoom";
+import { PerformancePage } from "../pages/performance/PerformancePage"; // Import Performance Page
 
-// Define the routes with proper TypeScript typings
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -14,11 +14,19 @@ export const router = createBrowserRouter([
             {
                 path: "/lobby",
                 element: (
-                <ProtectedRoute>
-                    <GameRoom />
-                </ProtectedRoute>
+                    <ProtectedRoute>
+                        <GameRoom />
+                    </ProtectedRoute>
                 ),
-            }
-        ]
+            },
+            {
+                path: "/game/performance/:sessionId",
+                element: (
+                    <ProtectedRoute>
+                        <PerformancePage />
+                    </ProtectedRoute>
+                ),
+            },
+        ],
     },
-    ] as RouteObject[]); 
+] as RouteObject[]);

@@ -1,9 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { GuessWhatInitConfig } from "../game/gameModes/GuessWhat/types";
-import { initializeGameState, updateGameSessionMetrics,  } from "../utils/guessWhatUtils";
+import { initializeGameState, } from "../utils/guessWhatUtils";
 import { Card } from "../game/InterfacesAndClasses/Card";
 import { RootState } from "./store";
-import { Metric } from "../types/props";
 
 
 export const selectCardThunk = createAsyncThunk<boolean, number, { state: RootState }>(
@@ -19,21 +18,9 @@ export const selectCardThunk = createAsyncThunk<boolean, number, { state: RootSt
 
         const isMatch = gameState.currentImagesToFind.includes(card.image);
 
-        dispatch(selectCard(cardId));
+        dispatch(selectCard(cardId)); // ✅ Dispatch actual reducer
 
-        return isMatch;
-    }
-);
-
-export const sendGameMetrics = createAsyncThunk(
-    "game/sendGameMetrics",
-    async ({ sessionId, performance }: { sessionId: string | null; performance: Metric[] }, { rejectWithValue }) => {
-        try {
-            await updateGameSessionMetrics(sessionId!, performance);
-            return performance;
-        } catch (error) {
-            return rejectWithValue(error);
-        }
+        return isMatch; // ✅ Returns true if correct, false otherwise
     }
 );
 
@@ -54,10 +41,10 @@ interface GameState {
     } | null;
     metrics: { 
         level: number; 
-        attempts: number, 
+        attempt: number, 
         totalResponseTime: number, 
-        accuracy: number,   
-        totalErrors: number 
+        accuracy: number, 
+        levelErrors: number 
     }[];
     isPlaying: boolean;
     isMuted: boolean;
@@ -130,12 +117,13 @@ const guessWhatGameSlice = createSlice({
             const accuracy = totalAttempts > 0 ? (correctAttempts / totalAttempts) * 100 : 0;
             const errors = totalAttempts - correctAttempts;
 
+            // Store level metrics
             state.metrics.push({
                 level: state.gameState.level,
-                attempts: totalAttempts,
+                attempt: totalAttempts,
                 totalResponseTime,
                 accuracy,
-                totalErrors: errors,
+                levelErrors: errors,
             });
 
             if (state.gameState.level >= state.config.maxLevels) {

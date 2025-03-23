@@ -1,5 +1,6 @@
 import { GuessWhatInitConfig } from "../game/gameModes/GuessWhat/types";
 import { Card } from "../game/InterfacesAndClasses/Card";
+import API from "../config/axiosConfig";
 import { Metric } from "../types/props";
 
 // Helper functions
@@ -38,18 +39,13 @@ function selectImagesToFind(imagesToMemorize: number[], imageSet: string[], numI
 
 export const updateGameSessionMetrics = async (sessionId: string, metrics: Metric[]) => {
     try {
-        const response = await fetch(`${process.env.VITE_SERVER_URL}/game-sessioin/update/${sessionId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ sessionId, metrics }),
-        });
+        const response = await API.post(`/game/game-session/${sessionId}`, { metrics: metrics });
 
-        if (!response.ok) {
+
+        if (response.status !== 200) {
             throw new Error("Failed to send game metrics");
         } else {
-            console.log("Game metrics sent successfully", response);
+            console.log("Game metrics sent successfully", response.data);
         }
     } catch (error) {
         console.error("Error sending game metrics", error);

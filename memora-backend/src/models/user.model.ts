@@ -35,7 +35,7 @@ const UserSchema = new Schema<IUserDocument>({
     trim: true,
     match: [/\S+@\S+\.\S+/, 'is invalid'],
   },
-  role: { type: String, required: true, default: "user" },
+  role: { type: String, required: true, default: "player" },
   password: { type: String, required: true },
 }, { timestamps: true });
 

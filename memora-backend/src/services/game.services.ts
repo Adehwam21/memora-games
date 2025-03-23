@@ -1,5 +1,6 @@
 import { IGameSession } from "../models/game.model";
 import { IAppContext, IService } from "../types/app";
+import { Types } from "mongoose";
 
 export default class GameSessionService extends IService {
     constructor(props: IAppContext) {
@@ -53,6 +54,10 @@ export default class GameSessionService extends IService {
      * Update a specific game session by ID
      */
     async updateOne(id: string, input: Partial<IGameSession>): Promise<IGameSession | null> {
+        if (!Types.ObjectId.isValid(id)) {
+            throw new Error("Invalid GameSession ID");
+        }
+
         try {
             const gameSession = await this.db.GameSessionModel.findByIdAndUpdate(
                 id,
