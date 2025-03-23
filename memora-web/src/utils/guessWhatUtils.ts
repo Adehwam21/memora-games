@@ -39,7 +39,7 @@ function selectImagesToFind(imagesToMemorize: number[], imageSet: string[], numI
 
 export const updateGameSessionMetrics = async (sessionId: string, metrics: Metric[]) => {
     try {
-        const response = await API.post(`/game/game-session/${sessionId}`, { metrics: metrics });
+        const response = await API.put(`/game/game-session/update/${sessionId}`, { metrics: metrics });
 
 
         if (response.status !== 200) {
