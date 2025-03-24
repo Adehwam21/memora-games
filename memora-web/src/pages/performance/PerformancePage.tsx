@@ -1,9 +1,11 @@
 import React from 'react';
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import API from '../../config/axiosConfig';
 
 import MetricsTable from '../../compnents/Games/MetricsTable';
+import { useDispatch } from 'react-redux';
+import { forceEndGame } from '../../redux/gameSlice';
 
 interface IGameMetric {
     _id: string;
@@ -21,6 +23,7 @@ interface IGameSession {
     ssid: string;
     sessionDate: string; 
     metrics: IGameMetric[];
+    mmseScore: string;
     createdAt: string;
     updatedAt: string; 
     __v: number;
@@ -28,6 +31,8 @@ interface IGameSession {
 
 
 export const PerformancePage: React.FC = () => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const { sessionId } = useParams<{ sessionId: string }>();
     const [session, setSession] = useState<IGameSession | null>(null);
 
@@ -36,7 +41,6 @@ export const PerformancePage: React.FC = () => {
             try {
                 const response = await API.get(`/game/game-session/${sessionId}`)
                 if (response.status === 200){
-                    console.log("GameSession", response.data)
                     setSession(response.data!.gameSession);
                 }
             } catch (error) {
@@ -47,20 +51,21 @@ export const PerformancePage: React.FC = () => {
         if (sessionId) fetchSessionData();
     }, [sessionId]);
 
+    const handleReturnButtonClick = () => {
+        dispatch(forceEndGame())
+        navigate("/lobby")
+    }
+
     if (!session) return <p>Loading session data...</p>;
 
     return (
         <div className='p-10'>
             <MetricsTable metrics={session.metrics}/>
-            {/* <div className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto">
-                <h1 className="text-xl font-bold mb-4">Game Session Performance</h1>
-                <p className="text-lg font-semibold">Session ID: {session._id}</p>
-                <p className="text-md">Accuracy: {session.accuracy}%</p>
-                <p className="text-md">Total Errors: {session.totalErrors}</p>
-                <p className="text-md">Total Response Time: {session.totalResponseTime} sec</p>
-                <p className="text-md">Attempts: {session.attempts}</p>
-                <p className="text-md">Final Level Reached: {session.level}</p>
-            </div> */}
+            <div className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto">
+                <p className="text-lg font-semibold">Mini-Mental State Score (MMSE) : {session.mmseScore}</p>
+            </div>
+
+            <button onClick={handleReturnButtonClick}>Go Home</button>
         </div>
     );
 }

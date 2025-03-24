@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { playSound } from "../../utils/sound";
-import { selectCardThunk } from "../../redux/gameSlice";
+import { selectCardThunk } from "../../redux/thunks";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 

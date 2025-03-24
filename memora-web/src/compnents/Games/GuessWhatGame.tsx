@@ -4,16 +4,11 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { revealCards, nextLevel } from "../../redux/gameSlice";
 import GuessWhatTimer from "./GuessWhatTimer";
 import Card from "./AnimatedClickableCard";
-import { updateGameSessionMetrics } from "../../utils/guessWhatUtils";
-import { useNavigate } from "react-router-dom";
+
 
 export default function GuessWhat() {
     const dispatch = useDispatch<AppDispatch>();
-    const navigate = useNavigate()
     const gameState = useSelector((state: RootState) => state.guessWhat.gameState);
-    const sessionId = useSelector((state: RootState) => state.guessWhat.sessionId);
-    const isPlaying = useSelector((state: RootState) => state.guessWhat.isPlaying);
-    const metrics = useSelector((state: RootState) => state.guessWhat.metrics);
 
     useEffect(() => {
         if (!gameState) return;
@@ -29,13 +24,6 @@ export default function GuessWhat() {
             }, 1000);
         }
     }, [gameState, dispatch]); 
-
-    useEffect(() => {
-        if (!isPlaying) {
-            updateGameSessionMetrics(sessionId!, metrics)
-            navigate(`/game/performance/${sessionId}`)
-        }
-    }, [ navigate, gameState, isPlaying, metrics, sessionId])
 
     if (!gameState) return <p>Loading...</p>;
 
