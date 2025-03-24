@@ -1,22 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store"; // Import your store's RootState type
 import { startGame } from "../redux/gameSlice"; // Import Redux actions
 import API from "../config/axiosConfig";
 import GuessWhat from "./Games/GuessWhatGame";
-import MetricsTable from "./Games/MetricsTable";
+import { useNavigate } from "react-router-dom";
+import { computeMmseScore } from "../utils/guessWhatUtils";
 
 export const GameRoom: React.FC = () => {
     const dispatch = useDispatch();
-    const { config, isPlaying } = useSelector((state: RootState) => state.guessWhat); // Select state from Redux
+    const navigate = useNavigate();
+    const { config, isPlaying, sessionId } = useSelector((state: RootState) => state.guessWhat); // Select state from Redux
+    const gameEnded = useSelector((state: RootState) => state.guessWhat.gameEnded)
+    
     const metrics = useSelector((state: RootState) => state.guessWhat.metrics);
+    const mmseScore = computeMmseScore(metrics);
+
+    useEffect(() => {
+        if (gameEnded && !isPlaying) {
+            API.put(`/game/game-session/update/${sessionId}`, { metrics, mmseScore })
+                .then(() => {
+                    navigate(`/game/performance/${sessionId}`);
+                })
+                .catch((error) => console.error("Failed to update game session:", error));
+        }
+    }, [navigate, gameEnded, isPlaying, sessionId, metrics, mmseScore]);
+    
+    
 
     const handleStartGame = async () => {
         try {
             const response = await API.post('/game/game-session', { gameType: "guessWhat" });
 
             dispatch(startGame({
-                sessionId: response.data.gameSession.sessionId,
+                sessionId: response.data.gameSession!._id,
                 config: response.data.gameSession.initConfig,
             }));
         } catch (error) {
@@ -35,10 +52,6 @@ export const GameRoom: React.FC = () => {
             </button>
 
             {config && <GuessWhat />}
-
-            <div className="mt-10 flex justify-center items-center">
-                <MetricsTable metrics={metrics} />
-            </div>
         </div>
     );
 };
