@@ -23,7 +23,7 @@ export interface IGameSession {
   gameType: string // The type of game user took a session on
   initConfig: {}, // The initial configurations of the game type
   metrics: IMetric[]; // Scores for individual levels
-  totalScore: ITotalScore; // Aggregated score for the session
+  mmseScore: ITotalScore; // Aggregated score for the session
 }
 
 export interface IGameSessionDocument extends Document, IGameSession { }
@@ -46,13 +46,7 @@ const GameSessionSchema = new Schema<IGameSessionDocument>(
         totalResponseTime: { type: Number, required: false },
       },
     ],
-    totalScore: {
-      avgAttempts: { type: Number, required: false },
-      avgAccuracy: { type: Number, required: false },
-      avgErrors: { type: Number, required: false },
-      avgResponseTime: { type: Number, required: false },
-      mmeScore: { type: Number, required: false },
-    }
+    mmseScore: { type: Number, required: false },
   },
   { timestamps: true }
 );
