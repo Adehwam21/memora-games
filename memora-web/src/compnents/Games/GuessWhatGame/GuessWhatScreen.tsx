@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
-import { revealCards, nextLevel } from "../../redux/gameSlice";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { revealCards, nextLevel } from "../../../redux/slices/games-slice/guessWhat";
 import GuessWhatTimer from "./GuessWhatTimer";
 import Card from "./AnimatedClickableCard";
 

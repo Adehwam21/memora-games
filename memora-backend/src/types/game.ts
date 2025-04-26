@@ -4,7 +4,8 @@ export enum GameTypeEnum {
 
 export const GameInitialConfig = {
     guessWhat: {
-        name: "guessWhat",
+        title: "guessWhat",
+        type: "memory",
         maxLevels: 10,
         defaultMemorizationTime: 20000,
         memorizationTimeReductionPerLevel: 1000,

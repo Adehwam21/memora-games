@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store"; // Import your store's RootState type
-import { startGame } from "../redux/gameSlice"; // Import Redux actions
-import API from "../config/axiosConfig";
-import GuessWhat from "./Games/GuessWhatGame";
+import { RootState } from "../../../redux/store"; // Import your store's RootState type
+import { startGame } from "../../../redux/slices/games-slice/guessWhat"; // Import Redux actions
+import API from "../../../config/axiosConfig";
 import { useNavigate } from "react-router-dom";
-import { computeMmseScore } from "../utils/guessWhatUtils";
+import { computeMmseScore } from "../../../utils/game/guessWhatUtils";
+import { GameRunner } from "../GameRunner";
 
 export const GameRoom: React.FC = () => {
     const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export const GameRoom: React.FC = () => {
 
     const handleStartGame = async () => {
         try {
-            const response = await API.post('/game/game-session', { gameType: "guessWhat" });
+            const response = await API.post('/game/game-session', { gameTitle: "guessWhat" });
 
             dispatch(startGame({
                 sessionId: response.data.gameSession!._id,
@@ -51,7 +51,7 @@ export const GameRoom: React.FC = () => {
                 {isPlaying ? "Game In Progress..." : "Start GuessWhat Game"}
             </button>
 
-            {config && <GuessWhat />}
+            {config && <GameRunner sessionId={sessionId!} config={config} />}
         </div>
     );
 };

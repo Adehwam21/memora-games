@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GuessWhatInitConfig } from "../game/gameModes/GuessWhat/types";
-import { initializeGameState, } from "../utils/guessWhatUtils";
-import { Card } from "../game/InterfacesAndClasses/Card";
-
+import { GuessWhatInitConfig } from "../../../types/game/guessWhatTypes";
+import { initializeGameState, } from "../../../utils/game/guessWhatUtils";
+import { Card } from "../../../types/game/guessWhatTypes";
 
 interface GameState {
     sessionId: string | null;
@@ -69,7 +68,7 @@ const guessWhatGameSlice = createSlice({
             if (state.gameState && state.gameState.timeLeft === 0) {
                 state.gameState.isMemorizationPhase = false;
             }
-        }, 
+        },
 
         selectCard(state, action: PayloadAction<number>) {
             if (!state.gameState || state.gameState.isMemorizationPhase) return;
@@ -77,7 +76,7 @@ const guessWhatGameSlice = createSlice({
             const card = state.gameState.cards.find(card => card.id === action.payload);
             if (!card || card.matched) return;
 
-            state.gameState.attempts++; 
+            state.gameState.attempts++;
 
             if (state.gameState.currentImagesToFind.includes(card.image)) {
                 card.matched = true;
@@ -124,6 +123,7 @@ const guessWhatGameSlice = createSlice({
             state.gameEnded = true;
             state.gameState = null;
         },
+
         forceEndGame(state){
             state.config = null;
             state.isPlaying = false;
@@ -143,6 +143,6 @@ export const {
     decrementTimer, 
     forceEndGame,
     setLevelStartTime
- } = guessWhatGameSlice.actions;
+} = guessWhatGameSlice.actions;
 
 export const guessWhatGameReducer = guessWhatGameSlice.reducer;

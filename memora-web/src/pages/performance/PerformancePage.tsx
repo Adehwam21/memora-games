@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from '../../config/axiosConfig';
 
-import MetricsTable from '../../compnents/Games/MetricsTable';
+import MetricsTable from '../../compnents/Games/GuessWhatGame/MetricsTable';
 import { useDispatch } from 'react-redux';
-import { forceEndGame } from '../../redux/gameSlice';
+import { forceEndGame } from '../../redux/slices/games-slice/guessWhat';
 
 interface IGameMetric {
     _id: string;

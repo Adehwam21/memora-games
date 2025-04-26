@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { authReducer } from "./authSlice";
-import { guessWhatGameReducer } from "./gameSlice";
+import { authReducer } from "./slices/auth-slice/authSlice";
+import { guessWhatGameReducer } from "./slices/games-slice/guessWhat";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";

@@ -1,6 +1,6 @@
 // src/components/MetricsTable.tsx
 import React from "react";
-import { Metric } from "../../types/props";
+import { Metric } from "../../../types/props";
 
 interface MetricsTableProps {
     metrics: Metric[];

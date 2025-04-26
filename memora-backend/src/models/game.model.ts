@@ -20,7 +20,8 @@ export interface IGameSession {
   userId: string; // Reference to the user
   sessionDate: Date; // Date of the session
   ssid: string; // Session ID
-  gameType: string // The type of game user took a session on
+  gameTitle: string // The title of game user took a session on
+  gameType?: string // The category the chosen game falls under
   initConfig: {}, // The initial configurations of the game type
   metrics: IMetric[]; // Scores for individual levels
   mmseScore: ITotalScore; // Aggregated score for the session
@@ -35,7 +36,8 @@ const GameSessionSchema = new Schema<IGameSessionDocument>(
     userId: { type: String, required: true, index: true },
     ssid: { type: String, required: true, index: true, default: uuidv4 },
     sessionDate: { type: Date, default: Date.now, index: true },
-    gameType: { type: String, required: true },
+    gameTitle: { type: String, required: true },
+    gameType: {type: String, required: false},
     initConfig: {},
     metrics: [
       {

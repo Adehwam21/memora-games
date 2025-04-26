@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { playSound } from "../../utils/sound";
-import { selectCardThunk } from "../../redux/thunks";
+import { playSound } from "../../../utils/sound";
+import { selectCardThunk } from "../../../redux/thunks";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
+import { AppDispatch } from "../../../redux/store";
 
 interface CardProps {
     index: number;

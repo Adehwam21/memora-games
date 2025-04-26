@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { RootState } from "../../redux/store";
+import { RootState } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { decrementTimer, revealCards, setLevelStartTime } from "../../redux/gameSlice";
+import { decrementTimer, revealCards, setLevelStartTime } from "../../../redux/slices/games-slice/guessWhat";
 import { motion } from "framer-motion";
-import { Card } from "../../game/InterfacesAndClasses/Card";
+import { Card } from "../../../types/game/guessWhatTypes";
 
 export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize: Card[] }) {
     const dispatch = useDispatch();
@@ -42,7 +42,7 @@ export default function GuessWhatTimer({ imagesToMemorize }: { imagesToMemorize:
             <div className="w-full h-10 bg-gray-300 rounded overflow-hidden mt-4 relative">
                 {/* Progress fill */}
                 <div
-                    className={`h-full ${progressColor} transition-all duration-1000`}
+                    className={`h-20 ${progressColor} transition-all duration-1000`}
                     style={{ 
                         width: `${progressPercentage}%`,
                         transition: "width 1s linear"

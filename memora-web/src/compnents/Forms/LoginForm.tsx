@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { loginStart, loginSuccess, loginFailure } from '../../redux/authSlice';
+import { loginStart, loginSuccess, loginFailure } from '../../redux/slices/auth-slice/authSlice';
 import API from '../../config/axiosConfig';
 import { FormProps, LoginFormData } from '../../types/props';
 

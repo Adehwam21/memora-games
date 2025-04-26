@@ -1,8 +1,7 @@
-import { Card } from "../../InterfacesAndClasses/Card";
+import { BaseGameConfig } from "./base";
 
-export interface GuessWhatInitConfig {
-    name: string;
-    maxLevels: number;
+export interface GuessWhatInitConfig extends BaseGameConfig {
+    maxLevels: number,
     defaultMemorizationTime: number;
     memorizationTimeReductionPerLevel: number;
     minMemorizationTime: number;
@@ -22,4 +21,10 @@ export interface GuessWhatCurrentState {
         attempts: number;
         maxAttempts: number;
     }
+}
+
+export interface Card {
+    id: number;
+    image: string;
+    matched: boolean;
 }

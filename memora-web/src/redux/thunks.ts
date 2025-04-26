@@ -1,8 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { selectCard, endGame } from "./gameSlice";
+import { selectCard, endGame } from "./slices/games-slice/guessWhat";
 import { RootState } from "./store";
 import { Metric } from "../types/props";
 import API from "../config/axiosConfig";
+
 
 export const selectCardThunk = createAsyncThunk<boolean, number, { state: RootState }>(
     "guessWhat/selectCardThunk",

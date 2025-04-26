@@ -5,16 +5,16 @@ import { GameInitialConfig, GameTypeEnum } from "../types/game";
  * Create a new game session
  */
 export const createGameSession = async (req: Request, res: Response): Promise<void> => {
-    const { gameType } = req.body;
+    const { gameTitle } = req.body;
     const { userId } = req.user!;
 
     try {
         const newGameSession = await req.context!.services!.gameSession.addOne({
             userId,
-            gameType
+            gameTitle
         });
 
-        if (gameType === GameTypeEnum.GuessWhat){
+        if (gameTitle === GameTypeEnum.GuessWhat){
             newGameSession.initConfig = GameInitialConfig.guessWhat;
         }
 

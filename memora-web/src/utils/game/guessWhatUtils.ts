@@ -1,7 +1,7 @@
-import { GuessWhatInitConfig } from "../game/gameModes/GuessWhat/types";
-import { Card } from "../game/InterfacesAndClasses/Card";
-import API from "../config/axiosConfig";
-import { Metric } from "../types/props";
+import { GuessWhatInitConfig } from "../../types/game/guessWhatTypes";
+import { Card } from "../../types/game/guessWhatTypes";
+import API from "../../config/axiosConfig";
+import { Metric } from "../../types/props";
 
 // Helper functions
 export function initializeGameState(config: GuessWhatInitConfig, level: number) {
