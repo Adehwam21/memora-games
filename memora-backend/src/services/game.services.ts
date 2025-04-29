@@ -1,105 +1,81 @@
-import { IGameSession } from "../models/game.model";
 import { IAppContext, IService } from "../types/app";
-import { Types } from "mongoose";
+import { IGame } from "../models/game.model";
 
 export default class GameSessionService extends IService {
     constructor(props: IAppContext) {
         super(props);
     }
 
-    /**
-     * Create a new game session
-     */
-    async addOne(input: Partial<IGameSession>): Promise<IGameSession> {
-        try {
-            const gameSession = new this.db.GameSessionModel(input);
-            await gameSession.save();
-            return gameSession;
-        } catch (e) {
-            throw e;
-        }
+    async addOne(input: IGame) {
+      try {
+        const game = await this.db!.GameModel.create(input);
+        await game.save();
+        return game;
+
+      } catch (e) {
+        throw e;
+      }
     }
 
-    /**
-     * Get a single game session by ID
-     */
-    async getById(id: string): Promise<IGameSession | null> {
-        try {
-            const gameSession = await this.db.GameSessionModel.findById(id);
-            if (!gameSession) {
-                throw new Error("GameSession not found");
-            }
-            return gameSession;
-        } catch (err) {
-            throw err;
+    async getManyByType(input: {gameType: string}): Promise<IGame[]> {
+      try {
+        const game = await this.db!.GameModel.find({gametype: input.gameType});
+
+        if (!game){
+          throw new Error("No game found");
         }
+  
+        return game;
+
+      } catch (e) {
+        throw e;
+      }
+
     }
 
-    /**
-     * Get all game sessions for a specific user
-     */
-    async getByUserId(userId: string): Promise<IGameSession[]> {
-        try {
-            const gameSessions = await this.db.GameSessionModel.find({ userId });
-            if (!gameSessions) {
-                throw new Error("No game sessions found for this user");
-            }
-            return gameSessions;
-        } catch (err) {
-            throw err;
+    async getManyByDeveloper(input: {developer: string}): Promise<IGame[]> {
+      try {
+        const game = await this.db!.GameModel.find({developer: input.developer});
+
+        if (!game){
+          throw new Error("No game found");
         }
+  
+        return game;
+        
+      } catch (e) {
+        throw e;
+      }
+
     }
 
-    /**
-     * Update a specific game session by ID
-     */
-    async updateOne(id: string, input: Partial<IGameSession>): Promise<IGameSession | null> {
-        if (!Types.ObjectId.isValid(id)) {
-            throw new Error("Invalid GameSession ID");
-        }
+    async getOneByID(_id: string): Promise<IGame> {
+      try {
+        const game = await this.db!.GameModel.findById(_id);
 
-        try {
-            const gameSession = await this.db.GameSessionModel.findByIdAndUpdate(
-                id,
-                { $set: input },
-                { new: true }
-            );
-            if (!gameSession) {
-                throw new Error("GameSession not found");
-            }
-            return gameSession;
-        } catch (err) {
-            throw err;
+        if (!game){
+          throw new Error("No game found");
         }
+  
+        return game
+
+      } catch (e) {
+        throw e;
+      }
+
     }
 
-    /**
-     * Delete a specific game session by ID
-     */
-    async deleteOne(id: string): Promise<IGameSession | null> {
-        try {
-            const gameSession = await this.db.GameSessionModel.findByIdAndDelete(id);
-            if (!gameSession) {
-                throw new Error("GameSession not found");
-            }
-            return gameSession;
-        } catch (err) {
-            throw err;
+    async getAll(): Promise<IGame[]> {
+      try {
+        const games = await this.db!.GameModel.find();
+        
+        if (!games){
+          throw new Error("No games found");
         }
-    }
 
-    /**
-     * Get all game sessions
-     */
-    async getAll(): Promise<IGameSession[]> {
-        try {
-            const gameSessions = await this.db.GameSessionModel.find();
-            if (!gameSessions) {
-                throw new Error("No game sessions found");
-            }
-            return gameSessions;
-        } catch (e) {
-            throw e;
-        }
+        return games;
+      } catch (e) {
+        throw e;
+      }
     }
-}
+  }

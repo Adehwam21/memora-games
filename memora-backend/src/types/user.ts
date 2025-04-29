@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export interface IRegisterUserInput {
   username: string;
   age: number;
@@ -11,6 +13,7 @@ export interface IRegisterUserInput {
 }
 
 export interface _User {
+  _id: ObjectId
   userId: string;
   email: string;
   username: string;

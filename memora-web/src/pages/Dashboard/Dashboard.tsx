@@ -8,17 +8,30 @@ import Settings from './Settings'
 import Profile from './Profile'
 
 const Dashboard: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    if (window.innerWidth < 768 ) {
+      setIsMobileOpen(prev => !prev); // Open drawer on mobile
+    } else {
+      setCollapsed(prev => !prev); // Normal collapse on desktop
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
-      <div className="flex flex-1 pt-16">
-        <SideBar collapsed={collapsed} setCollapsed={setCollapsed} />
+      <Header collapsed={collapsed} toggleSidebar={toggleSidebar} />
+      <div className="flex flex-1 pt-16 bg-[#F7FAF8]">
+        <SideBar 
+          collapsed={collapsed} 
+          setCollapsed={setCollapsed}
+          isMobileOpen={isMobileOpen}
+          setIsMobileOpen={setIsMobileOpen}
+        />
         <main
-          className={`transition-all duration-300 p-4 w-full ${
-            collapsed ? 'ml-16' : 'ml-[16.6667%]' // 1/6th width
-          }`}
+          className={`transition-all duration-300 p-4 w-full bg-[#F7FAF8] 
+            ${collapsed ? 'ml-16' : 'ml-[20%]'}`}
         >
           <Routes>
             <Route index path='home' element={<Home />} />

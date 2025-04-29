@@ -55,7 +55,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
         ;
-        const token = jwt.sign({userId: user!.userId, email: user!.email, username: user!.username, role: user!.role}, config.auth.secret, { expiresIn: config.auth.expiresIn });
+        const token = jwt.sign({
+            _id: user!._id,
+            userId: user!.userId, 
+            email: user!.email, 
+            username: user!.username, 
+            role: user!.role
+        }, 
+            config.auth.secret, 
+        { 
+            expiresIn: config.auth.expiresIn 
+        });
 
         res.status(200).json({ 
             token, 

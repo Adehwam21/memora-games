@@ -1,32 +1,29 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store"
-// import { logout } from "../../redux/slices/authSlice";
+import { RootState } from "../../redux/store";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaUserCircle, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt } from "react-icons/fa";
+import { LuUserRound } from "react-icons/lu";
+import { MdOutlineSettings } from "react-icons/md";
 
 const UserHandle: React.FC = () => {
-  // const dispatch = useDispatch();
   const { username } = useSelector((state: RootState) => state.auth!.user!);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleLogout = () => {
-    // dispatch(logout());
     localStorage.removeItem("persist:auth");
     localStorage.removeItem("persist:game");
     localStorage.removeItem("reconnection");
@@ -35,15 +32,14 @@ const UserHandle: React.FC = () => {
   };
 
   return (
-    <div className="relative flex justify-center text-center p-3 m-2 rounded-lg hover:bg-base-200 w-2/12" ref={menuRef}>
+    <div className="relative flex items-center pr-5 rounded-lg " ref={menuRef}>
       {/* User Button */}
       <button
-        className="flex items-center gap-4 transition"
+        className="flex items-center gap-2 p-3 transition hover:bg-base-200"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <FaUserCircle size={30} />
-        <span className="md:inline-block">{username}</span>
-        
+        <LuUserRound size={23} />
+        <span className="hidden md:inline text-2xl font-pacifico">{username}</span>
       </button>
 
       {/* Dropdown Menu */}
@@ -54,25 +50,16 @@ const UserHandle: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="absolute right-0 top-14 mt-3 w-51 bg-white rounded-b-lg shadow-lg"
+            className="absolute right-4 top-18 mt-2 min-w-[15rem] bg-white rounded-lg shadow-lg z-50"
           >
             <ul className="py-2">
               <li>
                 <Link
-                  to="/profile"
+                  to="/dashboard/settings"
                   className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition"
                   onClick={() => setIsOpen(false)}
                 >
-                  <FaUser /> Profile
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/preferences"
-                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <FaCog /> Preferences
+                  <MdOutlineSettings /> Settings
                 </Link>
               </li>
               <li>

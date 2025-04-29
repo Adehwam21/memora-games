@@ -12,7 +12,7 @@ export interface IUser {
   educationLevel: string;
   email: string;
   password: string;
-  role: string;
+  role: 'admin' | 'player' | 'developer';
 }
 
 export interface IUserDocument extends Document, IUser { }

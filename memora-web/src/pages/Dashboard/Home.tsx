@@ -2,7 +2,7 @@ import React from 'react'
 
 const Home: React.FC = () => {
   return (
-    <div className="p-4 flex flex-col">
+    <div className="p-4 flex flex-col ">
       {/* Welcome */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold">Welcome back, Aaron! 👋</h1>
@@ -53,10 +53,10 @@ const Home: React.FC = () => {
 
       {/* Start Game Button */}
       <div className="flex justify-center">
-        <button className="btn btn-primary btn-lg">Start New Game</button>
+        <button className="btn text-white bg-green-500 btn-lg">Start New Game</button>
       </div>
     </div>
   )
 }
 
-export default Home
+export default Home;

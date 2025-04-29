@@ -1,82 +1,95 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { FaHome, FaGamepad, FaChartBar, FaBars, FaChevronLeft } from 'react-icons/fa'
-import { MdOutlineSettings } from "react-icons/md";
+import { FaChevronLeft } from 'react-icons/fa'
+import { LuBrain } from "react-icons/lu";
+import { MdOutlineAssessment } from "react-icons/md";
+import { CgGym } from "react-icons/cg";
+import { GrHomeRounded } from "react-icons/gr";
+import { BsCollectionPlay } from "react-icons/bs";
 
 interface SideBarProps {
-  collapsed: boolean
-  setCollapsed: (val: boolean) => void
+  collapsed: boolean;
+  setCollapsed: (val: boolean) => void;
+  isMobileOpen: boolean;
+  setIsMobileOpen: (val: boolean) => void;
 }
 
 const sections = [
-  { link: "/dashboard/home", name: "Home", icon: <FaHome /> },
-  { link: "/dashboard/games", name: "Games", icon: <FaGamepad /> },
-  { link: "/dashboard/profile", name: "Profile", icon: <FaChartBar /> },
-  { link: "/dashboard/settings", name: "Settings", icon: <MdOutlineSettings/>},
-  // { link: "/more", name: "More", icon: <FaEllipsisH /> },
+  { link: "/dashboard/home", name: "Home", icon: <GrHomeRounded size={20}/> },
+  { link: "/dashboard/games", name: "Games", icon: <BsCollectionPlay size={20}/> },
+  { link: "/dashboard/training", name: "Training", icon: <CgGym/> },
+  { link: "/dashboard/assessment", name: "Assess", icon: <MdOutlineAssessment/> },
+  { link: "/dashboard/profile", name: "Profile", icon: <LuBrain /> },
 ]
 
-const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed }) => {
-  const [openMobile, setOpenMobile] = useState(false);
+const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed, isMobileOpen, setIsMobileOpen }) => {
 
-  const toggleCollapse = () => setCollapsed(!collapsed)
-  const toggleMobile = () => setOpenMobile(!openMobile);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  const sidebarWidth = collapsed ? 'w-16' : 'w-1/6'
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setIsMobileOpen(false); // Close mobile drawer if resizing to desktop
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setIsMobileOpen]);
+
+  const sidebarWidth = collapsed ? 'w-18' : 'w-48 min-w-[19%]';
+
+  const sidebarClasses = `
+    fixed top-19 left-0 h-full bg-base-100 shadow-sm transition-all duration-500 ease-in-out 
+    ${isMobile ? 'w-18' : sidebarWidth}
+    ${isMobile ? (isMobileOpen ? 'translate-x-0' : '-translate-x-full') : ''}
+    ${isMobile ? 'z-50' : ''}
+  `;
 
   return (
     <>
-      {/* Mobile Hamburger Button */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
-        <button className="btn btn-square btn-sm" onClick={toggleMobile}>
-          <FaBars />
-        </button>
-      </div>
-
-      {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-screen bg-base-100 shadow-sm transition-all duration-300 z-60 
-          ${sidebarWidth} ${openMobile ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
-      >
-        {/* Logo */}
-        <div className="p-5">
-          {collapsed ? (
-            <span className="font-pacifico text-2xl font-bold">M</span>
-          ) : (
-            <span className="font-pacifico text-2xl font-bold">Memora</span>
-          )}
-        </div>
-
+      <div className={sidebarClasses}>
         {/* Nav */}
-        <ul className=''>
+        <ul>
           {sections.map((item, index) => (
             <NavLink 
               key={index}
               to={item.link} 
+              onClick={() => { if (isMobile) setIsMobileOpen(false); }} // Close on mobile when link clicked
               className={({ isActive }) =>
-                `flex items-center gap-3 p-5 text-lg transition-all duration-200 hover:bg-base-200 ${
-                  isActive ? 'border-l-4 border-green-500 bg-base-200' : ''
+                  `flex items-center ${collapsed ? 'justify-center p-4' : 'gap-4 p-6'} 
+                  transition-all duration-200 hover:bg-base-200 ${
+                  isActive ? 'text-green-500 font-bold bg-base-200' : ''
                 }`
               }
             >
               <span className="text-2xl">{item.icon}</span>
-              {!collapsed && <span className="text-base">{item.name}</span>}
+              {!collapsed && !isMobile && <span className="text-base">{item.name}</span>}
             </NavLink>
           ))}
         </ul>
 
-        {/* Collapse Button (middle right) */}
-        <div className="hidden md:block absolute top-9/10 -right-4 transform -translate-y-1/2">
-          <button
-            className="btn btn-sm btn-circle shadow-md bg-base-200 border"
-            onClick={toggleCollapse}
-          >
-            <FaChevronLeft
-              className={`transition-transform ${collapsed ? 'rotate-180' : ''}`}
-            />
-          </button>
-        </div>
+        {/* Collapse Button (Desktop only) */}
+        {!isMobile && (
+          <div className="hidden md:block absolute top-8/10 -right-4 transform -translate-y-1/2">
+            <button
+              className="btn btn-sm btn-circle shadow-md bg-base-200 border"
+              onClick={() => setCollapsed(!collapsed)}
+            >
+              <FaChevronLeft className={`transition-transform ${collapsed ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Backdrop when mobile sidebar is open */}
+      {isMobile && isMobileOpen && (
+        <div 
+          onClick={() => setIsMobileOpen(false)}
+          className="fixed inset-0 "
+        ></div>
+      )}
     </>
   )
 }

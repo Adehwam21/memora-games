@@ -42,7 +42,7 @@ const Login: React.FC<FormProps> = () => {
         // Dispatch Redux action
         dispatch(loginSuccess({ token, user }));
 
-        setTimeout(() => navigate('/lobby'), 2000);
+        setTimeout(() => navigate('/dashboard/home'), 1000);
         setFormData({ username: '', password: '' });
       }
     } catch (error: any) {

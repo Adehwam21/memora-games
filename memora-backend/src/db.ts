@@ -1,15 +1,16 @@
 import { connect } from 'mongoose';
 import dotenv from 'dotenv';
-import { IUserModel } from './models/user.model';
 import { Config } from './types/config';
-import { UserModel } from './models/user.model';
-import { GameSessionModel, IGameSessionModel } from './models/game.model';
+import { UserModel ,IUserModel } from './models/user.model';
+import { GameSessionModel, IGameSessionModel } from './models/gameSession.model';
+import { GameModel, IGameModel } from './models/game.model';
 
 dotenv.config();
 
 export interface IDb {
     UserModel: IUserModel;
     GameSessionModel: IGameSessionModel;
+    GameModel: IGameModel;
 }
 
 export default async function InitDB(config: Config["db"]): Promise<IDb> {
@@ -18,10 +19,13 @@ export default async function InitDB(config: Config["db"]): Promise<IDb> {
         console.log("Database connected");
 
         await UserModel.createCollection();
+        await GameSessionModel.createCollection();
+        await GameModel.createCollection();
 
         return {
             UserModel,
-            GameSessionModel
+            GameSessionModel,
+            GameModel
         };
     } catch (e) {
         throw e;
