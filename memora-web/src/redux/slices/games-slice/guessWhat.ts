@@ -14,6 +14,7 @@ interface GameState {
         memorizationTime: number;
         timeLeft: number;
         attempts: number;
+        pauseStartTime: number;
         levelStartTime: number;
         levelEndTime: number;
         maxAttempts: number;
@@ -26,6 +27,7 @@ interface GameState {
         levelErrors: number 
     }[];
     isPlaying: boolean;
+    isPaused: boolean;
     gameEnded: boolean | null;
 }
 
@@ -35,6 +37,7 @@ const initialState: GameState = {
     gameState: null,
     metrics: [],
     isPlaying: false,
+    isPaused: false,
     gameEnded: false,
 };
 
@@ -43,6 +46,8 @@ const guessWhatGameSlice = createSlice({
     initialState,
     reducers: {
         decrementTimer(state) {
+            if (state.isPaused || !state.gameState) return;
+
             if (state.gameState && state.gameState.timeLeft > 0) {
                 state.gameState.timeLeft -= 1;
             } else if (state.gameState?.timeLeft === 0) {
@@ -62,6 +67,15 @@ const guessWhatGameSlice = createSlice({
             // state.gameState = initializeGameState(action.payload.config, 1)
             state.gameState = initializeGameState(action.payload.config, 1);
             state.gameEnded = false
+
+        },
+        restartGame(state){
+            state.gameState = initializeGameState(state.config!, 1)
+            state.gameState.memorizationTime = 20000
+            state.isPaused = false
+            state.isPlaying = true;
+            state.metrics = []
+            state.gameEnded = false
         },
 
         revealCards(state) {
@@ -71,18 +85,18 @@ const guessWhatGameSlice = createSlice({
         },
 
         selectCard(state, action: PayloadAction<number>) {
-            if (!state.gameState || state.gameState.isMemorizationPhase) return;
+            if (!state.gameState || state.gameState.isMemorizationPhase || state.isPaused) return;
 
             const card = state.gameState.cards.find(card => card.id === action.payload);
             if (!card || card.matched) return;
-
-            state.gameState.attempts++;
 
             if (state.gameState.currentImagesToFind.includes(card.image)) {
                 card.matched = true;
                 state.gameState.currentImagesToFind = state.gameState.currentImagesToFind.filter(
                     image => image !== card.image
                 );
+            } else {
+                state.gameState.attempts++;
             }
         },
         
@@ -117,11 +131,36 @@ const guessWhatGameSlice = createSlice({
             state.gameState = initializeGameState(state.config, state.gameState.level + 1);
         },
 
-        endGame(state) {
-            state.config = null;
-            state.isPlaying = false;
-            state.gameEnded = true;
-            state.gameState = null;
+        pauseGame(state) {
+            if (state.isPaused || !state.gameState) return;
+            state.isPaused = true;
+            state.gameState.pauseStartTime = Date.now();
+        },
+
+        setPaused: (state, action: PayloadAction<boolean>) => {
+            state.isPaused = action.payload;
+        },
+
+        resumeGame(state) {
+            if (!state.isPaused || !state.gameState || !state.gameState.pauseStartTime) return;
+        
+            const pausedDuration = Date.now() - state.gameState.pauseStartTime;
+        
+            // Adjust level start time so the response time stays accurate
+            state.gameState.levelStartTime += pausedDuration;
+        
+            // Adjust timeLeft if still in memorization phase
+            if (state.gameState.isMemorizationPhase) {
+                state.gameState.timeLeft -= Math.floor(pausedDuration / 1000);
+                if (state.gameState.timeLeft < 0) state.gameState.timeLeft = 0;
+            }
+        
+            state.isPaused = false;
+            state.gameState.pauseStartTime = 0;
+        },
+
+        setTimeLeft: (state, action: PayloadAction<number>) => {
+            state.gameState!.timeLeft = action.payload;
         },
 
         forceEndGame(state){
@@ -129,7 +168,15 @@ const guessWhatGameSlice = createSlice({
             state.isPlaying = false;
             state.gameEnded = null;
             state.gameState = null;
-        }
+        },
+        
+        endGame(state) {
+            state.config = null;
+            state.isPlaying = false;
+            state.gameEnded = true;
+            state.gameState = null;
+        },
+        
     },
 });
 
@@ -142,7 +189,12 @@ export const {
     endGame, 
     decrementTimer, 
     forceEndGame,
-    setLevelStartTime
+    setLevelStartTime,
+    setPaused,
+    setTimeLeft,
+    pauseGame,
+    resumeGame,
+    restartGame
 } = guessWhatGameSlice.actions;
 
 export const guessWhatGameReducer = guessWhatGameSlice.reducer;

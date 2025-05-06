@@ -35,11 +35,11 @@ const UserHandle: React.FC = () => {
     <div className="relative flex items-center pr-5 rounded-lg " ref={menuRef}>
       {/* User Button */}
       <button
-        className="flex items-center gap-2 p-3 transition hover:bg-base-200"
+        className="flex text-green-700 items-center gap-2 p-3 transition hover:bg-base-200"
         onClick={() => setIsOpen(!isOpen)}
       >
         <LuUserRound size={23} />
-        <span className="hidden md:inline text-2xl font-pacifico">{username}</span>
+        <span className="hidden md:inline text-xl font-pacifico">{username}</span>
       </button>
 
       {/* Dropdown Menu */}
@@ -50,7 +50,7 @@ const UserHandle: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="absolute right-4 top-18 mt-2 min-w-[15rem] bg-white rounded-lg shadow-lg z-50"
+            className="absolute right-4 top-16 mt-2 min-w-[15rem] bg-white rounded-lg shadow-lg z-50"
           >
             <ul className="py-2">
               <li>

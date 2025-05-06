@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from '../../config/axiosConfig';
 
-import MetricsTable from '../../compnents/Games/GuessWhatGame/MetricsTable';
+import MetricsTable from '../../compnents/Games/GuessWhatGame/components/MetricsTable';
 import { useDispatch } from 'react-redux';
 import { forceEndGame } from '../../redux/slices/games-slice/guessWhat';
 

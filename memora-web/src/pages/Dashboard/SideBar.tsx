@@ -48,7 +48,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed, isMobileOpen
   `;
 
   return (
-    <>
+    <aside>
       <div className={sidebarClasses}>
         {/* Nav */}
         <ul>
@@ -60,7 +60,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed, isMobileOpen
               className={({ isActive }) =>
                   `flex items-center ${collapsed ? 'justify-center p-4' : 'gap-4 p-6'} 
                   transition-all duration-200 hover:bg-base-200 ${
-                  isActive ? 'text-green-500 font-bold bg-base-200' : ''
+                  isActive ? 'text-green-700 font-bold bg-base-200' : ''
                 }`
               }
             >
@@ -74,10 +74,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed, isMobileOpen
         {!isMobile && (
           <div className="hidden md:block absolute top-8/10 -right-4 transform -translate-y-1/2">
             <button
-              className="btn btn-sm btn-circle shadow-md bg-base-200 border"
+              className="btn bg-green-700 btn-sm btn-circle shadow-md border"
               onClick={() => setCollapsed(!collapsed)}
             >
-              <FaChevronLeft className={`transition-transform ${collapsed ? 'rotate-180' : ''}`} />
+              <FaChevronLeft className={` text-white font-bold transition-transform ${collapsed ? 'rotate-180' : ''}`} />
             </button>
           </div>
         )}
@@ -87,10 +87,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed, isMobileOpen
       {isMobile && isMobileOpen && (
         <div 
           onClick={() => setIsMobileOpen(false)}
-          className="fixed inset-0 "
+          className="fixed inset-0 bg-black/80"
         ></div>
       )}
-    </>
+    </aside>
   )
 }
 

@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import { FormProps } from '../../types/props';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import API from "../../config/axiosConfig";
 
 const strongPasswordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
 const SignUp: React.FC<FormProps> = () => {
-  const API_BASE_URL = import.meta.env.VITE_SERVER_URL;
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -47,10 +47,11 @@ const SignUp: React.FC<FormProps> = () => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/register`, formData);
+      const response = await API.post('/auth/register', formData);
       console.log(response);
 
-      response.status == 201 ? toast.success(response.data!.message) : toast.error(response.data!.message);
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      response!.status == 201 ? toast.success(response.data!.message) : toast.error(response.data!.message);
     } catch (error: any) {
       if (error.response?.status === 409) {
         toast.error("The email or username is already registered.");

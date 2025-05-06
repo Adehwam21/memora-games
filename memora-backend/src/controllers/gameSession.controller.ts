@@ -75,7 +75,7 @@ export const updateGameSession = async (req: Request, res: Response): Promise<vo
     const updateData = req.body;
 
     try {
-        const updatedGameSession = await req.context!.services!.gameSession.updateOne(id, updateData);
+        const updatedGameSession = await req.context!.services!.gameSession!.updateOne(id, updateData);
 
         if (!updatedGameSession) {
             res.status(404).json({ message: "Game session not found" });

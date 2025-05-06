@@ -2,7 +2,7 @@ import { createBrowserRouter, RouteObject } from "react-router-dom";
 import App from "../App";
 import ProtectedRoute from "../compnents/ProtectedRoute";
 import LandingPage from "../pages/LandingPage/LandingPage";
-import { GameRoom } from "../compnents/Games/GuessWhatGame/GuessWhatPage";
+import { GamePage } from "../compnents/Games/GuessWhatGame/GamePage";
 import { PerformancePage } from "../pages/performance/PerformancePage"; // Import Performance Page
 import Dashboard from "../pages/Dashboard/Dashboard";
 
@@ -13,10 +13,10 @@ export const router = createBrowserRouter([
         children: [
             { index: true, element: <LandingPage /> },
             {
-                path: "/lobby",
+                path: "/lobby/:game",
                 element: (
                     <ProtectedRoute>
-                        <GameRoom />
+                        <GamePage />
                     </ProtectedRoute>
                 ),
             },

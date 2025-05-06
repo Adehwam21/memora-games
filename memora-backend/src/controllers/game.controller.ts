@@ -30,8 +30,8 @@ export const getAllGames = async (req: Request, res: Response): Promise<void>  =
       return;
     }
 
-    res.status(404).json({message: "Games found", games});
-    return
+    res.status(200).json({message: "Games found", games});
+    return;
     
   } catch (error) {
     console.log(error);

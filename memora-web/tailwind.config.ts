@@ -25,19 +25,23 @@ const config: Config = {
       },
       animation: {
         borderGlow: "borderGlow 2s linear infinite", // Animation name
+        fadeIn: 'fadeIn 0.3s ease-in-out',
       },
       keyframes: {
         borderGlow: {
           "0%, 100%": { borderColor: "rgba(99, 102, 241, 1)" }, // Indigo color
           "50%": { borderColor: "rgba(59, 130, 246, 1)" }, // Blue color
         },
-      },
-    },
+        fadeIn: {
+          '0%': { opacity: 0, transform: 'scale(0.95)' },
+          '100%': { opacity: 1, transform: 'scale(1)' },
+        },
+      }
   },
   daisyui: {
     themes: ["light", "dark", "cupcake"],
   },
-  plugins: [require('daisyui')],
+  plugins: [require('daisyui')]
 };
 
 export default config;

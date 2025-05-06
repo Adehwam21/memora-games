@@ -1,13 +1,13 @@
 import { BaseGameConfig } from "./base";
 
 export interface GuessWhatInitConfig extends BaseGameConfig {
-    maxLevels: number,
-    defaultMemorizationTime: number;
+    maxLevels: number | 10,
+    defaultMemorizationTime: number | 2000;
     memorizationTimeReductionPerLevel: number;
     minMemorizationTime: number;
     basePairs: number;
-    levelStartTime: number;
-    levelEndTime: number;
+    levelStartTime: number | 0;
+    levelEndTime: number | 0;
     imageSet: [];
 }
 

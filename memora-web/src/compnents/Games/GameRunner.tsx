@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { startGame } from "../../redux/slices/games-slice/guessWhat";
-import GuessWhat from "./GuessWhatGame/GuessWhatScreen";
+import MainScreen from "./GuessWhatGame/screens/MainScreen";
 import { GuessWhatInitConfig } from "../../types/game/guessWhatTypes";
 import { GameCanvas } from "./GameCanvas";
 
@@ -15,7 +15,7 @@ export const GameRunner: React.FC<GameRunnerProps> = ({ sessionId, config }) => 
 
   useEffect(() => {
     switch (config.title) {
-      case "guessWhat":
+      case "guess what":
         dispatch(startGame({sessionId, config}));
         break;
 
@@ -24,8 +24,8 @@ export const GameRunner: React.FC<GameRunnerProps> = ({ sessionId, config }) => 
   }, [config, sessionId, dispatch]);
 
   return (
-    <GameCanvas>
-      {config.title === "guessWhat" && <GuessWhat />}
+    <GameCanvas gameTitle={config.title}>
+      {config.title === "guess what" && <MainScreen />}
     </GameCanvas>
   );
 };

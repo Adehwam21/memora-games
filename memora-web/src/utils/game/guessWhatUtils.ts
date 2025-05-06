@@ -5,7 +5,7 @@ import { Metric } from "../../types/props";
 
 // Helper functions
 export function initializeGameState(config: GuessWhatInitConfig, level: number) {
-    const numImages = level + config.basePairs;
+    const numImages = level + config!.basePairs!;
     const imagesToMemorize = shuffleArray([...Array(config.imageSet.length).keys()]).slice(0, numImages);
     
     const memorizationTime = Math.max(config.minMemorizationTime, config.defaultMemorizationTime - level * 1000);
@@ -17,6 +17,7 @@ export function initializeGameState(config: GuessWhatInitConfig, level: number) 
         isMemorizationPhase: true,
         memorizationTime,
         timeLeft: Math.floor(memorizationTime / 1000),
+        pauseStartTime: 0,
         levelStartTime: 0,
         levelEndTime: 0,
         attempts: 0,
