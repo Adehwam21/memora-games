@@ -7,8 +7,11 @@ import Games, { IGame } from './Games'
 import Settings from './Settings'
 import Profile from './Profile'
 import API from '../../config/axiosConfig'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
 
 const Dashboard: React.FC = () => {
+  const {user} = useSelector((state: RootState) => state.auth!)
   const [collapsed, setCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [games, setGames] = useState<IGame[]>([]);
@@ -61,7 +64,7 @@ const Dashboard: React.FC = () => {
           className={`transition-all duration-300 p-4 w-full bg-[#F7FAF8] ${mainMargin}`}
         >
           <Routes>
-            <Route index path="home" element={<Home />} />
+            <Route path="home" element={<Home user={user!} />} />
             <Route path="games" element={<Games games={games || []} />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />

@@ -4,9 +4,10 @@ import { Metric } from "../../../../types/props";
 
 interface MetricsTableProps {
     metrics: Metric[];
+    totalScore: number;
 }
 
-const MetricsTable: React.FC<MetricsTableProps> = ({ metrics }) => {
+const MetricsTable: React.FC<MetricsTableProps> = ({ metrics, totalScore }) => {
     if (!metrics || metrics.length === 0) return <p className="text-center text-gray-500"></p>;
 
     return (
@@ -20,6 +21,7 @@ const MetricsTable: React.FC<MetricsTableProps> = ({ metrics }) => {
                         <th className="border p-2">Response Time (s)</th>
                         <th className="border p-2">Accuracy (%)</th>
                         <th className="border p-2">Errors</th>
+                        <th className="border p-2">Score</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,10 +32,12 @@ const MetricsTable: React.FC<MetricsTableProps> = ({ metrics }) => {
                             <td className="border p-2">{metric.totalResponseTime.toFixed(2)}</td>
                             <td className="border p-2">{metric.accuracy.toFixed(1)}%</td>
                             <td className="border p-2">{metric.levelErrors}</td>
+                            <td className="border p-2">{metric.levelScore}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <p className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto font-bold">{totalScore}</p>
         </div>
     );
 };

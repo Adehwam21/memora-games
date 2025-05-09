@@ -59,8 +59,8 @@ const LevelTimer: React.FC<LevelTimerProps> = ({
   const seconds = String(elapsed % 60).padStart(2, "0");
 
   return (
-    <div className="absolute top-16 right-0 p-3 flex justify-center bg-black/40 items-center">
-      <span className="font-bold text-2xl">
+    <div className="flex justify-center items-center">
+      <span className="font-bold text-xl">
         {minutes}:{seconds}
       </span>
     </div>

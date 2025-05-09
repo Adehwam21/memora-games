@@ -14,6 +14,7 @@ interface IGameMetric {
     accuracy: number;
     levelErrors: number;
     totalResponseTime: number;
+    levelScore: number
 }
 
 interface IGameSession {
@@ -23,6 +24,7 @@ interface IGameSession {
     ssid: string;
     sessionDate: string; 
     metrics: IGameMetric[];
+    totalScore: number;
     mmseScore: string;
     createdAt: string;
     updatedAt: string; 
@@ -39,7 +41,7 @@ export const PerformancePage: React.FC = () => {
     useEffect(() => {
         const fetchSessionData = async () => {
             try {
-                const response = await API.get(`/game/game-session/${sessionId}`)
+                const response = await API.get(`/game-session/${sessionId}`)
                 if (response.status === 200){
                     setSession(response.data!.gameSession);
                 }
@@ -53,16 +55,16 @@ export const PerformancePage: React.FC = () => {
 
     const handleReturnButtonClick = () => {
         dispatch(forceEndGame())
-        navigate("/lobby")
+        navigate("/dashboard/games")
     }
 
     if (!session) return <p>Loading session data...</p>;
 
     return (
         <div className='p-10'>
-            <MetricsTable metrics={session.metrics}/>
+            <MetricsTable metrics={session.metrics} totalScore={session.totalScore}/>
             <div className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto">
-                <p className="text-lg font-semibold">Mini-Mental State Score (MMSE) : {session.mmseScore}</p>
+                <p className="text-lg font-semibold">Equivalent MMSE Score: {session.mmseScore}</p>
             </div>
 
             <button onClick={handleReturnButtonClick}>Go Home</button>

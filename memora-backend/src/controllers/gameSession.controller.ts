@@ -32,7 +32,7 @@ export const getGameSessionsByUser = async (req: Request, res: Response): Promis
     const { userId } = req.params;
 
     try {
-        const gameSessions = await req.context!.services!.gameSession.getByUserId(userId);
+        const gameSessions = await req.context!.services!.gameSession!.getByUserId(userId);
 
         if (gameSessions.length === 0) {
             res.status(404).json({ message: "No game sessions found for this user" });

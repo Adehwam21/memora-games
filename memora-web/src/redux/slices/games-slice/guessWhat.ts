@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GuessWhatInitConfig } from "../../../types/game/guessWhatTypes";
-import { initializeGameState, } from "../../../utils/game/guessWhatUtils";
+import { getAccuracyBonus, getDifficultyMultiplier, getPenaltyRate, initializeGameState, } from "../../../utils/game/guessWhatUtils";
 import { Card } from "../../../types/game/guessWhatTypes";
 
 interface GameState {
@@ -20,15 +20,18 @@ interface GameState {
         maxAttempts: number;
     } | null;
     metrics: { 
-        level: number; 
+        level: number, 
         attempt: number, 
         totalResponseTime: number, 
         accuracy: number, 
-        levelErrors: number 
+        levelErrors: number,
+        levelScore: number,
     }[];
+    totalScore: 0 | number;
     isPlaying: boolean;
     isPaused: boolean;
     gameEnded: boolean | null;
+
 }
 
 const initialState: GameState = {
@@ -39,6 +42,7 @@ const initialState: GameState = {
     isPlaying: false,
     isPaused: false,
     gameEnded: false,
+    totalScore: 0,
 };
 
 const guessWhatGameSlice = createSlice({
@@ -63,7 +67,8 @@ const guessWhatGameSlice = createSlice({
             state.sessionId = action.payload.sessionId;
             state.config = action.payload.config;
             state.isPlaying = true;
-            state.metrics = []
+            state.metrics = [];
+            state.totalScore = 0;
             // state.gameState = initializeGameState(action.payload.config, 1)
             state.gameState = initializeGameState(action.payload.config, 1);
             state.gameEnded = false
@@ -102,33 +107,53 @@ const guessWhatGameSlice = createSlice({
         
         nextLevel(state) {
             if (!state.config || !state.gameState) return;
+            const { level, levelStartTime, attempts, cards } = state.gameState;
+            const levelEndTime = Date.now();
+            const totalTime = (levelEndTime - levelStartTime) / 1000;
+            const correctMatches = cards.filter(c => c.matched).length;
+            const totalAttempts = attempts + correctMatches;
 
-            // Capture end time and calculate total response time
-            state.gameState.levelEndTime = Date.now();
-            const totalResponseTime = ((state.gameState.levelEndTime - state.gameState.levelStartTime) / 1000) - 0.5;
+            const accuracy = (totalAttempts && correctMatches >= 0)
+            ? (correctMatches / totalAttempts) * 100
+            : 0;
 
-            // Compute accuracy and errors
-            const correctAttempts = state.gameState.cards.filter(card => card.matched).length;
-            const totalAttempts = state.gameState.attempts;
-            const accuracy = totalAttempts > 0 ? (correctAttempts / totalAttempts) * 100 : 0;
-            const errors = totalAttempts - correctAttempts;
+            const errors = totalAttempts - correctMatches;
+            const errorRate = (errors && correctMatches >= 0) ? (errors / totalAttempts) * 100 : 0;
 
-            // Store level metrics
+            // Level Scoring System
+            const difficultyMultiplier = getDifficultyMultiplier(level);
+            const levelBonus = totalTime > 0 ? (((level/totalTime)*55)*difficultyMultiplier): 0;
+            const timeBonus = totalTime > 0 ? ((level/totalTime)*10): 0;
+            const accuracyBonus = getAccuracyBonus(accuracy);
+            const penaltyRate = getPenaltyRate(errorRate);
+            const compensation = (level * 2)
+            
+
+            const weightedLevelScore = (
+                3 * levelBonus + 
+                4 * timeBonus + 
+                5 * accuracyBonus
+                ) - (6 * penaltyRate) + compensation;
+
+            const levelScore = isNaN(weightedLevelScore) ? 0 : Math.round(weightedLevelScore);
+            state.totalScore += Math.round(levelScore);
+
+
             state.metrics.push({
-                level: state.gameState.level,
+                level,
                 attempt: totalAttempts,
-                totalResponseTime,
+                totalResponseTime: totalTime,
                 accuracy,
                 levelErrors: errors,
+                levelScore
             });
 
-            if (state.gameState.level >= state.config.maxLevels) {
+            if (level >= state.config.maxLevels) {
                 guessWhatGameSlice.caseReducers.endGame(state);
                 return;
             }
 
-            // Start the next level
-            state.gameState = initializeGameState(state.config, state.gameState.level + 1);
+            state.gameState = initializeGameState(state.config, level + 1);
         },
 
         pauseGame(state) {

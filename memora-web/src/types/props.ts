@@ -30,4 +30,5 @@ export interface Metric {
     totalResponseTime: number;
     accuracy: number;
     levelErrors: number;
+    levelScore: number;
 }

@@ -41,7 +41,7 @@ const ClickableCard = ({ index, id, image, matched }: CardProps) => {
                 setWrongSelection(true);
             }
         } catch (error) {
-        console.error("Error selecting card:", error);
+            console.error("Error selecting card:", error);
         } finally {
             setIsProcessing(false);
         }

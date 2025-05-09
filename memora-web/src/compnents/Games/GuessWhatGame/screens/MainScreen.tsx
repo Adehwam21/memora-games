@@ -10,12 +10,12 @@ import {
 import { GameHUD } from "../../GameHUD";
 import Screen1 from "./Screen1";
 import Screen2 from "./Screen2";
-import LevelTimer from "../components/LevelTimer";
 import PauseScreen from "./PauseScreen";
 
 const MainScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { isPaused, gameState, config } = useSelector((state: RootState) => state.guessWhat);
+    const { isPaused, gameState, config } = useSelector((state: RootState) => state.guessWhat); 
+    const score = useSelector((state: RootState) => state.guessWhat.totalScore);
 
     const handleResume = () => {
         dispatch(resumeGame()); // Resume the game
@@ -48,15 +48,7 @@ const MainScreen: React.FC = () => {
                 />
             )}
             <div>
-                <LevelTimer
-                    shouldRun={!isPaused}
-                    isMemorizationPhase={gameState.isMemorizationPhase}
-                    onTick={(seconds) => console.log("Elapsed:", seconds)}
-                    onReset={() => console.log("Timer reset due to memorization phase.")}
-                />
-            </div>
-            <div>
-                <GameHUD gameTitle={config!.title} />
+                <GameHUD gameTitle={config!.title} score={score} />
             </div>
             <div className="relative max-w-full h-[46rem] overflow-hidden flex justify-center items-center">
             <AnimatePresence mode="wait">

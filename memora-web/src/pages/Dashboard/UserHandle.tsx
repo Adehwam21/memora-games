@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import toast from "react-hot-toast";
@@ -9,6 +9,7 @@ import { LuUserRound } from "react-icons/lu";
 import { MdOutlineSettings } from "react-icons/md";
 
 const UserHandle: React.FC = () => {
+  const navigate = useNavigate()
   const { username } = useSelector((state: RootState) => state.auth!.user!);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -24,9 +25,9 @@ const UserHandle: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("persist:auth");
-    localStorage.removeItem("persist:game");
+    localStorage.removeItem("persist:root");
     localStorage.removeItem("reconnection");
+    navigate("/")
     toast.success("Logged out successfully");
     setIsOpen(false);
   };

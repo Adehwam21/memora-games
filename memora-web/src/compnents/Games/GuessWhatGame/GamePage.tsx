@@ -25,11 +25,9 @@ export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { game } = useParams(); // dynamic param from URL like /game/guess-what
-
-    console.log(game)
     const gameConfig = gameConfigs[game as keyof typeof gameConfigs];
 
-    const { config, isPlaying, sessionId, gameEnded, metrics } = useSelector(
+    const { config, isPlaying, sessionId, gameEnded, metrics, totalScore } = useSelector(
         (state: RootState) => state.guessWhat // change this based on game if needed
     );
 
@@ -37,21 +35,19 @@ export const GamePage: React.FC = () => {
 
     useEffect(() => {
         if (gameEnded && !isPlaying) {
-        API.put(`/game-session/update/${sessionId}`, { metrics, mmseScore })
+        API.put(`/game-session/update/${sessionId}`, { metrics, totalScore, mmseScore })
             .then(() => {
             navigate(`/game/performance/${sessionId}`);
             })
             .catch((error) => console.error("Failed to update game session:", error));
         }
-    }, [navigate, gameEnded, isPlaying, sessionId, metrics, mmseScore]);
+    }, [navigate, gameEnded, isPlaying, sessionId, metrics, mmseScore, totalScore]);
 
     const handleStartGame = async () => {
         try {
             const response = await API.post("/game-session/", {
                 gameTitle: gameConfig.gameTitle.toLowerCase(),
             });
-
-            console.log(response)
 
             dispatch(
                 gameConfig.startGameAction({
