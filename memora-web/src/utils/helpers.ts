@@ -9,8 +9,6 @@ export const formatSmartDate = (date: string | Date): string => {
   const inputDate = new Date(date);
   const now = new Date();
 
-  console.log(inputDate)
-
   const isToday =
     inputDate.toDateString() === now.toDateString();
 

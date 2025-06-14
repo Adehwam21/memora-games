@@ -4,12 +4,11 @@ import { RootState } from "../../../redux/store";
 import API from "../../../config/axiosConfig";
 import { useNavigate, useParams } from "react-router-dom";
 
-// Map game titles to config
 import { startGame as startGuessWhatGame } from "../../../redux/slices/games-slice/guessWhat";
-import { computeMmseScore as computeGuessWhatMmse } from "../../../utils/game/guessWhatUtils";
+import { computeMmseScore as computeGuessWhatMmse, getGuessWhatMMSEScore } from "../../../utils/game/guessWhatUtils";
 import { GameRunner as GuessWhatGameRunner } from "../GameRunner";
 
-// Add more mappings as needed
+
 const gameConfigs = {
     "guess what": {
         startGameAction: startGuessWhatGame,
@@ -31,7 +30,8 @@ export const GamePage: React.FC = () => {
         (state: RootState) => state.guessWhat // change this based on game if needed
     );
 
-    const mmseScore = gameConfig.computeScore(metrics);
+    // const mmseScore = gameConfig.computeScore(metrics);
+    const mmseScore = getGuessWhatMMSEScore(totalScore)
 
     useEffect(() => {
         if (gameEnded && !isPlaying) {
@@ -51,8 +51,8 @@ export const GamePage: React.FC = () => {
 
             dispatch(
                 gameConfig.startGameAction({
-                sessionId: response.data!.gameSession!._id!,
-                config: response.data!.gameSession!.initConfig!,
+                    sessionId: response.data!.gameSession!._id!,
+                    config: response.data!.gameSession!.initConfig!,
                 })
             );
         } catch (error) {
@@ -71,10 +71,10 @@ export const GamePage: React.FC = () => {
 
                 <button
                     onClick={handleStartGame}
-                    className="p-2 bg-green-500 w-1/2 text-white hover:bg-green-700 rounded"
+                    className="p-2 bg-green-500 w-1/2 text-white font-bold hover:bg-green-700 rounded"
                     disabled={isPlaying}
                 >
-                {isPlaying ? "Game In Progress..." : `Start ${gameConfig.gameTitle}`}
+                {isPlaying ? "Game In Progress..." : `Start game`}
                 </button>
             </div>
 

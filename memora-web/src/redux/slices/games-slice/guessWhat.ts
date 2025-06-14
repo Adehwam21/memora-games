@@ -75,12 +75,13 @@ const guessWhatGameSlice = createSlice({
 
         },
         restartGame(state){
-            state.gameState = initializeGameState(state.config!, 1)
-            state.gameState.memorizationTime = 20000
-            state.isPaused = false
+            state.gameState = initializeGameState(state.config!, 1);
+            state.gameState.memorizationTime = 20000;
+            state.isPaused = false;
             state.isPlaying = true;
-            state.metrics = []
-            state.gameEnded = false
+            state.metrics = [];
+            state.gameEnded = false;
+            state.totalScore = 0;
         },
 
         revealCards(state) {

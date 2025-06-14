@@ -27,6 +27,7 @@ const UserHandle: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem("persist:root");
     localStorage.removeItem("reconnection");
+    localStorage.removeItem("token");
     navigate("/")
     toast.success("Logged out successfully");
     setIsOpen(false);

@@ -120,4 +120,14 @@ export const getPenaltyRate = (errorRate: number): number =>{
     return 0; 
 }
 
+export const getGuessWhatMMSEScore = (totalScore: number): number => {
+    const maxScore = 4220; // max theoretical score
+    const normalized = (totalScore / maxScore) * 30;
+    return Math.round(Math.min(normalized, 30));
+};
 
+export const classifyMMSE = (mmseScore: number): "Normal" | "Okay" | "At Risk" => {
+    if (mmseScore >= 24) return "Normal";
+    if (mmseScore >= 18) return "Okay";
+    return "At Risk";
+};

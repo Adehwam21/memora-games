@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
           <Routes>
             <Route path="home" element={<Home user={user!} />} />
             <Route path="games" element={<Games games={games || []} />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="profile" element={<Profile user={user!} />} />
             <Route path="settings" element={<Settings />} />
           </Routes>
         </main>
