@@ -24,11 +24,7 @@ export default async function start(config: Config) {
     appContext.services = await initServices(appContext);
     const app = express();
     app.use(cors({
-      origin: [
-      FRONTEND_URL,
-      "http://localhost:3000",
-      "http://192.168.43.48:5173",
-      ]
+      origin: "*"
     }));
     app.use(morgan('dev'));
     app.use(express.json(), bodyParser.json());

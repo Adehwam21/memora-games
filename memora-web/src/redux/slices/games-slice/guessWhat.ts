@@ -63,14 +63,15 @@ const guessWhatGameSlice = createSlice({
             state.gameState!.levelStartTime = action.payload;
         },
         
-        startGame(state, action: PayloadAction<{ sessionId: string; config: GuessWhatInitConfig }>) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        startGuessWhatGame(state, action: PayloadAction<{ sessionId: string; guessWhatConfig: GuessWhatInitConfig | any }>) {
             state.sessionId = action.payload.sessionId;
-            state.config = action.payload.config;
+            state.config = action.payload.guessWhatConfig;
             state.isPlaying = true;
             state.metrics = [];
             state.totalScore = 0;
             // state.gameState = initializeGameState(action.payload.config, 1)
-            state.gameState = initializeGameState(action.payload.config, 1);
+            state.gameState = initializeGameState(action.payload.guessWhatConfig, 1);
             state.gameEnded = false
 
         },
@@ -127,16 +128,17 @@ const guessWhatGameSlice = createSlice({
             const timeBonus = totalTime > 0 ? ((level/totalTime)*10): 0;
             const accuracyBonus = getAccuracyBonus(accuracy);
             const penaltyRate = getPenaltyRate(errorRate);
-            const compensation = (level * 2)
+            const compensation = (level * 0.25)
             
 
             const weightedLevelScore = (
                 3 * levelBonus + 
                 4 * timeBonus + 
-                5 * accuracyBonus
-                ) - (6 * penaltyRate) + compensation;
+                6 * accuracyBonus
+                ) - (5 * penaltyRate) + compensation;
 
-            const levelScore = isNaN(weightedLevelScore) ? 0 : Math.round(weightedLevelScore);
+            const isFail = accuracy === 0;
+            const levelScore = isNaN(weightedLevelScore) || isFail  ? 0 : Math.round(weightedLevelScore);
             state.totalScore += Math.round(levelScore);
 
 
@@ -192,7 +194,7 @@ const guessWhatGameSlice = createSlice({
         forceEndGame(state){
             state.config = null;
             state.isPlaying = false;
-            state.gameEnded = null;
+            state.gameEnded = true;
             state.gameState = null;
         },
         
@@ -208,7 +210,7 @@ const guessWhatGameSlice = createSlice({
 
 
 export const { 
-    startGame, 
+    startGuessWhatGame, 
     revealCards, 
     selectCard, 
     nextLevel, 

@@ -16,7 +16,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({gameTitle, score}) => {
   const { isPaused, gameState } = useSelector((state: RootState) => state.guessWhat); 
   const state = useSelector((state: RootState) => {
     switch (gameTitle) {
-      case "guess what":
+      case "guess-what":
         return state.guessWhat;
       default:
         return null;
@@ -27,7 +27,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({gameTitle, score}) => {
 
   const togglePause = () => {
     switch (gameTitle) {
-      case "guess what":
+      case "guess-what":
         dispatch(isPaused ? resumeGame() : pauseGame());
         break;
 

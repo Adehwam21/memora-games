@@ -1,0 +1,12 @@
+import { BaseGameConfig } from "./base";
+
+export interface IStroopQuestion {
+  text: string; // The color word
+  fontColor: string; // The color used to render it
+  isCorrect: boolean; // Whether word matches color
+}
+
+export interface IStroopGameConfig extends BaseGameConfig {
+  duration: 110000,
+  questions: IStroopQuestion[]
+}

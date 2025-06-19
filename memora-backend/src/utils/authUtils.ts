@@ -22,6 +22,7 @@ export const comparePassword = async (password: string, hashedPassword: string |
     }
 };
 
+
 // export const generateToken = async (match: boolean, _user: _User | any) => {
 //     try {
 //         if (match && _user) {

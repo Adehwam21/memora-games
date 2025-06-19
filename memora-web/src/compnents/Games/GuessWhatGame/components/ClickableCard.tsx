@@ -26,7 +26,7 @@ const ClickableCard = ({ index, id, image, matched }: CardProps) => {
         if (matched && wrongSelection) {
         setWrongSelection(false); // Reset wrong state when card becomes matched
         }
-    }, [matched]);
+    }, [matched, wrongSelection]);
 
     const handleClick = async () => {
         if (isPaused || matched || wrongSelection || isProcessing || attempts >= maxAttempts || isAllSelected) return;
@@ -56,7 +56,10 @@ const ClickableCard = ({ index, id, image, matched }: CardProps) => {
                 : wrongSelection
                 ? "bg-red-500 pointer-events-none"
                 : "bg-[#1b3848]"
-            }`}
+            }
+            ${maxAttempts === attempts ? "pointer-events-none " : ""}
+        `}
+
         onClick={handleClick}
         initial={{ scale: 1 }}
         whileHover={{ scale: matched ? 1 : 1.03 }}

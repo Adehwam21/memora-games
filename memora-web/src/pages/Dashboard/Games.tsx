@@ -1,5 +1,5 @@
-import React from 'react'
-import Card from '../../compnents/Card'
+import React from 'react';
+import Card from '../../compnents/Card';
 
 export interface IGame {
   title: string;
@@ -14,7 +14,6 @@ interface IGames {
 }
 
 const Games: React.FC<IGames> = ({ games }) => {
-
   return (
     <main>
       <div className='p-5 pt-10'>
@@ -22,13 +21,16 @@ const Games: React.FC<IGames> = ({ games }) => {
         <p className='mt-4 text-gray-600'>Feel free to play any game of your choice</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-5">
+      <div className="flex flex-wrap gap-4 p-5 justify-start">
         {games?.map((game, index) => (
-          <Card key={index} game={game} />
+          <div key={index} className="w-full sm:w-[48%] lg:w-[31%]">
+            <Card game={game} />
+          </div>
         ))}
       </div>
-    </main>
-  )
-}
 
-export default Games
+    </main>
+  );
+};
+
+export default Games;

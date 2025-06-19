@@ -1,10 +1,12 @@
+import { generateStroopQuestions } from "../utils/stroopUtils"
 export enum GameTypeEnum {
-    GuessWhat = "guess what",
+    GuessWhat = "guess-what",
+    Stroop = "stroop"
 }
 
 export const GameInitialConfig = {
     guessWhat: {
-        title: "guess what",
+        title: "guess-what",
         type: "Memory",
         maxLevels: 10,
         defaultMemorizationTime: 20000,
@@ -25,7 +27,13 @@ export const GameInitialConfig = {
             "https://cdn.pixabay.com/photo/2020/05/22/12/39/cone-ice-cream-5205265_1280.png",
             // "https://cdn.pixabay.com/photo/2013/07/12/14/54/slime-148995_1280.png"
         ]
-    }
+    },
 
     // Add different intial configuration for other game types here
+    stroop: {
+        title: "stroop",
+        type: "Executive Function",
+        duration: 110000,
+        questions: generateStroopQuestions(150),
+    }
 }

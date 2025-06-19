@@ -4,16 +4,18 @@ import { guessWhatGameReducer } from "./slices/games-slice/guessWhat";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { stroopGameReducer } from "./slices/games-slice/stroop";
 
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: ["auth", "guessWhat"],
+    whitelist: ["auth", "guessWhat", "stroop"],
 };
 
 const rootReducer = combineReducers({
     auth: authReducer,
     guessWhat: guessWhatGameReducer,
+    stroop: stroopGameReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

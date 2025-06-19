@@ -115,7 +115,7 @@ export const getAccuracyBonus = (accuracy: number): number =>{
 }
 
 export const getPenaltyRate = (errorRate: number): number =>{
-    if (errorRate >= 80) return 20; 
+    if (errorRate >= 80) return 40; // attempt to reduce score significantly.
     if (errorRate >= 50 && errorRate < 80) return 10; 
     return 0; 
 }

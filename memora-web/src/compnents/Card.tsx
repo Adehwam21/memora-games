@@ -9,8 +9,11 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ game: { title, gametype, description, coverPhoto } }) => {
   const navigate = useNavigate()
+
+  // Format Guess What game title
+  const formatedTitle = title.trim().replace(" ", "-")
   const handlePlayGame = () => {
-    navigate(`/lobby/${title.toLowerCase()}`)
+    navigate(`/lobby/${formatedTitle.toLowerCase()}`)
   }
 
   return (
@@ -30,10 +33,10 @@ const Card: React.FC<CardProps> = ({ game: { title, gametype, description, cover
         <p className="text-sm text-gray-500 p-0 font-bold">{gametype.toUpperCase()}</p>
         <h2 className="card-title font-bold">{title}</h2>
         <p className="line-clamp-3 text-sm text-gray-600">{description}</p>
-        <div className="card-actions mt-2">
+        <div className="card-actions flex-row mt-2">
           <button 
             onClick={handlePlayGame}
-            className="btn border-none text-white bg-green-500 hover:bg-green-400 w-full"
+            className="btn border-none text-white font-bold text-lg bg-green-500 hover:bg-green-400 w-full"
           >
             Play
           </button>
@@ -43,4 +46,4 @@ const Card: React.FC<CardProps> = ({ game: { title, gametype, description, cover
   )
 }
 
-export default Card
+export default Card;

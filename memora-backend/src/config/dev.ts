@@ -5,15 +5,15 @@ dotenv.config();
 const config: Config = {
     app: {
         env: "development",
-        name: "guess-what-backend",
+        name: "memora-backend",
         port: (process.env.PORT as unknown as number) || 8000,
     },
     auth: {
-        secret: process.env.JWT_SECRET || "00606060",
+        secret: process.env.JWT_SECRET as string || "00606060",
         expiresIn: "7d",
     },
     db: {
-        uri: process.env.DEV_MONGO_URI || "",
+        uri: process.env.DEV_MONGO_URI as string || "",
     },
 };
 

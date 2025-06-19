@@ -3,15 +3,18 @@ import {
   FiPlay,
   FiRotateCcw,
 } from 'react-icons/fi';
+import { MdOutlineExitToApp } from "react-icons/md";
 
 interface PauseScreenProps {
   onResume: () => void;
   onRestart: () => void;
+  onExit: () => void;
 }
 
 const PauseScreen: React.FC<PauseScreenProps> = ({
   onResume,
   onRestart,
+  onExit
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -50,16 +53,26 @@ const PauseScreen: React.FC<PauseScreenProps> = ({
         <div className="flex flex-col gap-4">
           <button
             onClick={onResume}
-            className="flex items-center justify-center gap-2 bg-black/70 hover:bg-black/40 text-[#EADEB8] p-5 transition-transform duration-200 hover:scale-105"
+            className="grid grid-cols-[auto_1fr] items-center gap-1 bg-black/70 hover:bg-black/40 text-[#EADEB8] px-32 py-5 transition-transform duration-200 hover:scale-105 font-bold text-2xl"
           >
-            <FiPlay size={20} /> Resume
+            <FiPlay size={35} />
+            <span>Resume</span>
           </button>
 
           <button
             onClick={onRestart}
-            className="flex items-center justify-center gap-2 bg-black/70 hover:bg-black/40 text-[#EADEB8] p-5 transition-transform duration-200 hover:scale-105"
+            className="grid grid-cols-[auto_1fr] items-center gap-1 bg-black/70 hover:bg-black/40 text-[#EADEB8] px-32 py-5 transition-transform duration-200 hover:scale-105 font-bold text-2xl"
           >
-            <FiRotateCcw size={20} /> Restart
+            <FiRotateCcw size={35} />
+            <span>Restart</span>
+          </button>
+
+          <button
+            onClick={onExit}
+            className="grid grid-cols-[auto_1fr] items-center gap-0 bg-black/70 hover:bg-black/40 text-[#EADEB8] px-32 py-5 transition-transform duration-200 hover:scale-105 font-bold text-2xl"
+          >
+            <MdOutlineExitToApp size={35} />
+            <span>Exit</span>
           </button>
         </div>
       </div>

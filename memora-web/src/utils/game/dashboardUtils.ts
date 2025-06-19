@@ -10,19 +10,19 @@ export interface IGameSession {
   updatedAt: Date;
 }
 
-// 1. Get total number of sessions
+// Get total number of sessions
 export const getTotalSessions = (sessions: IGameSession[]): number => {
   return Array.isArray(sessions) ? sessions.length : 0;
 };
 
-// 2. Get average total score
+// Get average total score
 export const getAverageScore = (sessions: IGameSession[]): number => {
   if (!Array.isArray(sessions) || sessions.length === 0) return 0;
   const total = sessions.reduce((sum, session) => sum + (session.totalScore || 0), 0);
   return Math.round(total / sessions.length) || 0;
 };
 
-// 3. Get best total score
+// Get best total score
 export const getBestScore = (sessions: IGameSession[]): number => {
   if (!Array.isArray(sessions) || sessions.length === 0) return 0;
   return Math.max(...sessions.map(session => session.totalScore || 0));
@@ -33,14 +33,14 @@ export const getBestMMSEScore = (sessions: IGameSession[]): number => {
   return Math.max(...sessions.map(session => session.mmseScore || 0));
 };
 
-// 4. Get average MMSE score
+// Get average MMSE score
 export const getAverageMMSE = (sessions: IGameSession[]): number => {
   if (!Array.isArray(sessions) || sessions.length === 0) return 0;
   const total = sessions.reduce((sum, session) => sum + (session.mmseScore || 0), 0);
   return Math.round(total / sessions.length) || 0;
 };
 
-// 5. Group sessions by game title
+// Group sessions by game title
 export const groupSessionsByGame = (
   sessions: IGameSession[]
 ): Record<string, IGameSession[]> => {
@@ -53,13 +53,13 @@ export const groupSessionsByGame = (
   }, {} as Record<string, IGameSession[]>);
 };
 
-// 6. Get the most recent 3 sessions (assumes already sorted)
+// Get the most recent 3 sessions (assumes already sorted)
 export const getLatestSessions = (sessions: IGameSession[]): IGameSession[] => {
   if (!Array.isArray(sessions) || sessions.length === 0) return [];
   return sessions.slice(-3).reverse();
 };
 
-// 7. Get MMSE trend (sorted by session date)
+// Get MMSE trend (sorted by session date)
 export const getMMSETrend = (
   sessions: IGameSession[]
 ): { date: string; mmseScore: number }[] => {

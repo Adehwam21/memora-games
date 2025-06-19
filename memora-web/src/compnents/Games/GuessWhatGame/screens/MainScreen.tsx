@@ -5,14 +5,15 @@ import { AppDispatch, RootState } from "../../../../redux/store";
 import {
     resumeGame,
     restartGame,
-    nextLevel
+    nextLevel,
+    endGame
 } from "../../../../redux/slices/games-slice/guessWhat";
 import { GameHUD } from "../../GameHUD";
 import Screen1 from "./Screen1";
 import Screen2 from "./Screen2";
 import PauseScreen from "./PauseScreen";
 
-const MainScreen: React.FC = () => {
+export const MainScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { isPaused, gameState, config } = useSelector((state: RootState) => state.guessWhat); 
     const score = useSelector((state: RootState) => state.guessWhat.totalScore);
@@ -24,6 +25,10 @@ const MainScreen: React.FC = () => {
     const handleRestart = () => {
         dispatch(restartGame());
     };
+
+    const handleQuitGame = () => {
+        dispatch(endGame())
+    }
 
 
     // Timer and Game State Management
@@ -45,6 +50,7 @@ const MainScreen: React.FC = () => {
                 <PauseScreen
                     onResume={handleResume}
                     onRestart={handleRestart}
+                    onExit = {handleQuitGame}
                 />
             )}
             <div>
@@ -80,5 +86,3 @@ const MainScreen: React.FC = () => {
         </div>
     );
 }
-
-export default MainScreen;

@@ -1,32 +1,57 @@
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { startGame } from "../../redux/slices/games-slice/guessWhat";
-import MainScreen from "./GuessWhatGame/screens/MainScreen";
+import { startGuessWhatGame } from "../../redux/slices/games-slice/guessWhat";
+import { startStroopGame } from "../../redux/slices/games-slice/stroop";
+import { MainScreen as GuessWhatMainScreen } from "./GuessWhatGame/screens/MainScreen";
+import { MainScreen as StroopMainScreen } from "./StroopGame/screens/MainScreen";
 import { GuessWhatInitConfig } from "../../types/game/guessWhatTypes";
 import { GameCanvas } from "./GameCanvas";
+import { IStroopGameConfig } from "../../types/game/stroopTypes";
 
 interface GameRunnerProps {
   sessionId: string;
-  config: GuessWhatInitConfig;
+  guessWhatConfig: GuessWhatInitConfig;
+  stroopGameConfig: IStroopGameConfig;
 }
 
-export const GameRunner: React.FC<GameRunnerProps> = ({ sessionId, config }) => {
+export const GameRunner: React.FC<GameRunnerProps> = ({ sessionId, guessWhatConfig, stroopGameConfig }) => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    switch (config.title) {
-      case "guess what":
-        dispatch(startGame({sessionId, config}));
-        break;
+  const gameTitle = guessWhatConfig
+    ? "guess what"
+    : stroopGameConfig
+    ? "stroop"
+    : null;
 
-      // ... Add more cases for various games
+  useEffect(() => {
+    if (!gameTitle) return;
+
+    switch (gameTitle) {
+      case "guess what":
+        dispatch(startGuessWhatGame({ sessionId, guessWhatConfig }));
+        break;
+      case "stroop":
+        dispatch(startStroopGame({ sessionId, stroopGameConfig }));
+        break;
+      default:
+        break;
     }
-  }, [config, sessionId, dispatch]);
+  }, [gameTitle, sessionId, dispatch, guessWhatConfig, stroopGameConfig]);
+
+  const renderGameScreen = () => {
+    switch (gameTitle) {
+      case "guess what":
+        return <GuessWhatMainScreen />;
+      case "stroop":
+        return <StroopMainScreen />;
+      default:
+        return <div>Invalid game configuration</div>;
+    }
+  };
 
   return (
-    <GameCanvas gameTitle={config.title}>
-      {config.title === "guess what" && <MainScreen />}
+    <GameCanvas gameTitle={gameTitle || "unknown"}>
+      {renderGameScreen()}
     </GameCanvas>
   );
 };
-

@@ -2,7 +2,7 @@ import { createBrowserRouter, RouteObject } from "react-router-dom";
 import App from "../App";
 import ProtectedRoute from "../compnents/ProtectedRoute";
 import LandingPage from "../pages/LandingPage/LandingPage";
-import { GamePage } from "../compnents/Games/GuessWhatGame/GamePage";
+import { GamePage } from "../compnents/Games/GamePage";
 import { PerformancePage } from "../pages/performance/PerformancePage"; // Import Performance Page
 import Dashboard from "../pages/Dashboard/Dashboard";
 
