@@ -6,20 +6,22 @@ import {
     resumeGame,
     restartGame,
     nextLevel,
-    endGame
+    forceEndGame
 } from "../../../../redux/slices/games-slice/guessWhat";
-import { GameHUD } from "../../GameHUD";
+import { GameHUD } from "../components/GameHUD";
 import Screen1 from "./Screen1";
 import Screen2 from "./Screen2";
 import PauseScreen from "./PauseScreen";
+import { useNavigate } from "react-router-dom";
 
 export const MainScreen: React.FC = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const { isPaused, gameState, config } = useSelector((state: RootState) => state.guessWhat); 
     const score = useSelector((state: RootState) => state.guessWhat.totalScore);
 
     const handleResume = () => {
-        dispatch(resumeGame()); // Resume the game
+        dispatch(resumeGame()); 
     };
 
     const handleRestart = () => {
@@ -27,7 +29,8 @@ export const MainScreen: React.FC = () => {
     };
 
     const handleQuitGame = () => {
-        dispatch(endGame())
+        dispatch(forceEndGame())
+        navigate("/dashboard/games")
     }
 
 

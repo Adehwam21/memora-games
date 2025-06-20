@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "./slices/auth-slice/authSlice";
 import { guessWhatGameReducer } from "./slices/games-slice/guessWhat";
@@ -12,11 +13,20 @@ const persistConfig = {
     whitelist: ["auth", "guessWhat", "stroop"],
 };
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     auth: authReducer,
     guessWhat: guessWhatGameReducer,
     stroop: stroopGameReducer
+    //... add more game states
 });
+
+const rootReducer = (state: any, action: any) => {
+    if (action.type == "app/reset" ){
+        state = undefined;
+    }
+
+    return appReducer(state, action)
+}
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

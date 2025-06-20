@@ -9,9 +9,6 @@ const stroopColors: Record<string, string> = {
     Blue: '#0000FF',
     Green: '#008000',
     Yellow: '#FFFF00',
-    Purple: '#800080',
-    Orange: '#FFA500',
-    Brown: '#A52A2A',
     Black: '#000000',
 };
 

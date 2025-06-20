@@ -1,15 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { persistor, RootState } from "../../redux/store";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSignOutAlt } from "react-icons/fa";
 import { LuUserRound } from "react-icons/lu";
 import { MdOutlineSettings } from "react-icons/md";
+import { resetApp } from "../../redux/resetApp";
 
 const UserHandle: React.FC = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const { username } = useSelector((state: RootState) => state.auth!.user!);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -25,10 +27,12 @@ const UserHandle: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("persist:root");
-    localStorage.removeItem("reconnection");
     localStorage.removeItem("token");
+
+    dispatch(resetApp());
+    persistor.purge()
     navigate("/")
+
     toast.success("Logged out successfully");
     setIsOpen(false);
   };

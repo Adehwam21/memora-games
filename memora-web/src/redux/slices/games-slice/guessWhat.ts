@@ -193,6 +193,8 @@ const guessWhatGameSlice = createSlice({
 
         forceEndGame(state){
             state.config = null;
+            state.isPaused = false;
+            state.sessionId = null;
             state.isPlaying = false;
             state.gameEnded = true;
             state.gameState = null;
@@ -200,11 +202,12 @@ const guessWhatGameSlice = createSlice({
         
         endGame(state) {
             state.config = null;
+            state.isPaused = false;
+            state.sessionId = null;
             state.isPlaying = false;
             state.gameEnded = true;
             state.gameState = null;
         },
-        
     },
 });
 

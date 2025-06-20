@@ -19,18 +19,18 @@ const PauseScreen: React.FC<PauseScreenProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Handle click outside the modal
-  const handleClickOutside = (e: MouseEvent) => {
+  const handleClickOutside = React.useCallback((e: MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       onResume();
     }
-  };
+  }, [onResume]);
 
   // Handle Escape key
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = React.useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       onResume();
     }
-  };
+  }, [onResume]);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -40,7 +40,7 @@ const PauseScreen: React.FC<PauseScreenProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [handleClickOutside, handleKeyDown]);
 
   return (
     <div className="absolute top-15 left-0 inset-0 z-50 bg-black/40 backdrop-blur-2xl flex items-center justify-center">
