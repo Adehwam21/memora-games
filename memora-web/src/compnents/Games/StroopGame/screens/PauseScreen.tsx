@@ -43,7 +43,7 @@ const PauseScreen: React.FC<PauseScreenProps> = ({
   }, [handleClickOutside, handleKeyDown]);
 
   return (
-    <div className="absolute top-15 left-0 inset-0 z-50 bg-black/40 backdrop-blur-2xl flex items-center justify-center">
+    <div className="absolute inset-0 z-50 bg-black/70 flex flex-col items-center justify-center text-white">
       <div
         ref={modalRef}
         className="text-gray-800 w-[90%] max-w-md p-6 text-center space-y-5 animate-fadeIn"

@@ -27,11 +27,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({ gameTitle, score }) => {
   if (!state?.config || !gameState) return null;
 
   const togglePause = () => {
-    switch (gameTitle) {
-      case "guess-what":
-        dispatch(isPaused ? resumeGame() : pauseGame());
-        break;
-    }
+    dispatch(isPaused ? resumeGame() : pauseGame());
   };
 
   const totalHearts = gameState.maxAttempts ?? 3;

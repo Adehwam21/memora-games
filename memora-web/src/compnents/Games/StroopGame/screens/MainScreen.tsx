@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // pages/GameScreen.tsx
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -15,10 +15,8 @@ import {
   advanceLevel,
   forceEndGame,
   endGame,
-  resumeGame,
+  resumeStroopGame,
 } from "../../../../redux/slices/games-slice/stroop";
-
-import { IStroopQuestion } from "../../../../types/game/stroopTypes";
 
 export const MainScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -48,6 +46,28 @@ export const MainScreen: React.FC = () => {
     }
   }, [questions, currentIndex]);
 
+  const handleAnswer = useCallback(
+    (userSelectedAnswer: boolean) => {
+      const actualCorrect = currentQuestion?.isCorrect ?? false;
+      const isUserCorrect = userSelectedAnswer === actualCorrect;
+
+      const bonus = level % 10 === 0 ? 10 : 0;
+
+      dispatch(recordAnswer({ correct: isUserCorrect, bonus }));
+      dispatch(advanceLevel());
+
+      const delay = Math.max(300, 1000 - level * 30);
+      setTimeout(() => {
+        if (currentIndex + 1 < questions.length) {
+          setLevelStartTime(Date.now());
+        } else {
+          dispatch(endGame());
+        }
+      }, delay);
+    },
+    [currentQuestion, level, dispatch, currentIndex, questions.length]
+  );
+
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (!currentQuestion || isPaused || gameEnded) return;
@@ -61,50 +81,16 @@ export const MainScreen: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [currentQuestion, isPaused, gameEnded]);
+  }, [currentQuestion, isPaused, gameEnded, handleAnswer]);
 
 
-  const handleResume = () => dispatch(resumeGame());
+  const handleResume = () => dispatch(resumeStroopGame());
   const handleRestart = () => dispatch(restartGame());
   const handleQuitGame = () => {
     dispatch(forceEndGame());
     navigate("/dashboard/games");
   };
 
-  const handleAnswer = (userSelectedAnswer: boolean) => {
-    const actualCorrect = currentQuestion?.isCorrect ?? false;
-    const isUserCorrect = userSelectedAnswer === actualCorrect;
-
-    const timeTaken = Date.now() - levelStartTime;
-    const bonus = level % 10 === 0 ? 10 : 0;
-
-    dispatch(recordAnswer({ correct: isUserCorrect, bonus }));
-    dispatch(advanceLevel());
-
-    const delay = Math.max(300, 1000 - level * 30);
-    setTimeout(() => {
-      if (currentIndex + 1 < questions.length) {
-        setLevelStartTime(Date.now());
-      } else {
-        dispatch(endGame());
-      }
-    }, delay);
-  };
-
-
-  const accuracy = metrics?.accuracy ?? 0;
-  const attempts = metrics?.attempts ?? 0;
-
-  if (gameEnded) {
-    return (
-      <div className="text-center mt-20">
-        <h1 className="text-3xl font-bold">Game Over</h1>
-        <p className="mt-4 text-lg">Final Score: {totalScore}</p>
-        <p>Accuracy: {accuracy}%</p>
-        <p>Total Questions Answered: {attempts}</p>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-md text-center w-full h-full relative">

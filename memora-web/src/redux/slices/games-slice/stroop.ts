@@ -75,7 +75,6 @@ const stroopGameSlice = createSlice({
           state.totalScore += 10 + bonus;
         }
       }
-      console.log("answer: ", correct, "score: ", state.totalScore)
     },
     advanceLevel(state) {
       if (state.gameState) {
@@ -83,8 +82,8 @@ const stroopGameSlice = createSlice({
         state.gameState.currentIndex += 1;
       }
     },
-    pauseGame(state) {
-      if (state.isPaused || !state.gameState) return; // <-- Corrected condition
+    pauseStroopGame(state) {
+      if (state.isPaused) return; // <-- Corrected condition
       state.isPaused = true;
       state.pauseStartTime = Date.now();
     },
@@ -92,7 +91,7 @@ const stroopGameSlice = createSlice({
       state.isPaused = action.payload;
     },
 
-    resumeGame(state) {
+    resumeStroopGame(state) {
       if (state.isPaused && !state.gameEnded && state.isPlaying && state.gameState) {
         const pausedTime = Date.now() - (state.pauseStartTime || Date.now());
         state.totalPausedDuration = (state.totalPausedDuration || 0) + pausedTime;
@@ -133,9 +132,9 @@ const stroopGameSlice = createSlice({
 export const { 
   startStroopGame,
   restartGame,
-  pauseGame,
+  pauseStroopGame,
   forceEndGame,
-  resumeGame,
+  resumeStroopGame,
   recordAnswer, 
   advanceLevel, 
   endGame 

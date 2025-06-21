@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import { pauseGame, resumeGame } from "../../../../redux/slices/games-slice/guessWhat";
+import { pauseStroopGame, resumeStroopGame } from "../../../../redux/slices/games-slice/stroop";
 import { endGame } from "../../../../redux/slices/games-slice/stroop";
 import { CountdownTimer } from "./CountdownTimer";
 import { FaPause } from "react-icons/fa6";
@@ -41,7 +41,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
   const togglePause = () => {
     switch (gameTitle) {
       case "stroop":
-        dispatch(!isPaused ? resumeGame() : pauseGame());
+        dispatch(isPaused ? resumeStroopGame() : pauseStroopGame());
         break;
     }
   };
