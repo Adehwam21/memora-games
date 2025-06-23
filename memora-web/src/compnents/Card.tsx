@@ -1,49 +1,56 @@
-import React from 'react'
-import { IGame } from '../pages/Dashboard/Games'
-import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import React from 'react';
+import { IGame } from '../pages/Dashboard/Games';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 interface CardProps {
-  game: IGame
+  game: IGame;
 }
 
-const Card: React.FC<CardProps> = ({ game: { title, gametype, description, coverPhoto } }) => {
-  const navigate = useNavigate()
+const Card: React.FC<CardProps> = ({
+  game: { title, gametype, description, coverPhoto },
+}) => {
+  const navigate = useNavigate();
 
-  // Format Guess What game title
-  const formatedTitle = title.trim().replace(" ", "-")
+  const formatedTitle = title.trim().replace(/\s+/g, '-');
   const handlePlayGame = () => {
-    navigate(`/lobby/${formatedTitle.toLowerCase()}`)
-  }
+    navigate(`/lobby/${formatedTitle.toLowerCase()}`);
+  };
 
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.98 }}
-      className="flex flex-col rounded-lg w-full max-w-[15rem] bg-base-100 shadow-lg overflow-hidden"
+      className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg overflow-hidden transition-shadow duration-300 h-full"
     >
-      <figure>
+      <figure className="w-full h-40 sm:h-44">
         <img
           src={`/images/${coverPhoto}`}
           alt={title}
-          className="h-24 w-full object-cover"
+          className="w-full h-full object-cover"
         />
       </figure>
-      <div className="card-body p-3 text-left">
-        <p className="text-sm text-gray-500 p-0 font-bold">{gametype.toUpperCase()}</p>
-        <h2 className="card-title font-bold">{title}</h2>
-        <p className="line-clamp-3 text-sm text-gray-600">{description}</p>
-        <div className="card-actions flex-row mt-2">
-          <button 
-            onClick={handlePlayGame}
-            className="btn border-none text-white font-bold text-lg bg-green-500 hover:bg-green-400 w-full"
-          >
-            Play
-          </button>
-        </div>
+
+      <div className="flex flex-col flex-grow p-4 text-left">
+        <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">
+          {gametype}
+        </p>
+        <h2 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">
+          {title}
+        </h2>
+        <p className="text-sm text-gray-600 line-clamp-3 flex-grow">
+          {description}
+        </p>
+
+        <button
+          onClick={handlePlayGame}
+          className="mt-4 bg-green-500 hover:bg-green-400 text-white font-semibold text-lg py-2 rounded-md h-10 w-full transition-colors"
+        >
+          Play
+        </button>
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
 export default Card;

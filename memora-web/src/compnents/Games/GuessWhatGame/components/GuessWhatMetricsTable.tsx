@@ -1,13 +1,22 @@
 // src/components/MetricsTable.tsx
 import React from "react";
-import { Metric } from "../../../../types/props";
+
+interface IGuessWhatMetric {
+    level: number;
+    attempts: number;
+    accuracy: number;
+    levelErrors: number;
+    totalResponseTime: number;
+    levelScore: number;
+}
+
 
 interface MetricsTableProps {
-    metrics: Metric[];
+    metrics: IGuessWhatMetric[];
     totalScore: number;
 }
 
-const MetricsTable: React.FC<MetricsTableProps> = ({ metrics, totalScore }) => {
+export const GuessWhatMetricsTable: React.FC<MetricsTableProps> = ({ metrics, totalScore }) => {
     if (!metrics || metrics.length === 0) return <p className="text-center text-gray-500"></p>;
 
     return (
@@ -28,7 +37,7 @@ const MetricsTable: React.FC<MetricsTableProps> = ({ metrics, totalScore }) => {
                     {metrics.map((metric, index) => (
                         <tr key={index} className="text-center">
                             <td className="border p-2">{metric.level}</td>
-                            <td className="border p-2">{metric.attempt}</td>
+                            <td className="border p-2">{metric.attempts}</td>
                             <td className="border p-2">{metric.totalResponseTime.toFixed(2)}</td>
                             <td className="border p-2">{metric.accuracy.toFixed(1)}%</td>
                             <td className="border p-2">{metric.levelErrors}</td>
@@ -41,5 +50,3 @@ const MetricsTable: React.FC<MetricsTableProps> = ({ metrics, totalScore }) => {
         </div>
     );
 };
-
-export default MetricsTable;

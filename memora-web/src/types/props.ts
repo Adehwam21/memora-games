@@ -32,3 +32,12 @@ export interface Metric {
     levelErrors: number;
     levelScore: number;
 }
+
+export interface StroopMetric {
+    questions: number;
+    attempts: number;
+    averageResponseTime: number;
+    accuracy: number;
+    errors: number;
+    score: number;
+}

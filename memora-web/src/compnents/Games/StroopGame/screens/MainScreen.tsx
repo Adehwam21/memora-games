@@ -13,19 +13,20 @@ import {
   restartGame,
   recordAnswer,
   advanceLevel,
-  forceEndGame,
+  forceEndStroopGame,
   endGame,
   resumeStroopGame,
 } from "../../../../redux/slices/games-slice/stroop";
+import { PopUp } from "../../../PopUp";
 
 export const MainScreen: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const {
     config,
     gameState,
-    metrics,
     totalScore,
     isPaused,
     totalPausedDuration,
@@ -38,6 +39,20 @@ export const MainScreen: React.FC = () => {
   const level = gameState?.level ?? 1;
 
   const [levelStartTime, setLevelStartTime] = useState(Date.now());
+
+  useEffect(() => {
+    if (!gameState) return;
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [gameState]);
 
   // Set initial or updated question
   useEffect(() => {
@@ -87,13 +102,17 @@ export const MainScreen: React.FC = () => {
   const handleResume = () => dispatch(resumeStroopGame());
   const handleRestart = () => dispatch(restartGame());
   const handleQuitGame = () => {
-    dispatch(forceEndGame());
-    navigate("/dashboard/games");
-  };
+    setShowExitConfirm(true)
+  }
+
+  const confirmQuit = () => {
+      dispatch(forceEndStroopGame())
+      navigate("/dashboard/games")
+  }
 
 
   return (
-    <div className="bg-white/10 backdrop-blur-md rounded-md text-center w-full h-full relative">
+    <div className="relative w-full h-full rounded-md text-center">
       {isPaused && (
         <PauseScreen
           onResume={handleResume}
@@ -115,6 +134,18 @@ export const MainScreen: React.FC = () => {
           <QuestionCard question={currentQuestion} onAnswer={handleAnswer} />
         )}
       </div>
+      {/* Confirmation PopUp goes here */}
+      <PopUp
+        isOpen={showExitConfirm}
+        type="warning"
+        title="Are you sure?"
+        message="Quitting now will discard your progress and unsaved changes."
+        onClose={() => setShowExitConfirm(false)}
+        onConfirm={confirmQuit}
+        confirmText="Yes, Quit"
+        cancelText="Cancel"
+        showCancel
+      />
     </div>
   );
 };

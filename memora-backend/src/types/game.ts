@@ -33,7 +33,7 @@ export const GameInitialConfig = {
     stroop: {
         title: "stroop",
         type: "Executive Function",
-        duration: 110000,
+        duration: 90000,
         questions: generateStroopQuestions(150),
     }
 }

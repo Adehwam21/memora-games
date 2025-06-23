@@ -20,7 +20,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
   // accuracy,
 }) => {
   const dispatch = useDispatch();
-  const { isPaused } = useSelector((state: RootState) => state.stroop);
+  const { isPaused, config } = useSelector((state: RootState) => state.stroop);
 
   const state = useSelector((state: RootState) => {
     switch (gameTitle) {
@@ -55,7 +55,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
 
       <div className="flex items-center space-x-4">
         <CountdownTimer
-          duration={110000}
+          duration={config!.duration}
           onComplete={handleGameEnd}
           isPaused={isPaused}
         />

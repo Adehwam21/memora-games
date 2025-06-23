@@ -26,7 +26,7 @@ interface GameState {
         accuracy: number, 
         levelErrors: number,
         levelScore: number,
-    }[];
+    }[] | null;
     totalScore: 0 | number;
     isPlaying: boolean;
     isPaused: boolean;
@@ -71,7 +71,7 @@ const guessWhatGameSlice = createSlice({
             state.metrics = [];
             state.totalScore = 0;
             // state.gameState = initializeGameState(action.payload.config, 1)
-            state.gameState = initializeGameState(action.payload.guessWhatConfig, 1);
+            state.gameState = initializeGameState(action.payload.guessWhatConfig, 1); // Change later
             state.gameEnded = false
 
         },
@@ -142,7 +142,7 @@ const guessWhatGameSlice = createSlice({
             state.totalScore += Math.round(levelScore);
 
 
-            state.metrics.push({
+            state.metrics!.push({
                 level,
                 attempt: totalAttempts,
                 totalResponseTime: totalTime,
@@ -195,6 +195,8 @@ const guessWhatGameSlice = createSlice({
             state.config = null;
             state.isPaused = false;
             state.sessionId = null;
+            state.totalScore = 0;
+            state.metrics = null;
             state.isPlaying = false;
             state.gameEnded = true;
             state.gameState = null;
@@ -203,7 +205,6 @@ const guessWhatGameSlice = createSlice({
         endGame(state) {
             state.config = null;
             state.isPaused = false;
-            state.sessionId = null;
             state.isPlaying = false;
             state.gameEnded = true;
             state.gameState = null;

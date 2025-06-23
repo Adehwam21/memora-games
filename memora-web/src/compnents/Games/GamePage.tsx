@@ -18,9 +18,12 @@ export const GamePage: React.FC = () => {
     // Always call hooks unconditionally
     const selector = gameConfig ? gameConfig.getSlice : () => ({});
     const { config, isPlaying, sessionId, gameEnded, metrics, totalScore } = useSelector(selector) as any;
+
+    // TODO: Ensure you provide this with your model, for now hardcoded mmse score is being used
     const mmseScore = gameConfig && totalScore !== undefined ? gameConfig.computeScore(totalScore) : 0;
 
     useEffect(() => {
+        // Update game session with metrics when game has ended
         if (gameEnded && !isPlaying && sessionId) {
         API.put(`/game-session/update/${sessionId}`, { metrics, totalScore, mmseScore })
             .then(() => navigate(`/game/performance/${sessionId}`))

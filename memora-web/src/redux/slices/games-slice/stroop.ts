@@ -14,6 +14,7 @@ export interface GameState {
   metrics: {
     questions: number;
     attempts: number;
+    averageResponseTime: number;
     errors: number;
     accuracy: number;
   } | null;
@@ -49,6 +50,7 @@ const stroopGameSlice = createSlice({
       state.metrics = {
         questions: 0,
         attempts: 0,
+        averageResponseTime: 0,
         errors: 0,
         accuracy: 0,
       };
@@ -68,11 +70,12 @@ const stroopGameSlice = createSlice({
           state.metrics.errors += 1;
         }
         state.metrics.questions += 1;
+        state.metrics.averageResponseTime = ((state.config!.duration / state.metrics!.attempts)/1000)
         state.metrics.accuracy = Math.round(
           ((state.metrics.attempts - state.metrics.errors) / state.metrics.attempts) * 100
         );
         if (correct) {
-          state.totalScore += 10 + bonus;
+          state.totalScore += 500 + bonus;
         }
       }
     },
@@ -102,14 +105,25 @@ const stroopGameSlice = createSlice({
 
 
     restartGame(state){
-      state.gameState = initializeGameState(state.config!, 1);
+      state.gameState = {
+        ...initializeGameState(state.config!, 1),
+        currentIndex: 0,
+      };
+      state.metrics = {
+        questions: 0,
+        averageResponseTime: 0,
+        attempts: 0,
+        errors: 0,
+        accuracy: 0,
+      };
+      state.totalScore = 0;
       state.isPaused = false;
       state.isPlaying = true;
       state.gameEnded = false;
       state.totalScore = 0;
     },
 
-    forceEndGame(state){
+    forceEndStroopGame(state){
       state.config = null;
       state.isPaused = false;
       state.sessionId = null;
@@ -121,7 +135,6 @@ const stroopGameSlice = createSlice({
     endGame(state) {
       state.config = null;
       state.isPaused = false;
-      state.sessionId = null;
       state.isPlaying = false;
       state.gameEnded = true;
       state.gameState = null;
@@ -133,7 +146,7 @@ export const {
   startStroopGame,
   restartGame,
   pauseStroopGame,
-  forceEndGame,
+  forceEndStroopGame,
   resumeStroopGame,
   recordAnswer, 
   advanceLevel, 
