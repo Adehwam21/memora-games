@@ -49,6 +49,8 @@ const GameSessionSchema = new mongoose_1.Schema({
     mmseScore: { type: Number, required: false },
     age: { type: String, required: false },
     participantName: { type: String, required: false },
+    consent: { type: Boolean, required: false },
+    educationLevel: { type: String, required: false }
 }, { timestamps: true });
 exports.GameSessionModel = mongoose_1.default.model("GameSession", GameSessionSchema);
 //# sourceMappingURL=gameSession.model.js.map

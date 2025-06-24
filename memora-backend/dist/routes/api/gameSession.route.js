@@ -19,5 +19,5 @@ exports.gameSessionRouter.route("/update/:id")
 exports.gameSessionRouter.route("/del/:id")
     .delete([auth_1.verifyToken, auth_1.admin], gameSession_controller_1.deleteGameSession); // Delete a specific game session
 exports.researchSessionRouter.route("/")
-    .post([auth_1.verifyToken, auth_1.facilitator], gameSession_controller_1.createResearchGameSession); // Create a new game session
+    .post(auth_1.verifyToken, gameSession_controller_1.createResearchGameSession); // Create a new game session
 //# sourceMappingURL=gameSession.route.js.map

@@ -48,7 +48,7 @@ exports.createGameSession = createGameSession;
  */
 const createResearchGameSession = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { gameTitle, participantName, mmse, age } = req.body;
+        const { gameTitle, participantInfo } = req.body;
         const { userId } = req.user;
         const formattedGameTitle = gameTitle.toString().trim().replace(" ", "-");
         const initialConfig = formattedGameTitle === game_1.GameTypeEnum.GuessWhat
@@ -60,9 +60,11 @@ const createResearchGameSession = (req, res) => __awaiter(void 0, void 0, void 0
             userId,
             gameTitle,
             initConfig: initialConfig,
-            mmseScore: mmse,
-            participantName,
-            age,
+            mmseScore: Number(participantInfo.mmseScore),
+            consent: participantInfo.consent,
+            educationLevel: participantInfo.educationLevel,
+            participantName: participantInfo.name,
+            age: participantInfo.age,
         });
         if (gameTitle === game_1.GameTypeEnum.GuessWhat) {
             newGameSession.initConfig = game_1.GameInitialConfig.guessWhat;
