@@ -24,7 +24,7 @@ export interface ProtectedRouteProps {
     children: ReactNode;
 }
 
-export interface Metric {
+export interface IGuessWhatMetric {
     level: number;
     attempt: number;
     totalResponseTime: number;

@@ -19,7 +19,7 @@ const Screen1: React.FC<Screen1Props> = ({ imagesToMemorize }) => {
     const totalTime = Math.floor(memorizationTime / 1000);
 
     return (
-        <div className="flex flex-col justify-center items-center m-0 p-10 w-full">
+        <div className="flex flex-col justify-center items-center m-0 p-5 w-full">
             <div className="flex text-[#EADEB8] justify-center items-center">
                 <MemorizationPhaseTimer
                     initialTime={totalTime}

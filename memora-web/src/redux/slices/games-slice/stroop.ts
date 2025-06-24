@@ -75,7 +75,7 @@ const stroopGameSlice = createSlice({
           ((state.metrics.attempts - state.metrics.errors) / state.metrics.attempts) * 100
         );
         if (correct) {
-          state.totalScore += 500 + bonus;
+          state.totalScore += 100 + bonus;
         }
       }
     },
@@ -127,9 +127,11 @@ const stroopGameSlice = createSlice({
       state.config = null;
       state.isPaused = false;
       state.sessionId = null;
+      state.totalScore = 0;
       state.isPlaying = false;
       state.gameEnded = true;
       state.gameState = null;
+      state.metrics = null;
     },
 
     endGame(state) {

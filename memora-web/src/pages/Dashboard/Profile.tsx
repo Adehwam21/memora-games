@@ -57,15 +57,15 @@ const Profile: React.FC<HomeProps> = ({ user }) => {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
-          <h2 className="text-xl font-semibold mb-2">Games Played</h2>
+          <h2 className="text-sm font-semibold mb-2">Games Played</h2>
           <p className="text-3xl font-bold">{totalSessions}</p>
         </div>
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
-          <h2 className="text-xl font-semibold mb-2">Avg. MMSE Score</h2>
+          <h2 className="text-sm font-semibold mb-2">Avg. MMSE Score</h2>
           <p className="text-3xl font-bold">{avgMMSEScore}</p>
         </div>
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
-          <h2 className="text-xl font-semibold mb-2">Best MMSE Score</h2>
+          <h2 className="text-sm font-semibold mb-2">Best MMSE Score</h2>
           <p className="text-3xl font-bold">{bestMMSEScore}</p>
         </div>
       </div>

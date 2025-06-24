@@ -19,7 +19,7 @@ export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({ metrics,
 
     return (
         <div className="mt-10 w-full">
-            <p className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto font-bold">PREVIOUS SESSION PERFORMANCE</p>
+            <h1 className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto font-bold">Session Stats</h1>
             <table className="w-full border-collapse border border-gray-300">
                 <thead>
                     <tr className="bg-gray-200">

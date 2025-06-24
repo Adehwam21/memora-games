@@ -38,7 +38,7 @@ export const MainScreen: React.FC = () => {
   const currentQuestion = questions[currentIndex];
   const level = gameState?.level ?? 1;
 
-  const [levelStartTime, setLevelStartTime] = useState(Date.now());
+  const [_, setLevelStartTime] = useState(Date.now());
 
   useEffect(() => {
     if (!gameState) return;

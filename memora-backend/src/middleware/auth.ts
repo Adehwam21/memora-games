@@ -52,4 +52,5 @@ const checkRole = (requiredRole: string) => {
 
 export const admin = checkRole('admin');
 export const player = checkRole('player');
+export const facilitator = checkRole('facilitator');
 export const developer = checkRole('developer');

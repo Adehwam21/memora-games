@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { selectCard, endGame } from "./slices/games-slice/guessWhat";
-import { RootState } from "./store";
-import { Metric } from "../types/props";
-import API from "../config/axiosConfig";
+import { selectCard, endGuessWhatGame } from "./guessWhat";
+import { RootState } from "../../store";
+import { IGuessWhatMetric } from "../../../types/props";
+import API from "../../../config/axiosConfig";
 
 
 export const selectCardThunk = createAsyncThunk<boolean, number, { state: RootState }>(
@@ -25,7 +25,7 @@ export const selectCardThunk = createAsyncThunk<boolean, number, { state: RootSt
 );
 
 export const sendFinalGameMetricsThunk = createAsyncThunk<
-  Metric[],         // Return type (response from the API)
+  IGuessWhatMetric[],         // Return type (response from the API)
   string,          // Argument type (game session ID or other identifier)
   { state: RootState } // Thunk API (includes access to the state)
 >(
@@ -67,6 +67,6 @@ export const endGameThunk = createAsyncThunk<
     }
 
     // Now safely end the game
-    dispatch(endGame()); 
+    dispatch(endGuessWhatGame()); 
   }
 );

@@ -1,7 +1,7 @@
 import { GuessWhatInitConfig } from "../../types/game/guessWhatTypes";
 import { Card } from "../../types/game/guessWhatTypes";
 import API from "../../config/axiosConfig";
-import { Metric } from "../../types/props";
+import { IGuessWhatMetric } from "../../types/props";
 
 // Helper functions
 export function initializeGameState(config: GuessWhatInitConfig, level: number) {
@@ -39,7 +39,7 @@ function selectImagesToFind(imagesToMemorize: number[], imageSet: string[], numI
 }
 
 
-export const updateGameSessionMetrics = async (sessionId: string, metrics: Metric[], mmseScore: number) => {
+export const updateGameSessionMetrics = async (sessionId: string, metrics: IGuessWhatMetric[], mmseScore: number) => {
     try {
         const response = await API.put(`/game/game-session/update/${sessionId}`, { metrics: metrics, mmseScore });
 
@@ -66,7 +66,7 @@ export const updateGameSessionMetrics = async (sessionId: string, metrics: Metri
  *
  * @returns A computed MMSE-like score scaled between 0 and 30.
  */
-export function computeMmseScore(data: Metric[]): number {
+export function computeMmseScore(data: IGuessWhatMetric[]): number {
     // Extract data into separate arrays
     const levels = data.map((row) => row.level);
     const responseTimes = data.map((row) => row.totalResponseTime);
@@ -131,3 +131,25 @@ export const classifyMMSE = (mmseScore: number): "Normal" | "Okay" | "At Risk" =
     if (mmseScore >= 18) return "Okay";
     return "At Risk";
 };
+
+export const calculateAverages = (metrics: IGuessWhatMetric[])=> {
+    let totalTime: number = 0;
+    let totalAttempts: number = 0;
+    let totalErrors: number = 0;
+    let totalAccuracy: number = 0;
+
+    metrics.forEach(element => {
+        totalTime += element.totalResponseTime;
+        totalAttempts += element.attempt;
+        totalErrors += element.levelErrors;
+        totalAccuracy += element.accuracy
+
+    });
+
+    return {
+        avgResponseTime: totalTime / metrics.length,
+        avgAttemps: totalAttempts / metrics.length,
+        avgErrors: totalErrors / metrics.length,
+        avgAccuracy: totalAccuracy / metrics.length
+    }
+}

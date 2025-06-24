@@ -152,7 +152,7 @@ const guessWhatGameSlice = createSlice({
             });
 
             if (level >= state.config.maxLevels) {
-                guessWhatGameSlice.caseReducers.endGame(state);
+                guessWhatGameSlice.caseReducers.endGuessWhatGame(state)
                 return;
             }
 
@@ -169,7 +169,7 @@ const guessWhatGameSlice = createSlice({
             state.isPaused = action.payload;
         },
 
-        resumeGame(state) {
+        resumeGuessWhatGame(state) {
             if (!state.isPaused || !state.gameState || !state.gameState.pauseStartTime) return;
         
             const pausedDuration = Date.now() - state.gameState.pauseStartTime;
@@ -191,7 +191,7 @@ const guessWhatGameSlice = createSlice({
             state.gameState!.timeLeft = action.payload;
         },
 
-        forceEndGame(state){
+        forceEndGuessWhatGame(state){
             state.config = null;
             state.isPaused = false;
             state.sessionId = null;
@@ -202,7 +202,7 @@ const guessWhatGameSlice = createSlice({
             state.gameState = null;
         },
         
-        endGame(state) {
+        endGuessWhatGame(state) {
             state.config = null;
             state.isPaused = false;
             state.isPlaying = false;
@@ -218,14 +218,14 @@ export const {
     revealCards, 
     selectCard, 
     nextLevel, 
-    endGame, 
+    endGuessWhatGame, 
     decrementTimer, 
-    forceEndGame,
+    forceEndGuessWhatGame,
     setLevelStartTime,
     setPaused,
     setTimeLeft,
     pauseGame,
-    resumeGame,
+    resumeGuessWhatGame,
     restartGame
 } = guessWhatGameSlice.actions;
 

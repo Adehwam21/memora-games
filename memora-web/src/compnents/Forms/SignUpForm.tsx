@@ -114,7 +114,7 @@ const SignUp: React.FC<FormProps> = () => {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-2 rounded-lg ${loading ? "bg-gray-600" : "bg-blue-500 hover:bg-blue-600"} text-white`}
+          className={`w-full py-2 rounded-lg ${loading ? "bg-gray-600" : "bg-green-500 hover:bg-green-700"} text-white`}
         >
           {loading ? "Signing Up..." : "Sign Up"}
         </button>

@@ -36,7 +36,11 @@ export interface IGameSession {
   initConfig: {}, // The initial configurations of the game type
   metrics?: GameMetric[]
   totalScore: number;
-  mmseScore: ITotalScore; // Aggregated score for the session
+  participantName?: string;
+  mmseScore?: ITotalScore | number; // Aggregated score for the session
+  age?: number;
+  consent?: boolean;
+  educationLevel?: string;
 }
 
 export interface IGameSessionDocument extends Document, IGameSession { }
@@ -51,9 +55,14 @@ const GameSessionSchema = new Schema<IGameSessionDocument>(
     gameTitle: { type: String, required: true },
     gameType: {type: String, required: false},
     initConfig: {},
-    metrics: { type: Schema.Types.Mixed },
+    metrics: { type: Schema.Types.Mixed, required: false },
     totalScore: {type: Number, required: false},
     mmseScore: { type: Number, required: false },
+    age: { type: String, required: false },
+    participantName: { type: String, required: false },
+    consent: { type: Boolean, required: false },
+    educationLevel: {type: String, required: false}
+
   },
   { timestamps: true }
 );

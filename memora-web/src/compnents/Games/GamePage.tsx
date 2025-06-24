@@ -7,10 +7,21 @@ import API from "../../config/axiosConfig";
 import { GameRunner } from "./GameRunner";
 import { gameConfigs, GameKey } from "../../config/gameConfigs";
 
+interface ParticipantInfo {
+    participantName: string,
+    mmseScore: string,
+    consent: boolean,
+    age: number,
+    educationLevel: string,
+}
+
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { game } = useParams(); // 'guess-what', 'stroop', etc.
+    const participantInfo:ParticipantInfo | any  = JSON.parse(localStorage.getItem("participantInfo") || "{}"); // Provided it was a reseach participation
+    console.log(participantInfo)
+
 
     const gameKey = game as GameKey;
     const gameConfig = gameKey ? gameConfigs[gameKey] : undefined;
@@ -19,39 +30,44 @@ export const GamePage: React.FC = () => {
     const selector = gameConfig ? gameConfig.getSlice : () => ({});
     const { config, isPlaying, sessionId, gameEnded, metrics, totalScore } = useSelector(selector) as any;
 
-    // TODO: Ensure you provide this with your model, for now hardcoded mmse score is being used
-    const mmseScore = gameConfig && totalScore !== undefined ? gameConfig.computeScore(totalScore) : 0;
-
     useEffect(() => {
         // Update game session with metrics when game has ended
         if (gameEnded && !isPlaying && sessionId) {
-        API.put(`/game-session/update/${sessionId}`, { metrics, totalScore, mmseScore })
+        API.put(`/game-session/update/${sessionId}`, { metrics, totalScore })
             .then(() => navigate(`/game/performance/${sessionId}`))
             .catch((err) => console.error("Failed to update session", err));
         }
-    }, [gameEnded, isPlaying, sessionId, metrics, totalScore, mmseScore, navigate]);
+    }, [gameEnded, isPlaying, sessionId, metrics, totalScore, navigate]);
 
     if (!gameConfig) return <div>Invalid game: {game}</div>;
 
     const handleStartGame = async () => {
-        try {
-        const response = await API.post("/game-session/", {
-            gameTitle: gameConfig.gameTitle,
-        });
+        const participantInfoRaw = localStorage.getItem("participantInfo");
+        const participantInfo = participantInfoRaw ? JSON.parse(participantInfoRaw) : null;
 
-        dispatch(
+        const endpoint = participantInfo ? "/research-session" : "/game-session";
+
+        try {
+            const response = await API.post(endpoint, {
+            gameTitle: gameConfig.gameTitle,
+            ...(participantInfo && { participantInfo })  // only send if available
+            });
+
+            dispatch(
             gameConfig.startGameAction({
                 sessionId: response.data.gameSession._id,
                 ...(game === "guess-what"
                 ? { guessWhatConfig: response.data.gameSession.initConfig }
                 : { stroopGameConfig: response.data.gameSession.initConfig }),
-            } as any) // optional: cast to any to suppress edge errors, but should be safe
-        );
+            } as any)
+            );
 
+            localStorage.removeItem("participantInfo");
         } catch (error) {
-        console.error("Failed to start game:", error);
+            console.error("Failed to start game:", error);
         }
     };
+
 
     return (
         <div className="flex flex-row w-full h-screen bg-green-50 p-4 gap-4">

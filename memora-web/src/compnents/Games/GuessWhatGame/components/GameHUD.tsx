@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import { pauseGame, resumeGame } from "../../../../redux/slices/games-slice/guessWhat";
+import { pauseGame, resumeGuessWhatGame } from "../../../../redux/slices/games-slice/guessWhat";
 import { FaPause } from "react-icons/fa6";
 import { FaPlay } from "react-icons/fa";
 import LevelTimer from "./LevelTimer";
@@ -27,7 +27,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({ gameTitle, score }) => {
   if (!state?.config || !gameState) return null;
 
   const togglePause = () => {
-    dispatch(isPaused ? resumeGame() : pauseGame());
+    dispatch(isPaused ? resumeGuessWhatGame() : pauseGame());
   };
 
   const totalHearts = gameState.maxAttempts ?? 3;

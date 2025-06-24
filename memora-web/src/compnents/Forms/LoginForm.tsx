@@ -2,11 +2,11 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { loginStart, loginSuccess, loginFailure } from '../../redux/slices/auth-slice/authSlice';
 import API from '../../config/axiosConfig';
 import { FormProps, LoginFormData } from '../../types/props';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login: React.FC<FormProps> = () => {
   const navigate = useNavigate();
@@ -77,16 +77,16 @@ const Login: React.FC<FormProps> = () => {
             required
           />
           <span
-            className="absolute right-3 top-2.5 cursor-pointer"
+            className="absolute right-3 top-3 text-gray-400 cursor-pointer"
             onClick={togglePasswordVisibility}
           >
-            {showPassword ? <MdVisibilityOff className="text-gold" /> : <MdVisibility className="text-gold" />}
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
           </span>
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-500 hover:bg-blue-800 py-2 text-white rounded-lg transition-all duration-200"
+          className="w-full bg-green-500 hover:bg-green-700 py-2 text-white rounded-lg transition-all duration-200"
         >
           {loading ? 'Please wait...' : 'Login'}
         </button>

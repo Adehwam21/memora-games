@@ -5,12 +5,12 @@ import API from '../../config/axiosConfig';
 import { GuessWhatMetricsTable } from '../../compnents/Games/GuessWhatGame/components/GuessWhatMetricsTable';
 import { StroopMetricsTable } from '../../compnents/Games/StroopGame/components/StroopMetricsTable';
 import { useDispatch } from 'react-redux';
-import { forceEndGame } from '../../redux/slices/games-slice/guessWhat';
+import { forceEndGuessWhatGame } from '../../redux/slices/games-slice/guessWhat';
 import { forceEndStroopGame } from '../../redux/slices/games-slice/stroop';
 
 interface IGuessWhatMetric {
     level: number;
-    attempts: number;
+    attempt: number;
     accuracy: number;
     levelErrors: number;
     totalResponseTime: number;
@@ -69,8 +69,8 @@ export const PerformancePage: React.FC = () => {
     const handleReturnButtonClick = (gameTitle: string) => {
         if (!session) return;
         switch (gameTitle) {
-            case "guess-what":
-                dispatch(forceEndGame());
+            case "guess what":
+                dispatch(forceEndGuessWhatGame());
                 navigate("/dashboard/games");
                 break;
 
@@ -87,7 +87,7 @@ export const PerformancePage: React.FC = () => {
     const handleMetricTableChoice = (gameTitle: string) => {
         if (!session) return;
         switch (gameTitle) {
-            case "guess-what":
+            case "guess what":
                 return <GuessWhatMetricsTable 
                     metrics={session.metrics as IGuessWhatMetric[]} 
                     totalScore={session.totalScore}
@@ -108,12 +108,9 @@ export const PerformancePage: React.FC = () => {
     return (
         <div className='p-10'>
             { session && handleMetricTableChoice(session.gameTitle)}
-            <div className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto">
-                <p className="text-lg font-semibold">Equivalent MMSE Score: {session.mmseScore}</p>
-            </div>
 
             <button
-                className='mt-4 bg-green-500 hover:bg-green-400 text-white font-semibold text-lg py-2 rounded-md p-5 transition-colors'
+                className='mt-4 bg-green-400 hover:bg-green-800 text-white font-semibold text-md rounded-md p-3 transition-colors'
                 onClick={() => handleReturnButtonClick(session.gameTitle)}
             >
                 Return to Dashboard

@@ -9,6 +9,7 @@ import Profile from './Profile'
 import API from '../../config/axiosConfig'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
+import { ParticipationForm } from './Participation'
 
 const Dashboard: React.FC = () => {
   const {user} = useSelector((state: RootState) => state.auth!)
@@ -68,6 +69,7 @@ const Dashboard: React.FC = () => {
             <Route path="games" element={<Games games={games || []} />} />
             <Route path="profile" element={<Profile user={user!} />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="facilitate" element={<ParticipationForm/>}/>
           </Routes>
         </main>
       </div>

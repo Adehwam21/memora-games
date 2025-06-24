@@ -3,10 +3,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/store";
 import {
-    resumeGame,
+    resumeGuessWhatGame,
     restartGame,
     nextLevel,
-    forceEndGame
+    forceEndGuessWhatGame
 } from "../../../../redux/slices/games-slice/guessWhat";
 import { PopUp } from "../../../PopUp";
 import { GameHUD } from "../components/GameHUD";
@@ -23,7 +23,7 @@ export const MainScreen: React.FC = () => {
     const score = useSelector((state: RootState) => state.guessWhat.totalScore);
 
     const handleResume = () => {
-        dispatch(resumeGame()); 
+        dispatch(resumeGuessWhatGame()); 
     };
 
     const handleRestart = () => {
@@ -35,7 +35,7 @@ export const MainScreen: React.FC = () => {
     }
 
     const confirmQuit = () => {
-        dispatch(forceEndGame())
+        dispatch(forceEndGuessWhatGame())
         navigate("/dashboard/games")
     }
 

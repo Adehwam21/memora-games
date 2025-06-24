@@ -1,15 +1,17 @@
 import { Router } from 'express';
 import {
     createGameSession,
+    createResearchGameSession,
     getGameSessionsByUser,
     getGameSessionById,
     updateGameSession,
     deleteGameSession,
     getAllGameSessions,
 } from "../../controllers/gameSession.controller";
-import { verifyToken, admin, player } from '../../middleware/auth';
+import { verifyToken, admin, player, facilitator } from '../../middleware/auth';
 
 export const gameSessionRouter = Router();
+export const researchSessionRouter = Router();
 
 gameSessionRouter.route("")
     .post( verifyToken, createGameSession); // Create a new game session
@@ -28,3 +30,7 @@ gameSessionRouter.route("/update/:id")
 
 gameSessionRouter.route("/del/:id")
     .delete([verifyToken, admin], deleteGameSession); // Delete a specific game session
+
+
+researchSessionRouter.route("/")
+    .post( verifyToken, createResearchGameSession); // Create a new game session

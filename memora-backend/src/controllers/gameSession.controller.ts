@@ -37,6 +37,46 @@ export const createGameSession = async (req: Request, res: Response): Promise<vo
 };
 
 /**
+ * Create a new research session
+ */
+export const createResearchGameSession = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { gameTitle, participantInfo } = req.body;
+        const { userId } = req.user!;
+        const formattedGameTitle = gameTitle.toString().trim().replace(" ", "-");
+
+        const initialConfig =
+            formattedGameTitle === GameTypeEnum.GuessWhat
+                ? GameInitialConfig.guessWhat
+                : formattedGameTitle === GameTypeEnum.Stroop
+                ? GameInitialConfig.stroop
+                : null;
+
+        const newGameSession = await req.context!.services!.gameSession.addOne({
+            userId,
+            gameTitle,
+            initConfig: initialConfig!,
+            mmseScore: Number(participantInfo.mmseScore),
+            consent: participantInfo.consent,
+            educationLevel: participantInfo.educationLevel,
+            participantName: participantInfo.name,
+            age: participantInfo.age,
+        });
+
+        if (gameTitle === GameTypeEnum.GuessWhat){
+            newGameSession.initConfig = GameInitialConfig.guessWhat;
+        } else if (gameTitle == GameTypeEnum.Stroop){
+            newGameSession.initConfig = GameInitialConfig.stroop;
+        }
+
+        res.status(201).json({ message: "Game session created successfully", gameSession: newGameSession });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+/**
  * Get all game sessions for a user
  */
 export const getGameSessionsByUser = async (req: Request, res: Response): Promise<void> => {

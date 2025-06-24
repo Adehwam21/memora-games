@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { playSound } from "../../../../utils/sound";
-import { selectCardThunk } from "../../../../redux/thunks";
+import { selectCardThunk } from "../../../../redux/slices/games-slice/thunks";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/store";
 
@@ -49,7 +49,7 @@ const ClickableCard = ({ index, id, image, matched }: CardProps) => {
 
     return (
         <motion.div
-        className={`p-5 rounded-lg shadow-lg cursor-pointer flex justify-center items-center text-center text-5xl text-[#EADEB8] font-bold
+            className={`p-5 rounded-lg shadow-lg cursor-pointer flex justify-center items-center text-center text-5xl text-[#EADEB8] font-bold
             ${
             matched
                 ? "bg-green-500 pointer-events-none"
@@ -57,7 +57,7 @@ const ClickableCard = ({ index, id, image, matched }: CardProps) => {
                 ? "bg-red-500 pointer-events-none"
                 : "bg-[#1b3848]"
             }
-            ${maxAttempts === attempts ? "pointer-events-none " : ""}
+            ${maxAttempts === attempts ? "pointer-events-none" : ""}
         `}
 
         onClick={handleClick}
@@ -71,7 +71,7 @@ const ClickableCard = ({ index, id, image, matched }: CardProps) => {
             <motion.img
             src={image}
             alt="Card"
-            className="w-16 h-16 object-contain"
+            className="w-14 h-14 object-contain"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}

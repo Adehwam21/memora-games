@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom'
 import { FaChevronLeft } from 'react-icons/fa'
 import { LuBrain } from "react-icons/lu";
 import { MdOutlineAssessment } from "react-icons/md";
-import { CgGym } from "react-icons/cg";
 import { GrHomeRounded } from "react-icons/gr";
 import { BsCollectionPlay } from "react-icons/bs";
 
@@ -17,8 +16,7 @@ interface SideBarProps {
 const sections = [
   { link: "/dashboard/home", name: "Home", icon: <GrHomeRounded size={20}/> },
   { link: "/dashboard/games", name: "Games", icon: <BsCollectionPlay size={20}/> },
-  { link: "/dashboard/training", name: "Training", icon: <CgGym/> },
-  { link: "/dashboard/assessment", name: "Assess", icon: <MdOutlineAssessment/> },
+  { link: "/dashboard/assessment", name: "Assessment", icon: <MdOutlineAssessment/> },
   { link: "/dashboard/profile", name: "Profile", icon: <LuBrain /> },
 ]
 

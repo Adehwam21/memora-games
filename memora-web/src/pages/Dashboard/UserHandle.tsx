@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaSignOutAlt } from "react-icons/fa";
 import { LuUserRound } from "react-icons/lu";
 import { MdOutlineSettings } from "react-icons/md";
+import { FaHandsHelping } from "react-icons/fa";
 import { resetApp } from "../../redux/resetApp";
 
 const UserHandle: React.FC = () => {
@@ -41,11 +42,11 @@ const UserHandle: React.FC = () => {
     <div className="relative flex items-center pr-5 rounded-lg " ref={menuRef}>
       {/* User Button */}
       <button
-        className="flex text-green-700 items-center gap-2 p-3 transition hover:bg-base-200"
+        className="flex text-gray-700 font-bold items-center gap-2 p-3 transition hover:bg-base-200 hover:cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <LuUserRound size={23} />
-        <span className="hidden md:inline text-xl font-pacifico">{username}</span>
+        <span className="hidden md:inline text-md font-bold font-poppins">{username}</span>
       </button>
 
       {/* Dropdown Menu */}
@@ -66,6 +67,15 @@ const UserHandle: React.FC = () => {
                   onClick={() => setIsOpen(false)}
                 >
                   <MdOutlineSettings /> Settings
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/dashboard/facilitate"
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FaHandsHelping /> Facilitate
                 </Link>
               </li>
               <li>

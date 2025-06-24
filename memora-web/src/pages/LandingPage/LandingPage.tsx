@@ -12,7 +12,8 @@ const LandingPage: React.FC = () => {
 
     return (
         <div className="text-black landing-page font-poppins min-h-screen flex items-center justify-center">
-            <div className="landing-content text-black p-8 rounded-lg shadow-lg w-full max-w-lg">
+            <div className="landing-content text-black p-8 w-full max-w-lg">
+                <div className='p-5 font-bold text-center text-4xl text-green-700 font-pacifico '> Memora Games</div>
                 {showLogin ? (
                     <Login toggleForm={toggleForm} />
                 ) : (
@@ -23,7 +24,7 @@ const LandingPage: React.FC = () => {
                         {showLogin ? "Don't have an account? " : "Already have an account? "}
                         <span
                             onClick={toggleForm}
-                            className="text-blue-500 hover:text-blue-600 cursor-pointer font-semibold"
+                            className="text-green-500 hover:text-green-600 cursor-pointer font-semibold"
                         >
                             {showLogin ? 'Sign Up' : 'Log In'}
                         </span>
