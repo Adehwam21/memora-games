@@ -1,13 +1,12 @@
 # Frontend (React)
-guess-what-frontend/node_modules/
-guess-what-frontend/build/
+memora-web/node_modules/
 
 # Backend (Node.js)
-guess-what-backend/node_modules/
+memora-backend/node_modules/
 
 # AI Server (FastAPI)
-guess-what-ai-server/venv/
-guess-what-ai-server/__pycache__/
+memora-ai-server/venv/
+memora-ai-server/__pycache__/
 
 # IDEs
 .idea/
