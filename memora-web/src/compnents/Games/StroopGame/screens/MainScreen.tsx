@@ -18,6 +18,7 @@ import {
   resumeStroopGame,
 } from "../../../../redux/slices/games-slice/stroop";
 import { PopUp } from "../../../PopUp";
+import { playSound } from "../../../../utils/sound";
 
 export const MainScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -67,6 +68,12 @@ export const MainScreen: React.FC = () => {
       const isUserCorrect = userSelectedAnswer === actualCorrect;
 
       const bonus = level % 10 === 0 ? 10 : 0;
+
+      if (isUserCorrect){
+        playSound("/sounds/correct1.wav")
+      } else {
+        playSound("/sounds/wrong3.wav")
+      }
 
       dispatch(recordAnswer({ correct: isUserCorrect, bonus }));
       dispatch(advanceLevel());

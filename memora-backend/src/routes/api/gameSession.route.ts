@@ -7,6 +7,8 @@ import {
     updateGameSession,
     deleteGameSession,
     getAllGameSessions,
+    exportGuessWhatParticipantSessionsToCSV,
+    exportStroopParticipantGameSessionsToCSV,
 } from "../../controllers/gameSession.controller";
 import { verifyToken, admin, player, facilitator } from '../../middleware/auth';
 
@@ -34,3 +36,9 @@ gameSessionRouter.route("/del/:id")
 
 researchSessionRouter.route("/")
     .post( verifyToken, createResearchGameSession); // Create a new game session
+
+researchSessionRouter.route("/export-csv/guess-what")
+    .get(exportGuessWhatParticipantSessionsToCSV); 
+
+researchSessionRouter.route("/export-csv/stroop")
+    .get(exportStroopParticipantGameSessionsToCSV); 

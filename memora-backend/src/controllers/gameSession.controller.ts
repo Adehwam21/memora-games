@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { GameInitialConfig, GameTypeEnum } from "../types/game";
+import { formatGuessWhatParticipantSession } from "../utils/guessWhatUtils";
+import { formatStroopParticipantSession } from "../utils/stroopUtils";
 
 /**
  * Create a new game session
@@ -181,3 +183,55 @@ export const getAllGameSessions = async (req: Request, res: Response): Promise<v
         return;
     }
 };
+
+export const exportGuessWhatParticipantSessionsToCSV = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const gameSessions = await req.context.services?.gameSession.getParticipantSession("guess what");
+
+        if (!gameSessions){
+            res.status(404).json({message: "No participant game session found"});
+            return;
+        }
+
+        const csv = formatGuessWhatParticipantSession(gameSessions);
+        if(!csv){
+            res.status(404).json({message: "Counldn't export"});
+            return;
+        }
+
+        res.header("Content-Type", "text/csv");
+        res.attachment("guesswhat_sessions.csv");
+        res.send(csv);
+        return;
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const exportStroopParticipantGameSessionsToCSV = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const sessions = await req.context.services?.gameSession.getParticipantSession("stroop");
+        if (!sessions){
+            res.status(404).json({message: "No participant game session found"});
+            return;
+        }
+
+        const csv = formatStroopParticipantSession(sessions);
+        if(!csv){
+            res.status(404).json({message: "Counldn't export"});
+            return;
+        }
+
+        res.header("Content-Type", "text/csv");
+        res.attachment("stroop_sessions.csv");
+        res.send(csv);
+        return;
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Internal server error" });
+    }
+}

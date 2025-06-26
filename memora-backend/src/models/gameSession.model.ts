@@ -6,16 +6,16 @@ interface ITotalScore {
   totalErrors: number; // sum of all errors across levels
   totalResponseTime: number; // sum of response times across levels
 }
-interface IGuessWhatMetric {
+export interface IGuessWhatMetric {
   level: number;
-  attempts: number;
+  attempt: number;
   accuracy: number;
   levelErrors: number;
   totalResponseTime: number;
   levelScore: number;
 }
 
-interface IStroopMetric {
+export interface IStroopMetric {
   questions: number;
   attempts: number;
   averageResponseTime: number;

@@ -1,3 +1,6 @@
+import { Parser } from "json2csv";
+import { IGameSession } from "../models/gameSession.model";
+
 interface StroopQuestion {
   text: string; // The color word
   fontColor: string; // The color used to render it
@@ -42,3 +45,39 @@ export const generateStroopQuestions = (count: 150): StroopQuestion[] => {
 
     return questions;
 };
+
+export const formatStroopParticipantSession = (sessions: IGameSession[]) => {
+
+  const formatted = sessions.map((s: any) => {
+      return {
+        ssid: s.ssid,
+        sessionDate: new Date(Number(s.sessionDate)).toISOString(),
+        age: s.age || "",
+        educationLevel: s.educationLevel || "",
+        totalQuestions: s.metrics?.questions ?? "",
+        attempts: s.metrics?.attempts ?? "",
+        errors: s.metrics?.errors ?? "",
+        accuracy: s.metrics?.accuracy ?? "",
+        averageResponseTime: s.metrics?.averageResponseTime?.toFixed(2) ?? "",
+        mmseScore: s.mmseScore ?? ""
+      };
+  });
+
+  const fields = [
+    "ssid",
+    "sessionDate",
+    "age",
+    "educationLevel",
+    "totalQuestions",
+    "attempts",
+    "errors",
+    "accuracy",
+    "averageResponseTime",
+    "mmseScore"
+  ];
+
+  const parser = new Parser({ fields });
+  const stroopSessionCSV = parser.parse(formatted);
+
+  return stroopSessionCSV;
+}

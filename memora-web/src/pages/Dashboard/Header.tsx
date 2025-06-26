@@ -16,8 +16,8 @@ const Header: React.FC<HeaderProps> = ({ collapsed, toggleSidebar }) => {
         </button>
 
         {/* Desktop: normal logo */}
-        <span className="hidden md:inline font-pacifico text-2xl font-bold hover:cursor-pointer">
-          {collapsed ? "Mg" : "Memora Games"}
+        <span className="hidden md:inline font-poppins text-3xl font-bold hover:cursor-pointer">
+          {collapsed ? "Mg" : "Mg"}
         </span>
       </div>
 

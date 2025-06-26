@@ -20,4 +20,8 @@ exports.gameSessionRouter.route("/del/:id")
     .delete([auth_1.verifyToken, auth_1.admin], gameSession_controller_1.deleteGameSession); // Delete a specific game session
 exports.researchSessionRouter.route("/")
     .post(auth_1.verifyToken, gameSession_controller_1.createResearchGameSession); // Create a new game session
+exports.researchSessionRouter.route("/export-csv/guess-what")
+    .get(gameSession_controller_1.exportGuessWhatParticipantSessionsToCSV);
+exports.researchSessionRouter.route("/export-csv/stroop")
+    .get(gameSession_controller_1.exportStroopParticipantGameSessionsToCSV);
 //# sourceMappingURL=gameSession.route.js.map

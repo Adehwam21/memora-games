@@ -9,8 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllGameSessions = exports.deleteGameSession = exports.updateGameSession = exports.getGameSessionById = exports.getGameSessionsByUser = exports.createResearchGameSession = exports.createGameSession = void 0;
+exports.exportStroopParticipantGameSessionsToCSV = exports.exportGuessWhatParticipantSessionsToCSV = exports.getAllGameSessions = exports.deleteGameSession = exports.updateGameSession = exports.getGameSessionById = exports.getGameSessionsByUser = exports.createResearchGameSession = exports.createGameSession = void 0;
 const game_1 = require("../types/game");
+const guessWhatUtils_1 = require("../utils/guessWhatUtils");
+const stroopUtils_1 = require("../utils/stroopUtils");
 /**
  * Create a new game session
  */
@@ -177,4 +179,52 @@ const getAllGameSessions = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.getAllGameSessions = getAllGameSessions;
+const exportGuessWhatParticipantSessionsToCSV = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const gameSessions = yield ((_a = req.context.services) === null || _a === void 0 ? void 0 : _a.gameSession.getParticipantSession("guess what"));
+        if (!gameSessions) {
+            res.status(404).json({ message: "No participant game session found" });
+            return;
+        }
+        const csv = (0, guessWhatUtils_1.formatGuessWhatParticipantSession)(gameSessions);
+        if (!csv) {
+            res.status(404).json({ message: "Counldn't export" });
+            return;
+        }
+        res.header("Content-Type", "text/csv");
+        res.attachment("guesswhat_sessions.csv");
+        res.send(csv);
+        return;
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+exports.exportGuessWhatParticipantSessionsToCSV = exportGuessWhatParticipantSessionsToCSV;
+const exportStroopParticipantGameSessionsToCSV = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const sessions = yield ((_a = req.context.services) === null || _a === void 0 ? void 0 : _a.gameSession.getParticipantSession("stroop"));
+        if (!sessions) {
+            res.status(404).json({ message: "No participant game session found" });
+            return;
+        }
+        const csv = (0, stroopUtils_1.formatStroopParticipantSession)(sessions);
+        if (!csv) {
+            res.status(404).json({ message: "Counldn't export" });
+            return;
+        }
+        res.header("Content-Type", "text/csv");
+        res.attachment("stroop_sessions.csv");
+        res.send(csv);
+        return;
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+exports.exportStroopParticipantGameSessionsToCSV = exportStroopParticipantGameSessionsToCSV;
 //# sourceMappingURL=gameSession.controller.js.map

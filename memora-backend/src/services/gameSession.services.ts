@@ -102,4 +102,17 @@ export default class GameSessionService extends IService {
             throw e;
         }
     }
+
+    async getParticipantSession(gameTitle: string): Promise<any> {
+        try {
+            const gameSessions = await this.db.GameSessionModel.find({
+                gameTitle,
+                consent: true
+            }).lean()
+
+            return gameSessions
+        } catch (e) {
+            throw e;
+        }
+    }
 }

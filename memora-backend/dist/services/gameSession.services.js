@@ -118,6 +118,20 @@ class GameSessionService extends app_1.IService {
             }
         });
     }
+    getParticipantSession(gameTitle) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const gameSessions = yield this.db.GameSessionModel.find({
+                    gameTitle,
+                    consent: true
+                }).lean();
+                return gameSessions;
+            }
+            catch (e) {
+                throw e;
+            }
+        });
+    }
 }
 exports.default = GameSessionService;
 //# sourceMappingURL=gameSession.services.js.map

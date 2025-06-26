@@ -35,9 +35,9 @@ const ClickableCard = ({ index, id, image, matched }: CardProps) => {
         try {
         const isMatch = await dispatch(selectCardThunk(id)).unwrap();
             if (isMatch) {
-                playSound("/sounds/correct.mp3");
+                playSound("/sounds/correct2.wav");
             } else {
-                playSound("/sounds/wrong.mp3");
+                playSound("/sounds/wrong2.wav");
                 setWrongSelection(true);
             }
         } catch (error) {
