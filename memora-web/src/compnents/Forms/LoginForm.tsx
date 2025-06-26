@@ -86,7 +86,7 @@ const Login: React.FC<FormProps> = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-green-500 hover:bg-green-700 py-2 text-white rounded-lg transition-all duration-200"
+          className="w-full bg-green-700 hover:bg-green-500 py-2 text-white rounded-lg transition-all duration-200"
         >
           {loading ? 'Please wait...' : 'Login'}
         </button>

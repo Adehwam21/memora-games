@@ -136,7 +136,8 @@ export const MainScreen: React.FC = () => {
         />
       )}
 
-      <div className="mt-8">
+      <div className="mt-10">
+        <div className="text-3xl text-bold text-[#EADEB8]">Does the text match the color?</div>
         {currentQuestion && (
           <QuestionCard question={currentQuestion} onAnswer={handleAnswer} />
         )}

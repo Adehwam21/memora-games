@@ -23,7 +23,7 @@ const Games: React.FC<IGames> = ({ games }) => {
 
       <div className="flex flex-wrap gap-4 p-5 justify-start">
         {games?.map((game, index) => (
-          <div key={index} className="w-full sm:w-[48%] lg:w-[31%]">
+          <div key={index} className="w-[240px] h-[240px] sm:w-[200px] lg:w-[200px]">
             <Card game={game} />
           </div>
         ))}

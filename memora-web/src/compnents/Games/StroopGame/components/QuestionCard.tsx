@@ -13,7 +13,7 @@ interface Props {
 export const QuestionCard: React.FC<Props> = ({ question, onAnswer }) => {
 
   return (
-    <div className="text-center mt-36">
+    <div className="text-center mt-20">
       {/* Question */}
       <div
         className="text-6xl font-extrabold mb-28 transition-all duration-300"

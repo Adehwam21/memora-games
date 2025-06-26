@@ -20,7 +20,7 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({ user }) => {
 
   return (
-    <div className="p-4 flex flex-col">
+    <div className="p-5 pt-10 flex flex-col">
       {/* Welcome */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold">Welcome back, {user.username}! 👋</h1>

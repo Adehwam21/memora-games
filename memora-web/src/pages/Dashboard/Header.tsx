@@ -12,7 +12,7 @@ const Header: React.FC<HeaderProps> = ({ collapsed, toggleSidebar }) => {
       <div className="p-5 text-green-700 flex items-center hover:cursor-pointer">
         {/* Mobile: Logo as button */}
         <button onClick={toggleSidebar} className="md:hidden">
-          <span className="font-pacifico text-2xl font-bold">Mg</span>
+          <span className="font-poppins text-2xl font-bold">Mg</span>
         </button>
 
         {/* Desktop: normal logo */}

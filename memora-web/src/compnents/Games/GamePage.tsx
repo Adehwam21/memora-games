@@ -6,6 +6,7 @@ import API from "../../config/axiosConfig";
 
 import { GameRunner } from "./GameRunner";
 import { gameConfigs, GameKey } from "../../config/gameConfigs";
+import { MobileWarning } from "../MobilViewWarning";
 
 interface ParticipantInfo {
     participantName: string,
@@ -71,29 +72,30 @@ export const GamePage: React.FC = () => {
 
     return (
         <div className="flex flex-row w-full h-screen bg-green-50 p-4 gap-4">
-        {/* Left Panel */}
-        <div className="flex flex-col w-1/2 p-10 bg-white rounded-md shadow text-[#3e3e3e]">
-            <h2 className="text-4xl font-bold mb-2 capitalize">{gameConfig.gameTitle}</h2>
-            <p className="text-lg mb-4">{gameConfig.description}</p>
+            <MobileWarning/>
+            {/* Left Panel */}
+            <div className="flex flex-col w-1/2 p-10 bg-white rounded-md shadow text-[#3e3e3e]">
+                <h2 className="text-4xl font-bold mb-2 capitalize">{gameConfig.gameTitle}</h2>
+                <p className="text-lg mb-4">{gameConfig.description}</p>
 
-            <button
-            onClick={handleStartGame}
-            className="p-2 bg-green-500 w-1/2 text-white font-bold hover:bg-green-700 rounded"
-            disabled={isPlaying}
-            >
-            {isPlaying ? "Game In Progress..." : "Start Game"}
-            </button>
-        </div>
+                <button
+                onClick={handleStartGame}
+                className="p-2 bg-green-700 w-1/2 text-white font-bold hover:bg-green-500 rounded"
+                disabled={isPlaying}
+                >
+                {isPlaying ? "Game In Progress..." : "Start Game"}
+                </button>
+            </div>
 
-        {/* Right Panel */}
-        <div className="flex w-full bg-[#9c6144cc] rounded-md text-[#EADEB8]">
-            {config && (
-                <GameRunner
-                    sessionId={sessionId!}
-                    guessWhatConfig={game === "guess-what" ? config : null}
-                    stroopGameConfig={game === "stroop" ? config : null}
-                />)}
-        </div>
+            {/* Right Panel */}
+            <div className="flex w-full bg-[#9c6144cc] rounded-md text-[#EADEB8]">
+                {config && (
+                    <GameRunner
+                        sessionId={sessionId!}
+                        guessWhatConfig={game === "guess-what" ? config : null}
+                        stroopGameConfig={game === "stroop" ? config : null}
+                    />)}
+            </div>
         </div>
     );
 };
