@@ -110,7 +110,7 @@ export const PerformancePage: React.FC = () => {
             { session && handleMetricTableChoice(session.gameTitle)}
 
             <button
-                className='mt-4 bg-green-400 hover:bg-green-800 text-white font-semibold text-md rounded-md p-3 transition-colors'
+                className='mt-4 bg-green-700 hover:bg-green-500 text-white font-semibold text-md rounded-md p-3 transition-colors'
                 onClick={() => handleReturnButtonClick(session.gameTitle)}
             >
                 Return to Dashboard

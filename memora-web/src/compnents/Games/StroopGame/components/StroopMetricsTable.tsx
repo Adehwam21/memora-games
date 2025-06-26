@@ -22,13 +22,13 @@ export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({ metrics,
             <h1 className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto font-bold">Session Stats</h1>
             <table className="w-full border-collapse border border-gray-300">
                 <thead>
-                    <tr className="bg-gray-200">
-                        <th className="border p-2 text-center font-bold text-lg">Number of Questions</th>
-                        <th className="border p-2 text-center font-bold text-lg">Attempts</th>
-                        <th className="border p-2 text-center font-bold text-lg">Average Respnse Time (s)</th>
-                        <th className="border p-2 text-center font-bold text-lg">Errors</th>
-                        <th className="border p-2 text-center font-bold text-lg">Accuracy (%)</th>
-                        <th className="border p-2 text-center font-bold text-lg">Total Score</th>
+                    <tr className="bg-green-300">
+                        <th className="border p-2 text-center font-bold text-md">Number of Questions</th>
+                        <th className="border p-2 text-center font-bold text-md">Attempts</th>
+                        <th className="border p-2 text-center font-bold text-md">Average Respnse Time (s)</th>
+                        <th className="border p-2 text-center font-bold text-md">Errors</th>
+                        <th className="border p-2 text-center font-bold text-md">Accuracy (%)</th>
+                        <th className="border p-2 text-center font-bold text-md">Total Score</th>
                     </tr>
                 </thead>
                 <tbody>

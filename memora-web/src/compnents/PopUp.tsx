@@ -47,7 +47,7 @@ export const PopUp: React.FC<PopUpProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-2xl flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-xl max-w-md w-full relative">
+      <div className="bg-white rounded-md shadow-xl max-w-md w-full relative">
         {/* <div className={classNames("h-2 rounded-t-xl", typeColors[type])} /> */}
         <button
           className="absolute top-2 right-2 text-green-500 hover:text-green-700"
@@ -57,7 +57,7 @@ export const PopUp: React.FC<PopUpProps> = ({
         </button>
 
         <div className="p-5 text-center space-y-3">
-          {title && <h2 className="text-2xl text-green-500 font-bold">{title}</h2>}
+          {title && <h2 className="text-2xl text-green-700 font-bold">{title}</h2>}
           {message && <p className="text-gray-700 text-lg font-bold">{message}</p>}
 
           <div className="flex justify-center gap-4 pt-4">
@@ -68,7 +68,7 @@ export const PopUp: React.FC<PopUpProps> = ({
                 {
                   "bg-green-500": type === "success",
                   "bg-red-500": type === "error",
-                  "bg-green-500 text-black": type === "warning",
+                  "bg-green-700 text-black": type === "warning",
                   "bg-blue-500": type === "info",
                 }
               )}
