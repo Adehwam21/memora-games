@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exportStroopParticipantGameSessionsToCSV = exports.exportGuessWhatParticipantSessionsToCSV = exports.getAllGameSessions = exports.deleteGameSession = exports.updateGameSession = exports.getGameSessionById = exports.getGameSessionsByUser = exports.createResearchGameSession = exports.createGameSession = void 0;
+exports.exportStroopParticipantGameSessionsToCSV = exports.exportGuessWhatParticipantSessionsToCSV = exports.getAllCompletedGameSessions = exports.getAllGameSessions = exports.deleteGameSession = exports.updateGameSession = exports.getGameSessionById = exports.getCompleteGameSessionsByUser = exports.getGameSessionsByUser = exports.createResearchGameSession = exports.createGameSession = void 0;
 const game_1 = require("../types/game");
 const guessWhatUtils_1 = require("../utils/guessWhatUtils");
 const stroopUtils_1 = require("../utils/stroopUtils");
@@ -102,6 +102,25 @@ const getGameSessionsByUser = (req, res) => __awaiter(void 0, void 0, void 0, fu
 });
 exports.getGameSessionsByUser = getGameSessionsByUser;
 /**
+ * Get all complete game sessions for a user
+ */
+const getCompleteGameSessionsByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    try {
+        const gameSessions = yield req.context.services.gameSession.getCompleteSessionsByUserId(userId);
+        if (gameSessions.length === 0) {
+            res.status(404).json({ message: "No game sessions found for this user" });
+            return;
+        }
+        res.status(200).json({ gameSessions });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+exports.getCompleteGameSessionsByUser = getCompleteGameSessionsByUser;
+/**
  * Get a single game session by ID
  */
 const getGameSessionById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -179,6 +198,26 @@ const getAllGameSessions = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.getAllGameSessions = getAllGameSessions;
+/**
+ * Get all completed game sessions
+*/
+const getAllCompletedGameSessions = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const gameSessions = yield req.context.services.gameSession.getAllCompleted();
+        if (gameSessions.length === 0) {
+            res.status(404).json({ message: "No game sessions found" });
+            return;
+        }
+        res.status(200).json({ gameSessions });
+        return;
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+        return;
+    }
+});
+exports.getAllCompletedGameSessions = getAllCompletedGameSessions;
 const exportGuessWhatParticipantSessionsToCSV = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {

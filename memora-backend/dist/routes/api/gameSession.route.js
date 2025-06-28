@@ -10,6 +10,8 @@ exports.gameSessionRouter.route("")
     .post(auth_1.verifyToken, gameSession_controller_1.createGameSession); // Create a new game session
 exports.gameSessionRouter.route("/user/:userId")
     .get([auth_1.verifyToken], gameSession_controller_1.getGameSessionsByUser); // Get all game sessions for a user
+exports.gameSessionRouter.route("/user/complete/:userId")
+    .get([auth_1.verifyToken], gameSession_controller_1.getCompleteGameSessionsByUser); // Get all complete game sessions for a user
 exports.gameSessionRouter.route("/all/")
     .get([auth_1.verifyToken, auth_1.admin], gameSession_controller_1.getAllGameSessions); // Get all game sessions
 exports.gameSessionRouter.route("/:id")

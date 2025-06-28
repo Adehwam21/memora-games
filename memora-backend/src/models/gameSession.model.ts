@@ -41,6 +41,7 @@ export interface IGameSession {
   age?: number;
   consent?: boolean;
   educationLevel?: string;
+  complete?: boolean;
 }
 
 export interface IGameSessionDocument extends Document, IGameSession { }
@@ -61,7 +62,8 @@ const GameSessionSchema = new Schema<IGameSessionDocument>(
     age: { type: String, required: false },
     participantName: { type: String, required: false },
     consent: { type: Boolean, required: false },
-    educationLevel: {type: String, required: false}
+    educationLevel: {type: String, required: false},
+    complete: {type: Boolean, required: false, default: false}
 
   },
   { timestamps: true }

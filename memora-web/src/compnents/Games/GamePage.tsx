@@ -9,11 +9,11 @@ import { gameConfigs, GameKey } from "../../config/gameConfigs";
 import { MobileWarning } from "../MobilViewWarning";
 
 interface ParticipantInfo {
-  participantName: string;
-  mmseScore: string;
-  consent: boolean;
-  age: number;
-  educationLevel: string;
+    participantName: string;
+    mmseScore: string;
+    consent: boolean;
+    age: number;
+    educationLevel: string;
 }
 
 export const GamePage: React.FC = () => {
@@ -28,7 +28,7 @@ export const GamePage: React.FC = () => {
     const gameConfig = gameKey ? gameConfigs[gameKey] : undefined;
 
     const selector = gameConfig ? gameConfig.getSlice : () => ({});
-    const { config, isPlaying, sessionId, gameEnded, metrics, totalScore } =
+    const { config, isPlaying, sessionId, gameEnded, complete, metrics, totalScore } =
         useSelector(selector) as any;
 
     useEffect(() => {
@@ -36,13 +36,14 @@ export const GamePage: React.FC = () => {
         API.put(`/game-session/update/${sessionId}`, {
             metrics,
             totalScore,
+            complete,
         })
             .then(() => navigate(`/game/performance/${sessionId}`))
             .catch((err) => console.error("Failed to update session", err));
         }
-    }, [gameEnded, isPlaying, sessionId, metrics, totalScore, navigate]);
+    }, [gameEnded, isPlaying, sessionId, metrics, totalScore, complete, navigate]);
 
-    if (!gameConfig) return <div>Invalid game: {game}</div>;
+    if (!gameConfig) return;
 
     const handleStartGame = async () => {
         const endpoint = participantInfo?.participantName ? "/research-session" : "/game-session";

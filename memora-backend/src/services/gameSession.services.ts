@@ -51,6 +51,21 @@ export default class GameSessionService extends IService {
     }
 
     /**
+     * Get all complete game sessions for a specific user
+     */
+    async getCompleteSessionsByUserId(userId: string): Promise<IGameSession[]> {
+        try {
+            const gameSessions = await this.db.GameSessionModel.find({ userId, complete: true });
+            if (!gameSessions) {
+                throw new Error("No game sessions found for this user");
+            }
+            return gameSessions;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
      * Update a specific game session by ID
      */
     async updateOne(id: string, input: Partial<IGameSession>): Promise<IGameSession | null> {
@@ -101,6 +116,21 @@ export default class GameSessionService extends IService {
         } catch (e) {
             throw e;
         }
+    }
+
+    /**
+     * Get all completed game sessions
+     */
+    async getAllCompleted(): Promise<IGameSession[] | any> {
+        try {
+            const gameSessions = await this.db.GameSessionModel.find({complete: true});
+            if (!gameSessions) {
+                throw new Error("No game sessions found");
+            }
+            return gameSessions;
+        } catch (e) {
+            throw e;
+        }   
     }
 
     async getParticipantSession(gameTitle: string): Promise<any> {

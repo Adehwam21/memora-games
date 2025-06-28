@@ -26,7 +26,7 @@ const Profile: React.FC<HomeProps> = ({ user }) => {
   useEffect(() => {
     const fetchGameSessions = async () => {
       try {
-        const response = await API.get(`/game-session/user/${user.userId}`);
+        const response = await API.get(`/game-session/user/complete/${user.userId}`);
         if (response.data?.gameSessions) {
           setGameSessions(response.data.gameSessions);
         } else {

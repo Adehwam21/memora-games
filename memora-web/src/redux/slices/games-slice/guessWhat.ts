@@ -31,6 +31,7 @@ interface GameState {
     isPlaying: boolean;
     isPaused: boolean;
     gameEnded: boolean | null;
+    complete: boolean;
 
 }
 
@@ -43,6 +44,7 @@ const initialState: GameState = {
     isPaused: false,
     gameEnded: false,
     totalScore: 0,
+    complete: false
 };
 
 const guessWhatGameSlice = createSlice({
@@ -208,6 +210,7 @@ const guessWhatGameSlice = createSlice({
             state.isPlaying = false;
             state.gameEnded = true;
             state.gameState = null;
+            state.complete = true;
         },
     },
 });

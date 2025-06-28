@@ -65,6 +65,23 @@ class GameSessionService extends app_1.IService {
         });
     }
     /**
+     * Get all complete game sessions for a specific user
+     */
+    getCompleteSessionsByUserId(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const gameSessions = yield this.db.GameSessionModel.find({ userId, complete: true });
+                if (!gameSessions) {
+                    throw new Error("No game sessions found for this user");
+                }
+                return gameSessions;
+            }
+            catch (err) {
+                throw err;
+            }
+        });
+    }
+    /**
      * Update a specific game session by ID
      */
     updateOne(id, input) {
@@ -108,6 +125,23 @@ class GameSessionService extends app_1.IService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const gameSessions = yield this.db.GameSessionModel.find();
+                if (!gameSessions) {
+                    throw new Error("No game sessions found");
+                }
+                return gameSessions;
+            }
+            catch (e) {
+                throw e;
+            }
+        });
+    }
+    /**
+     * Get all completed game sessions
+     */
+    getAllCompleted() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const gameSessions = yield this.db.GameSessionModel.find({ complete: true });
                 if (!gameSessions) {
                     throw new Error("No game sessions found");
                 }

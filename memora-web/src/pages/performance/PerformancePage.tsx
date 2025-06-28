@@ -7,6 +7,7 @@ import { StroopMetricsTable } from '../../compnents/Games/StroopGame/components/
 import { useDispatch } from 'react-redux';
 import { forceEndGuessWhatGame } from '../../redux/slices/games-slice/guessWhat';
 import { forceEndStroopGame } from '../../redux/slices/games-slice/stroop';
+import { Loader } from '../../compnents/Loader';
 
 interface IGuessWhatMetric {
     level: number;
@@ -103,7 +104,7 @@ export const PerformancePage: React.FC = () => {
         }
     }
 
-    if (!session) return <p>Loading session data...</p>;
+    if (!session) return <Loader/>;
 
     return (
         <div className='p-10'>

@@ -24,6 +24,7 @@ export interface GameState {
   isPlaying: boolean;
   isPaused: boolean;
   gameEnded: boolean;
+  complete:boolean;
 }
 
 const initialState: GameState = {
@@ -37,6 +38,7 @@ const initialState: GameState = {
   gameEnded: false,
   pauseStartTime: null,
   totalPausedDuration: 0,
+  complete: false
 };
 
 const stroopGameSlice = createSlice({
@@ -132,6 +134,7 @@ const stroopGameSlice = createSlice({
       state.gameEnded = true;
       state.gameState = null;
       state.metrics = null;
+      state.complete = false;
     },
 
     endGame(state) {
@@ -140,6 +143,7 @@ const stroopGameSlice = createSlice({
       state.isPlaying = false;
       state.gameEnded = true;
       state.gameState = null;
+      state.complete = true;
     },
   },
 });

@@ -3,6 +3,7 @@ import {
     createGameSession,
     createResearchGameSession,
     getGameSessionsByUser,
+    getCompleteGameSessionsByUser,
     getGameSessionById,
     updateGameSession,
     deleteGameSession,
@@ -20,6 +21,9 @@ gameSessionRouter.route("")
 
 gameSessionRouter.route("/user/:userId")
     .get([verifyToken], getGameSessionsByUser); // Get all game sessions for a user
+
+gameSessionRouter.route("/user/complete/:userId")
+    .get([verifyToken], getCompleteGameSessionsByUser); // Get all complete game sessions for a user
 
 gameSessionRouter.route("/all/")
     .get([verifyToken, admin], getAllGameSessions); // Get all game sessions
