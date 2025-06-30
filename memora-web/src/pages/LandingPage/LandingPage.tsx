@@ -13,7 +13,10 @@ const LandingPage: React.FC = () => {
     return (
         <div className="text-black landing-page font-poppins min-h-screen flex items-center justify-center">
             <div className="landing-content text-black p-8 w-full max-w-lg">
-                <div className='p-5 font-bold text-center text-4xl text-green-700 font-pacifico '> Memora Games</div>
+                <div className='flex justify-center items-center space-x-2 p-2 font-bold text-center text-4xl text-green-700 '> 
+                    <img className='w-8 h-8' src="/images/mgt.png" alt="memora games log" />
+                    <span className='text-[24px] font-poppins'>Memora Games</span>
+                </div>
                 {showLogin ? (
                     <Login toggleForm={toggleForm} />
                 ) : (

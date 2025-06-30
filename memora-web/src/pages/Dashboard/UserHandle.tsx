@@ -59,11 +59,11 @@ const UserHandle: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="absolute right-4 top-16 mt-2 min-w-[15rem] bg-white rounded-lg shadow-lg z-50"
           >
-            <ul className="py-2">
+            <ul className="p-2">
               <li>
                 <Link
                   to="/dashboard/settings"
-                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition"
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition rounded-sm"
                   onClick={() => setIsOpen(false)}
                 >
                   <MdOutlineSettings /> Settings
@@ -72,7 +72,7 @@ const UserHandle: React.FC = () => {
               <li>
                 <Link
                   to="/dashboard/facilitate"
-                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition"
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition rounded-sm"
                   onClick={() => setIsOpen(false)}
                 >
                   <FaHandsHelping /> Facilitate
@@ -81,7 +81,7 @@ const UserHandle: React.FC = () => {
               <li>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 px-4 py-2 w-full text-left hover:bg-red-100 text-red-600 transition"
+                  className="flex items-center gap-2 px-4 py-2 w-full text-left hover:bg-red-100 text-red-600 transition rounded-sm"
                 >
                   <FaSignOutAlt /> Sign Out
                 </button>
