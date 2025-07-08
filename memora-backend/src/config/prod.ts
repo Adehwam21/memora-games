@@ -5,7 +5,7 @@ dotenv.config();
 const config: Config = {
     app: {
         env: "production",
-        name: "memora-backend",
+        name: "memora-backend-production",
         port: process.env.PORT as unknown as number,
     },
     auth: {
