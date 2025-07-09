@@ -3,20 +3,16 @@ from app.models.mmse_predictor import MMSEPredictor
 
 # Sample game data
 sample_data = {
-    "age": 65,
-    "averageAttempts": 2,
-    "averageLevelErrors": 1,
-    "averageAccuracy": 75,
-    "averageResponseTime": 2.5,
-    "educationLevel_none": 0,
-    "educationLevel_primary": 0,
-    "educationLevel_secondary": 1,
-    "educationLevel_postsecondary": 0,
-    "educationLevel_postgraduate": 0
+    "age": 72,
+    "averageAccuracy": 3.0,
+    "averageAttempts": 2.0,
+    "averageResponseTime": 1.8,
+    "averageLevelErrors": 1.0,
+    "educationLevel": "postsecondary"
 }
 
 def test_feature_engineering():
-    df = GWPredictor.feature_engineer(sample_data)
+    df = GWPredictor.preprocess(sample_data)
     assert "accuracyPerAttempt" in df.columns
     assert "errorRate" in df.columns
     assert "speedScore" in df.columns

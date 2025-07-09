@@ -26,11 +26,11 @@ async def assessment_prediction():
 @app.post("/game/predict-mmse/gw")
 async def predict_mmse(input: GuessWhatInput):
     game_data = input.dict()
-    score = await MMSEPredictor.predict_gw_mmse(game_data)
+    score = MMSEPredictor.predict_gw_mmse(game_data)
     return {"predicted_mmse": score}
 
 # @app.post("/game/predict-mmse/stp")
 # async def predict_mmse(input: GuessWhatInput):
 #     game_data = input.dict()
-#     score = await GWPredictor.predict_stp_mmse(game_data)
+#     score = MMSEPredictor.predict_stp_mmse(game_data)
 #     return {"predicted_mmse": score}
