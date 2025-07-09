@@ -72,7 +72,7 @@ const guessWhatGameSlice = createSlice({
             state.isPlaying = true;
             state.metrics = [];
             state.totalScore = 0;
-            state.gameState = initializeGameState(action.payload.guessWhatConfig, 10); // Change later to 1
+            state.gameState = initializeGameState(action.payload.guessWhatConfig, 1);
             state.gameEnded = false
 
         },
