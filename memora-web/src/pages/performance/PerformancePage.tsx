@@ -39,7 +39,7 @@ interface IGameSession {
     sessionDate: string; 
     metrics: IGameMetric;
     totalScore: number;
-    mmseScore: string;
+    mmseScore: number;
     createdAt: string;
     updatedAt: string; 
     __v: number;
@@ -92,12 +92,15 @@ export const PerformancePage: React.FC = () => {
                 return <GuessWhatMetricsTable 
                     metrics={session.metrics as IGuessWhatMetric[]} 
                     totalScore={session.totalScore}
+                    mmseScore = {session.mmseScore}
                 />
             
             case "stroop":
                 return <StroopMetricsTable 
                     metrics={session.metrics as IStroopMetric} 
-                    totalScore={session.totalScore}/>
+                    totalScore={session.totalScore}
+                    mmseScore={session.mmseScore}
+                    />
         
             default:
                 break;

@@ -15,21 +15,22 @@ except Exception as e:
     print(f"Failed to load model: {e}")
 
 
-@app.get("/")
+@app.get("/api/v1/")
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/assessment/predict")
+@app.get("/api/v1/assessment/predict")
 async def assessment_prediction():
     return {"message":"Nothing to predict yet"}
 
-@app.post("/game/predict-mmse/gw")
+@app.post("/api/v1/game/predict-mmse/gw")
 async def predict_mmse(input: GuessWhatInput):
     game_data = input.dict()
     score = MMSEPredictor.predict_gw_mmse(game_data)
+    print(f"Predicted Guess What MMSE score: {score}")
     return {"predicted_mmse": score}
 
-# @app.post("/game/predict-mmse/stp")
+# @app.post("/api/v1/game/predict-mmse/stp")
 # async def predict_mmse(input: GuessWhatInput):
 #     game_data = input.dict()
 #     score = MMSEPredictor.predict_stp_mmse(game_data)

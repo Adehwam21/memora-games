@@ -14,10 +14,11 @@ export interface IGuessWhatMetric {
 
 interface MetricsTableProps {
     metrics: IGuessWhatMetric[];
+    mmseScore: number;
     totalScore: number;
 }
 
-export const GuessWhatMetricsTable: React.FC<MetricsTableProps> = ({ metrics, totalScore }) => {
+export const GuessWhatMetricsTable: React.FC<MetricsTableProps> = ({ metrics, totalScore, mmseScore}) => {
     if (!metrics || metrics.length === 0) return <p className="text-center text-gray-500"></p>;
     const averages = calculateAverages(metrics)
 
@@ -55,6 +56,7 @@ export const GuessWhatMetricsTable: React.FC<MetricsTableProps> = ({ metrics, to
                         <th className="border p-2">Total: {totalScore}</th>
                     </tr>
                 </tbody>
+                <h1 className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto font-bold">Predicted MMSE Score: {mmseScore.toFixed()}</h1>
             </table>
         </div>
     );

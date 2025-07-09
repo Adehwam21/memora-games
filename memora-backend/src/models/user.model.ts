@@ -21,8 +21,8 @@ export interface IUserModel extends Model<IUserDocument> { }
 const UserSchema = new Schema<IUserDocument>({
   userId: { type: String, required: true, default: uuidv4 },
   username: { type: String, required: true, },
-  age: { type: Number, required: true },
-  gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
+  age: { type: Number, required: false },
+  gender: { type: String, enum: ["Male", "Female", "Other"], required: false},
   smokingStatus: { type: Boolean, default: false },
   drinkingStatus: { type: Boolean, default: false },
   medicalCondition: { type: String, required: false },

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { FaChevronLeft } from 'react-icons/fa'
 import { LuBrain } from "react-icons/lu";
-import { MdOutlineAssessment } from "react-icons/md";
+// import { MdOutlineAssessment } from "react-icons/md";
 import { GrHomeRounded } from "react-icons/gr";
 import { BsCollectionPlay } from "react-icons/bs";
 
@@ -16,8 +16,8 @@ interface SideBarProps {
 const sections = [
   { link: "/dashboard/home", name: "Home", icon: <GrHomeRounded size={20}/> },
   { link: "/dashboard/games", name: "Games", icon: <BsCollectionPlay size={20}/> },
-  { link: "/dashboard/assessment", name: "Assessment", icon: <MdOutlineAssessment/> },
-  { link: "/dashboard/profile", name: "Profile", icon: <LuBrain /> },
+  { link: "/dashboard/stats", name: "My Stats", icon: <LuBrain /> },
+  // { link: "/dashboard/assessment", name: "Assessment", icon: <MdOutlineAssessment/> },
 ]
 
 const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed, isMobileOpen, setIsMobileOpen }) => {

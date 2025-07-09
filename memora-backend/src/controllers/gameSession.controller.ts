@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { GameInitialConfig, GameTypeEnum } from "../types/game";
-import { formatGuessWhatParticipantSession } from "../utils/guessWhatUtils";
+import { formatGuessWhatParticipantSession, formatGuessWhatSessionForMMSEPrediction, requestGuessWhatMMSEscore } from "../utils/guessWhatUtils";
 import { formatStroopParticipantSession } from "../utils/stroopUtils";
 
 /**
@@ -146,10 +146,18 @@ export const getGameSessionById = async (req: Request, res: Response): Promise<v
  */
 export const updateGameSession = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
+
+    if (!req.user){
+        res.status(401).json({message: "Unauthorized"})
+    }
+
+    const {age, educationLevel} = req.user
     const updateData = req.body;
 
     try {
-        const updatedGameSession = await req.context!.services!.gameSession!.updateOne(id, updateData);
+        const gwMetrics = formatGuessWhatSessionForMMSEPrediction(updateData);
+        const mmseScore = await requestGuessWhatMMSEscore({...gwMetrics, educationLevel, age});
+        const updatedGameSession = await req.context!.services!.gameSession!.updateOne(id, {...updateData, mmseScore});
 
         if (!updatedGameSession) {
             res.status(404).json({ message: "Game session not found" });

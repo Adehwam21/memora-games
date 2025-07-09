@@ -7,7 +7,7 @@ export default class UserService extends IService {
         super(props);
     }
 
-    async addOne(input: IRegisterUserInput): Promise<IUser> {
+    async addOne(input: IRegisterUserInput): Promise<IUser | any | null> {
         try {
             const user = new this.db.UserModel(input);
             await user.save();
@@ -38,7 +38,7 @@ export default class UserService extends IService {
         }
     }
 
-    async updateOne(input: Partial<IUser>, { user }: { user: any }): Promise<IUser | null> {
+    async updateOne(input: Partial<IUser>, { user }: { user: any }): Promise<IUser | null | any> {
         try {
             console.log(user);
             if (!user) {

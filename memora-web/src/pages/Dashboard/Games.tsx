@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from '../../compnents/Card';
+import { User } from '../../redux/slices/auth-slice/authSlice';
 
 export interface IGame {
   title: string;
@@ -11,11 +12,25 @@ export interface IGame {
 
 interface IGames {
   games: IGame[];
+  user: User;
 }
 
-const Games: React.FC<IGames> = ({ games }) => {
+
+const Games: React.FC<IGames> = ({ games, user }) => {
+  const isProfileComplete = user.age && user.educationLevel
+
   return (
     <main>
+      {!isProfileComplete && (
+        <div className="bg-yellow-100 text-yellow-800 p-3 rounded-lg mb-10 border border-yellow-300 ">
+          <p className="flex flex-col text-md p-3 font-medium">
+            ⚠️ Your profile is incomplete. Please complete your profile to improve the accuracy of your MMSE scores.
+            <a href="/dashboard/settings" className="underline text-yellow-900 hover:text-yellow-700">
+              Click here to complete it.
+            </a>
+          </p>
+        </div>
+      )}
       <div className='p-5 pt-10'>
         <h1 className='text-3xl font-poppins font-bold'>Browse our collection of Games</h1>
         <p className='mt-4 text-gray-600'>Feel free to play any game of your choice</p>

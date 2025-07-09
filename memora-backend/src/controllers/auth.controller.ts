@@ -12,25 +12,39 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     try {
         const existingUser = await req.context!.services!.user.getOne({ username });
         if (existingUser) {
-            res.status(400).json({ message: 'User already exists' });
+            res.status(409).json({ message: 'User already exists' });
             return;
         }
 
         const hashedPassword = await hashPassword(password);
 
-        await req.context!.services!.user.addOne({
+        const user = await req.context!.services!.user.addOne({
             username,
             email,
             password: hashedPassword,
-            age:0,
-            gender:'Other',
-            smokingStatus: false,
-            medicalCondition:'',
-            educationLevel:'',
-            drinkingStatus: false,
         });
 
-        res.status(201).json({ message: 'User registered successfully' });
+        if (!user){
+            res.status(404).json({message: "Couldn't create user"});
+            return;
+        }
+
+        const token = jwt.sign({
+            _id: user!._id,
+            userId: user!.userId, 
+            email: user!.email, 
+            username: user!.username,
+            age: user.age,
+            educationLevel: user.educationLevel,
+            role: user!.role
+        }, 
+            config.auth.secret, 
+        { 
+            expiresIn: config.auth.expiresIn 
+        });
+
+
+        res.status(201).json({ message: 'User registered successfully', user, token});
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
@@ -59,7 +73,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             _id: user!._id,
             userId: user!.userId, 
             email: user!.email, 
-            username: user!.username, 
+            username: user!.username,
+            age: user.age,
+            educationLevel: user.educationLevel,
             role: user!.role
         }, 
             config.auth.secret, 
@@ -70,10 +86,12 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({ 
             token, 
             user:{
-                userId: user.userId,
-                email: user!.email,
-                username: user!.username, 
-                role: user.role
+                userId: user!.userId, 
+                email: user!.email, 
+                username: user!.username,
+                age: user.age,
+                educationLevel: user.educationLevel,
+                role: user!.role
             },
             message: 'Logged in successfully' });
     } catch (error) {
@@ -87,8 +105,37 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 export const getUserProfile = async (req: Request, res: Response): Promise<void> => {
     try {
         const user = req.user;
+        if (!user) {
+            res.status(404).json({ message: 'Unauthorized' });
+            return;
+        }
 
         const _user = await req.context!.services!.user!.getOne({ username: user!.username });
+        if (!_user) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+
+        res.status(200).json({ user: _user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+        return;
+    }
+};
+
+// Update User Profile
+export const updateUserProfile = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user = req.user;
+        if (!user) {
+            res.status(404).json({ message: 'Unauthorized' });
+            return;
+        }
+
+        const updateData = req.body
+
+        const _user = await req.context!.services!.user!.updateOne(updateData, {user: user});
         if (!_user) {
             res.status(404).json({ message: 'User not found' });
             return;

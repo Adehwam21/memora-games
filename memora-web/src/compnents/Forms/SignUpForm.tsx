@@ -1,13 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { FormProps } from '../../types/props';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import API from "../../config/axiosConfig";
+import { useNavigate } from "react-router-dom";
+import { loginSuccess } from "../../redux/slices/auth-slice/authSlice";
+import { useAppDispatch } from "../../redux/store";
 
 const strongPasswordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
 const SignUp: React.FC<FormProps> = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -50,8 +56,15 @@ const SignUp: React.FC<FormProps> = () => {
       const response = await API.post('/auth/register', formData);
       console.log(response);
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      response!.status == 201 ? toast.success(response.data!.message) : toast.error(response.data!.message);
+      response!.status === 201 ? toast.success(response.data!.message) : toast.error(response.data!.message);
+      const token = response.data.token;
+      const user = response.data.user;
+
+      dispatch(loginSuccess({token, user}))
+      setTimeout(()=>{
+        navigate("/dashboard/home")
+      }, 900)
+      
     } catch (error: any) {
       if (error.response?.status === 409) {
         toast.error("The email or username is already registered.");
@@ -101,7 +114,7 @@ const SignUp: React.FC<FormProps> = () => {
         </div>
         <div className="relative">
           <input
-            type="password"
+            type="text"
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleInputChange}

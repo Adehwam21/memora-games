@@ -20,8 +20,9 @@ interface HomeProps {
   user: User;
 }
 
-const Profile: React.FC<HomeProps> = ({ user }) => {
+const UserStats: React.FC<HomeProps> = ({ user }) => {
   const [gameSessions, setGameSessions] = useState<IGameSession[]>([]);
+  const isProfileComplete = user.age && user.educationLevel
 
   useEffect(() => {
     const fetchGameSessions = async () => {
@@ -48,6 +49,17 @@ const Profile: React.FC<HomeProps> = ({ user }) => {
 
   return (
     <div className="p-5 pt-10 flex flex-col">
+      {!isProfileComplete && (
+        <div className="bg-yellow-100 text-yellow-800 p-3 rounded-lg mb-10 border border-yellow-300 ">
+          <p className="flex flex-col text-md p-3 font-medium">
+            ⚠️ Your profile is incomplete. Please complete your profile to improve the accuracy of your MMSE scores.
+            <a href="/dashboard/settings" className="underline text-yellow-900 hover:text-yellow-700">
+              Click here to complete it.
+            </a>
+          </p>
+        </div>
+      )}
+
       {/* Welcome */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold">Your Stats</h1>
@@ -61,7 +73,7 @@ const Profile: React.FC<HomeProps> = ({ user }) => {
           <p className="text-3xl font-bold">{totalSessions}</p>
         </div>
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
-          <h2 className="text-sm font-semibold mb-2">Avg. MMSE Score</h2>
+          <h2 className="text-sm font-semibold mb-2">Average MMSE Score</h2>
           <p className="text-3xl font-bold">{avgMMSEScore}</p>
         </div>
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
@@ -102,4 +114,4 @@ const Profile: React.FC<HomeProps> = ({ user }) => {
   );
 };
 
-export default Profile;
+export default UserStats;

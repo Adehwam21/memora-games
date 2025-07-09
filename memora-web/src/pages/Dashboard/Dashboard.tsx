@@ -5,7 +5,7 @@ import { Routes, Route } from 'react-router-dom'
 import Home from './Home'
 import Games, { IGame } from './Games'
 import Settings from './Settings'
-import Profile from './Profile'
+import UserStats from './UserStats'
 import API from '../../config/axiosConfig'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
@@ -66,9 +66,9 @@ const Dashboard: React.FC = () => {
         >
           <Routes>
             <Route path="home" element={<Home user={user!} />} />
-            <Route path="games" element={<Games games={games || []} />} />
-            <Route path="profile" element={<Profile user={user!} />} />
-            <Route path="settings" element={<Settings />} />
+            <Route path="games" element={<Games games={games || []} user={user!} />} />
+            <Route path="stats" element={<UserStats user={user!} />} />
+            <Route path="settings" element={<Settings user= {user!}/>} />
             <Route path="facilitate" element={<ParticipationForm/>}/>
           </Routes>
         </main>

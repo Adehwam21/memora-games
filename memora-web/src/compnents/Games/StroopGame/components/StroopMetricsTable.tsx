@@ -12,9 +12,10 @@ interface IStroopMetric {
 interface StroopMetricsTableProps {
     metrics: IStroopMetric;
     totalScore: number;
+    mmseScore: number;
 }
 
-export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({ metrics, totalScore }) => {
+export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({ metrics, totalScore, mmseScore }) => {
     if (!metrics ) return <p className="text-center text-gray-500"></p>;
 
     return (
@@ -42,6 +43,7 @@ export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({ metrics,
                     </tr>
                 </tbody>
             </table>
+            <h1 className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto font-bold">Predicted MMSE Score: {mmseScore.toFixed()}</h1>
         </div>
     );
 };
