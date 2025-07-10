@@ -81,7 +81,7 @@ const Settings: React.FC<SettingsProps> = ({ user }) => {
 
   return (
     <div className="p-5 pt-10">
-      <h1 className="text-3xl font-bold font-poppins mb-2">Settings</h1>
+      <h1 className="text-3xl text-green-800 font-bold font-poppins mb-2">Settings</h1>
       <p className="text-gray-600 mb-6">View or update your profile.</p>
 
       {/* Profile Info */}

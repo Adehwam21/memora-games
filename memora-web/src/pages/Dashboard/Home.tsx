@@ -35,7 +35,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
 
       {/* Welcome */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Welcome back, {user.username}! 👋</h1>
+        <h1 className="text-3xl text-green-800 font-bold">Welcome back, {user.username}! 👋</h1>
         <p className="text-gray-500 mt-2">Here's a quick overview of your progress.</p>
       </div>
     </div>

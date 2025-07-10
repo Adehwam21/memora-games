@@ -77,9 +77,9 @@ export const getMMSETrend = (
 
 export const computeStats = (gameSessions: IGameSession[]) => {
   return {
-    totalSessions: getTotalSessions(gameSessions),
-    avgMMSEScore : getAverageMMSE(gameSessions),
-    bestMMSEScore: getBestMMSEScore(gameSessions),
+    totalSessions: getTotalSessions(gameSessions) || 0,
+    avgMMSEScore : getAverageMMSE(gameSessions) || 0,
+    bestMMSEScore: getBestMMSEScore(gameSessions) || 0,
     recentSessions : getLatestSessions(gameSessions)
   }
 }

@@ -44,29 +44,29 @@ const UserStats: React.FC<HomeProps> = ({ user, stats }) => {
 
       {/* Welcome */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Your Stats</h1>
+        <h1 className="text-3xl text-green-800 font-bold">Your Stats</h1>
         <p className="text-gray-500 mt-2">Here's a quick overview of your progress.</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
-          <h2 className="text-sm font-semibold mb-2">Games Played</h2>
-          <p className="text-3xl font-bold">{stats.totalSessions}</p>
+          <h2 className="text-sm text-gray-500 font-semibold mb-2">Total Sessions</h2>
+          <p className="text-3xl text-green-800 font-bold">{stats.totalSessions || 0}</p>
         </div>
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
-          <h2 className="text-sm font-semibold mb-2">Average MMSE Score</h2>
-          <p className="text-3xl font-bold">{stats.avgMMSEScore}</p>
+          <h2 className="text-sm text-gray-500 font-semibold mb-2">Average MMSE Score</h2>
+          <p className="text-3xl text-green-800 font-bold">{stats.avgMMSEScore || 0}</p>
         </div>
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
-          <h2 className="text-sm font-semibold mb-2">Best MMSE Score</h2>
-          <p className="text-3xl font-bold">{stats.bestMMSEScore}</p>
+          <h2 className="text-sm text-gray-500 font-semibold mb-2">Best MMSE Score</h2>
+          <p className="text-3xl text-green-800 font-bold">{stats.bestMMSEScore || 0}</p>
         </div>
       </div>
 
       {/* Recent Activity */}
       <div className="bg-base-100 p-10 rounded-sm shadow-md mb-6 overflow-x-auto">
-        <h2 className="text-2xl font-bold mb-4">Recent Games</h2>
+        <h2 className="text-2xl text-green-800  font-bold mb-4">Recent Games</h2>
         {stats.recentSessions ? (
           <table className="table w-full">
             <thead>

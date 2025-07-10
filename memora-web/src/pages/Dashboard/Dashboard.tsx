@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
     try {
       const response = await API.get(`/game-session/user/complete/${user!.userId}`);
       if (response.data?.gameSessions) {
-        const userStats = computeStats(response.data.gameSessions)
+        const userStats = computeStats(response.data.gameSessions) || []
         dispatch(setStats({ stats: userStats }));
       } else {
         console.log("Couldn't fetch stats");
@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
           <Routes>
             <Route path="home" element={<Home user={user!} />} />
             <Route path="games" element={<Games games={games || []} user={user!} />} />
-            <Route path="stats" element={<UserStats user={user!} stats={stats!} />} />
+            <Route path="stats" element={<UserStats user={user!} stats={stats! || []} />} />
             <Route path="settings" element={<Settings user={user!} />} />
             <Route path="facilitate" element={<ParticipationForm />} />
           </Routes>

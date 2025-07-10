@@ -32,8 +32,8 @@ const Games: React.FC<IGames> = ({ games, user }) => {
         </div>
       )}
       <div className='p-5 pt-10'>
-        <h1 className='text-3xl font-poppins font-bold'>Browse our collection of Games</h1>
-        <p className='mt-4 text-gray-600'>Play any game of your choice</p>
+        <h1 className='text-3xl text-green-800  font-poppins font-bold'>Games</h1>
+        <p className='mt-4 text-gray-600'>Browse our collection of Games</p>
       </div>
 
       <div className="flex flex-wrap gap-4 p-5 justify-start">

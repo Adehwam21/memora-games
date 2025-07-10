@@ -22,10 +22,10 @@ const appSlice = createSlice({
   initialState,
   reducers: {
     setGames(state, action: PayloadAction<{games: IGame[]}>){
-      state.games = action.payload.games
+      state.games = action.payload.games || []
     },
     setStats(state, action: PayloadAction<{stats: IStats}>){
-      state.stats = action.payload.stats
+      state.stats = action.payload.stats || []
     }
   }
 })
