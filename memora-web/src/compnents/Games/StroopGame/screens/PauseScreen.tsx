@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {
   FiPlay,
-  FiRotateCcw,
+  // FiRotateCcw,
 } from 'react-icons/fi';
 import { MdOutlineExitToApp } from "react-icons/md";
 
@@ -13,7 +13,7 @@ interface PauseScreenProps {
 
 const PauseScreen: React.FC<PauseScreenProps> = ({
   onResume,
-  onRestart,
+  // onRestart,
   onExit
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -59,13 +59,13 @@ const PauseScreen: React.FC<PauseScreenProps> = ({
             <span>Resume</span>
           </button>
 
-          <button
+          {/* <button
             onClick={onRestart}
             className="grid grid-cols-[auto_1fr] items-center gap-1 bg-black/70 hover:bg-black/40 text-[#EADEB8] px-32 py-5 transition-transform duration-200 hover:scale-105 font-bold text-2xl"
           >
             <FiRotateCcw size={35} />
             <span>Restart</span>
-          </button>
+          </button> */}
 
           <button
             onClick={onExit}

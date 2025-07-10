@@ -15,15 +15,34 @@ export const gameConfigs = {
       startGuessWhatGame(payload),
     getSlice: (state: RootState) => state.guessWhat,
     computeScore: getGuessWhatMMSEScore,
+    rules: [
+      "You will be shown images briefly, before the timer ⏲️ goes down.",
+      "Try to memorize and recall the imagees and their positions.",
+      "A set of images will be displayed for selection.",
+      "Select which numbered card represents the position of the images displayed.",
+      "You get points for correct selections.",
+      "Speed and accuracy matter.",
+    ],
+    testingPhase: true,
   },
+
   "stroop": {
     gameTitle: "stroop",
     description: "A test of cognitive control using color-word interference.",
     startGameAction: (payload: { sessionId: string; stroopGameConfig: IStroopGameConfig }) =>
       startStroopGame(payload),
     getSlice: (state: RootState) => state.stroop,
-    computeScore: getGuessWhatMMSEScore, // TODO: Change this function to getStroopMMSEScore after implemented.
+    computeScore: getGuessWhatMMSEScore, // TODO: replace with getStroopMMSEScore
+    rules: [
+      "Identify the font color of a word, not the word itself.",
+      "Make sure the font color of the word and the word itself match.",
+      "Select ✅ if there is a match or ❌ if otherwise.",
+      "You must respond as quickly and accurately as possible.",
+      "You get points for correct choices only."
+    ],
+    testingPhase: true,
   },
 };
 
 export type GameKey = keyof typeof gameConfigs;
+

@@ -7,3 +7,11 @@ class GuessWhatInput(BaseModel):
     averageAccuracy: float
     averageResponseTime: float
     educationLevel: str
+
+class StroopInput(BaseModel):
+    age: float
+    attempts: float
+    errors: float
+    accuracy: float
+    averageResponseTime: float
+    educationLevel: str

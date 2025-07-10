@@ -20,7 +20,7 @@ export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({ metrics,
 
     return (
         <div className="mt-10 w-full">
-            <h1 className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto font-bold">Session Stats</h1>
+            <h1 className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto text-lg font-bold">Session Stats</h1>
             <table className="w-full border-collapse border border-gray-300">
                 <thead>
                     <tr className="bg-green-300">
@@ -43,7 +43,10 @@ export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({ metrics,
                     </tr>
                 </tbody>
             </table>
-            <h1 className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto font-bold">Predicted MMSE Score: {mmseScore.toFixed()}</h1>
+            <div className="flex flex-col justify-center items-center p-10">
+                <h2 className="text-lg font-semibold mb-2">Predicted MMSE Score</h2>
+                <p className="text-5xl text-green-600 font-bold">{mmseScore.toFixed()}<span className="text-lg text-green-800">/30</span></p>
+            </div>
         </div>
     );
 };

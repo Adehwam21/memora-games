@@ -11,4 +11,7 @@ export interface Config {
         secret: string;
         expiresIn: string;
     };
+    aiServer: {
+        baseUrl: string;
+    }
 }

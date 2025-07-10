@@ -7,6 +7,6 @@ export interface IStroopQuestion {
 }
 
 export interface IStroopGameConfig extends BaseGameConfig {
-  duration: 110000,
+  duration: 90000,
   questions: IStroopQuestion[]
 }

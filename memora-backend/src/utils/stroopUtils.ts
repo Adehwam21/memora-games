@@ -15,6 +15,15 @@ const stroopColors: Record<string, string> = {
     Black: '#000000',
 };
 
+export interface StpMMSEScoreDto {
+  age: number,
+  attempts: number,
+  errors: number,
+  accuracy: number,
+  averageResponseTime: number,
+  educationLevel: string,
+}
+
 
 export const generateStroopQuestions = (count: 150): StroopQuestion[] => {
     const colorEntries = Object.entries(stroopColors);
@@ -80,4 +89,18 @@ export const formatStroopParticipantSession = (sessions: IGameSession[]) => {
   const stroopSessionCSV = parser.parse(formatted);
 
   return stroopSessionCSV;
+}
+
+export const formatStroopSessionForMMSEPrediction = (session: IGameSession): StpMMSEScoreDto => {
+
+  const metrics: any = session.metrics || [];
+
+  return {
+    age: session.age || 68,
+    educationLevel: session.educationLevel || "none",
+    attempts: metrics.attempts.toFixed(),
+    errors: metrics.errors.toFixed(),
+    accuracy: metrics.accuracy.toFixed(2),
+    averageResponseTime: metrics.averageResponseTime.toFixed(2),
+  };
 }

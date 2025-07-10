@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { GameInitialConfig, GameTypeEnum } from "../types/game";
-import { formatGuessWhatParticipantSession, formatGuessWhatSessionForMMSEPrediction, requestGuessWhatMMSEscore } from "../utils/guessWhatUtils";
-import { formatStroopParticipantSession } from "../utils/stroopUtils";
+import { formatGuessWhatParticipantSession, formatGuessWhatSessionForMMSEPrediction, GWmmseScoreDto } from "../utils/guessWhatUtils";
+import { requestMMSEScore } from "../utils/helpers";
+import { formatStroopParticipantSession, formatStroopSessionForMMSEPrediction, StpMMSEScoreDto } from "../utils/stroopUtils";
 
 /**
  * Create a new game session
@@ -145,31 +146,56 @@ export const getGameSessionById = async (req: Request, res: Response): Promise<v
  * Update a game session
  */
 export const updateGameSession = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-
-    if (!req.user){
-        res.status(401).json({message: "Unauthorized"})
-    }
-
-    const {age, educationLevel} = req.user
-    const updateData = req.body;
-
     try {
-        const gwMetrics = formatGuessWhatSessionForMMSEPrediction(updateData);
-        const mmseScore = await requestGuessWhatMMSEscore({...gwMetrics, educationLevel, age});
-        const updatedGameSession = await req.context!.services!.gameSession!.updateOne(id, {...updateData, mmseScore});
+        const { id } = req.params;
 
-        if (!updatedGameSession) {
-            res.status(404).json({ message: "Game session not found" });
+        if (!req.user) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+        }
+
+        const { age, educationLevel } = req.user;
+        const { updateData, gameKey } = req.body;
+
+        let metrics: GWmmseScoreDto | StpMMSEScoreDto | any;
+        let mmseScore: number;
+
+        switch (gameKey) {
+        case "guess-what":
+            metrics = formatGuessWhatSessionForMMSEPrediction(updateData);
+            mmseScore = await requestMMSEScore({ ...metrics, educationLevel, age }, gameKey);
+            break;
+
+        case "stroop":
+            metrics = formatStroopSessionForMMSEPrediction(updateData);
+            mmseScore = await requestMMSEScore({ ...metrics, educationLevel, age }, gameKey);
+            break;
+
+        default:
+            res.status(400).json({ message: "Invalid game key" });
             return;
         }
 
-        res.status(200).json({ message: "Game session updated successfully", gameSession: updatedGameSession });
+        const updatedGameSession = await req.context!.services!.gameSession!.updateOne(id, {
+        ...updateData,
+        mmseScore,
+        });
+
+        if (!updatedGameSession) {
+        res.status(404).json({ message: "Game session not found" });
+        return;
+        }
+
+        res.status(200).json({
+        message: "Game session updated successfully",
+        gameSession: updatedGameSession,
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 /**
  * Delete a game session

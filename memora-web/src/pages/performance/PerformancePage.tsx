@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { forceEndGuessWhatGame } from '../../redux/slices/games-slice/guessWhat';
 import { forceEndStroopGame } from '../../redux/slices/games-slice/stroop';
 import { Loader } from '../../compnents/Loader';
+import { BsArrowBarLeft } from 'react-icons/bs';
 
 interface IGuessWhatMetric {
     level: number;
@@ -47,10 +48,12 @@ interface IGameSession {
 
 
 export const PerformancePage: React.FC = () => {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { sessionId } = useParams<{ sessionId: string }>();
     const [session, setSession] = useState<IGameSession | null>(null);
+    const [showLoader, setShowLoader] = useState(true); // ✅ Add this line
+
 
     useEffect(() => {
         const fetchSessionData = async () => {
@@ -72,12 +75,12 @@ export const PerformancePage: React.FC = () => {
         switch (gameTitle) {
             case "guess what":
                 dispatch(forceEndGuessWhatGame());
-                navigate("/dashboard/games");
+                navigate("/dashboard/stats");
                 break;
 
             case "stroop":
                 dispatch(forceEndStroopGame());
-                navigate("/dashboard/games");
+                navigate("/dashboard/stats");
                 break;
 
             default:
@@ -107,17 +110,27 @@ export const PerformancePage: React.FC = () => {
         }
     }
 
-    if (!session) return <Loader/>;
+    useEffect(() => {
+        const timer = setTimeout(() => {
+        setShowLoader(false);
+        }, 3000); 
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (showLoader || !session) {
+        return <Loader />;
+    }
 
     return (
-        <div className='p-10'>
+        <div className='p-10 flex flex-col justify-center items-center'>
             { session && handleMetricTableChoice(session.gameTitle)}
 
             <button
-                className='mt-4 bg-green-700 hover:bg-green-500 text-white font-semibold text-md rounded-md p-3 transition-colors'
+                className='mt-4 flex flex-row justify-center items-center bg-green-700 hover:bg-green-600 text-white font-semibold text-md rounded-md p-3 transition-colors'
                 onClick={() => handleReturnButtonClick(session.gameTitle)}
             >
-                Return to Dashboard
+                <BsArrowBarLeft style={{fontSize:30}}/> Games hub
             </button>
         </div>
     );

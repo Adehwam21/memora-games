@@ -15,6 +15,9 @@ const config: Config = {
     db: {
         uri: process.env.PROD_MONGO_URI as string || "",
     },
+    aiServer: {
+        baseUrl: process.env.PROD_AI_SERVER_URL as string || "",
+    }
 };
 
 export default config;
