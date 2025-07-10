@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.exportStroopParticipantGameSessionsToCSV = exports.exportGuessWhatParticipantSessionsToCSV = exports.getAllCompletedGameSessions = exports.getAllGameSessions = exports.deleteGameSession = exports.updateGameSession = exports.getGameSessionById = exports.getCompleteGameSessionsByUser = exports.getGameSessionsByUser = exports.createResearchGameSession = exports.createGameSession = void 0;
 const game_1 = require("../types/game");
 const guessWhatUtils_1 = require("../utils/guessWhatUtils");
+const helpers_1 = require("../utils/helpers");
 const stroopUtils_1 = require("../utils/stroopUtils");
 /**
  * Create a new game session
@@ -143,15 +144,38 @@ exports.getGameSessionById = getGameSessionById;
  * Update a game session
  */
 const updateGameSession = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const updateData = req.body;
     try {
-        const updatedGameSession = yield req.context.services.gameSession.updateOne(id, updateData);
+        const { id } = req.params;
+        if (!req.user) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+        const { age, educationLevel } = req.user;
+        const { updateData, gameKey } = req.body;
+        let metrics;
+        let mmseScore;
+        switch (gameKey) {
+            case "guess-what":
+                metrics = (0, guessWhatUtils_1.formatGuessWhatSessionForMMSEPrediction)(updateData);
+                mmseScore = yield (0, helpers_1.requestMMSEScore)(Object.assign(Object.assign({}, metrics), { educationLevel, age }), gameKey);
+                break;
+            case "stroop":
+                metrics = (0, stroopUtils_1.formatStroopSessionForMMSEPrediction)(updateData);
+                mmseScore = yield (0, helpers_1.requestMMSEScore)(Object.assign(Object.assign({}, metrics), { educationLevel, age }), gameKey);
+                break;
+            default:
+                res.status(400).json({ message: "Invalid game key" });
+                return;
+        }
+        const updatedGameSession = yield req.context.services.gameSession.updateOne(id, Object.assign(Object.assign({}, updateData), { mmseScore }));
         if (!updatedGameSession) {
             res.status(404).json({ message: "Game session not found" });
             return;
         }
-        res.status(200).json({ message: "Game session updated successfully", gameSession: updatedGameSession });
+        res.status(200).json({
+            message: "Game session updated successfully",
+            gameSession: updatedGameSession,
+        });
     }
     catch (error) {
         console.error(error);

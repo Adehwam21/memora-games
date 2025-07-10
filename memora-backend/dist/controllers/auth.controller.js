@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserProfile = exports.login = exports.register = void 0;
+exports.updateUserProfile = exports.getUserProfile = exports.login = exports.register = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config");
 const authUtils_1 = require("../utils/authUtils");
@@ -23,22 +23,31 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const existingUser = yield req.context.services.user.getOne({ username });
         if (existingUser) {
-            res.status(400).json({ message: 'User already exists' });
+            res.status(409).json({ message: 'User already exists' });
             return;
         }
         const hashedPassword = yield (0, authUtils_1.hashPassword)(password);
-        yield req.context.services.user.addOne({
+        const user = yield req.context.services.user.addOne({
             username,
             email,
             password: hashedPassword,
-            age: 0,
-            gender: 'Other',
-            smokingStatus: false,
-            medicalCondition: '',
-            educationLevel: '',
-            drinkingStatus: false,
         });
-        res.status(201).json({ message: 'User registered successfully' });
+        if (!user) {
+            res.status(404).json({ message: "Couldn't create user" });
+            return;
+        }
+        const token = jsonwebtoken_1.default.sign({
+            _id: user._id,
+            userId: user.userId,
+            email: user.email,
+            username: user.username,
+            age: user.age,
+            educationLevel: user.educationLevel,
+            role: user.role
+        }, config_1.config.auth.secret, {
+            expiresIn: config_1.config.auth.expiresIn
+        });
+        res.status(201).json({ message: 'User registered successfully', user, token });
     }
     catch (error) {
         console.error(error);
@@ -67,6 +76,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             userId: user.userId,
             email: user.email,
             username: user.username,
+            age: user.age,
+            educationLevel: user.educationLevel,
             role: user.role
         }, config_1.config.auth.secret, {
             expiresIn: config_1.config.auth.expiresIn
@@ -77,6 +88,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 userId: user.userId,
                 email: user.email,
                 username: user.username,
+                age: user.age,
+                educationLevel: user.educationLevel,
                 role: user.role
             },
             message: 'Logged in successfully'
@@ -93,6 +106,10 @@ exports.login = login;
 const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = req.user;
+        if (!user) {
+            res.status(404).json({ message: 'Unauthorized' });
+            return;
+        }
         const _user = yield req.context.services.user.getOne({ username: user.username });
         if (!_user) {
             res.status(404).json({ message: 'User not found' });
@@ -107,4 +124,27 @@ const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getUserProfile = getUserProfile;
+// Update User Profile
+const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = req.user;
+        if (!user) {
+            res.status(404).json({ message: 'Unauthorized' });
+            return;
+        }
+        const updateData = req.body;
+        const _user = yield req.context.services.user.updateOne(updateData, { user: user });
+        if (!_user) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+        res.status(200).json({ user: _user });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+        return;
+    }
+});
+exports.updateUserProfile = updateUserProfile;
 //# sourceMappingURL=auth.controller.js.map

@@ -8,7 +8,7 @@ dotenv_1.default.config();
 const config = {
     app: {
         env: "production",
-        name: "memora-backend",
+        name: "memora-backend-production",
         port: process.env.PORT,
     },
     auth: {
@@ -18,6 +18,9 @@ const config = {
     db: {
         uri: process.env.PROD_MONGO_URI || "",
     },
+    aiServer: {
+        baseUrl: process.env.PROD_AI_SERVER_URL || "",
+    }
 };
 exports.default = config;
 //# sourceMappingURL=prod.js.map

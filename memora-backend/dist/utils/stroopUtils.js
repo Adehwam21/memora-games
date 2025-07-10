@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatStroopParticipantSession = exports.generateStroopQuestions = void 0;
+exports.formatStroopSessionForMMSEPrediction = exports.formatStroopParticipantSession = exports.generateStroopQuestions = void 0;
 const json2csv_1 = require("json2csv");
 const stroopColors = {
     Red: '#FF0000',
@@ -67,4 +67,16 @@ const formatStroopParticipantSession = (sessions) => {
     return stroopSessionCSV;
 };
 exports.formatStroopParticipantSession = formatStroopParticipantSession;
+const formatStroopSessionForMMSEPrediction = (session) => {
+    const metrics = session.metrics || [];
+    return {
+        age: session.age || 68,
+        educationLevel: session.educationLevel || "none",
+        attempts: metrics.attempts.toFixed(),
+        errors: metrics.errors.toFixed(),
+        accuracy: metrics.accuracy.toFixed(2),
+        averageResponseTime: metrics.averageResponseTime.toFixed(2),
+    };
+};
+exports.formatStroopSessionForMMSEPrediction = formatStroopSessionForMMSEPrediction;
 //# sourceMappingURL=stroopUtils.js.map

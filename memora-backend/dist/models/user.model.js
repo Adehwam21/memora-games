@@ -39,8 +39,8 @@ const uuid_1 = require("uuid");
 const UserSchema = new mongoose_1.Schema({
     userId: { type: String, required: true, default: uuid_1.v4 },
     username: { type: String, required: true, },
-    age: { type: Number, required: true },
-    gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
+    age: { type: Number, required: false },
+    gender: { type: String, enum: ["Male", "Female", "Other"], required: false },
     smokingStatus: { type: Boolean, default: false },
     drinkingStatus: { type: Boolean, default: false },
     medicalCondition: { type: String, required: false },

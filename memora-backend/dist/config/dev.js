@@ -18,6 +18,9 @@ const config = {
     db: {
         uri: process.env.DEV_MONGO_URI || "",
     },
+    aiServer: {
+        baseUrl: process.env.DEV_AI_SERVER_URL || "",
+    }
 };
 exports.default = config;
 //# sourceMappingURL=dev.js.map
