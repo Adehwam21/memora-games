@@ -74,3 +74,12 @@ export const getMMSETrend = (
       mmseScore: s.mmseScore,
     }));
 };
+
+export const computeStats = (gameSessions: IGameSession[]) => {
+  return {
+    totalSessions: getTotalSessions(gameSessions),
+    avgMMSEScore : getAverageMMSE(gameSessions),
+    bestMMSEScore: getBestMMSEScore(gameSessions),
+    recentSessions : getLatestSessions(gameSessions)
+  }
+}

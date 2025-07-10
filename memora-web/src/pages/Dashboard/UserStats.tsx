@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import API from '../../config/axiosConfig';
+import React from 'react';
 import { User } from '../../redux/slices/auth-slice/authSlice';
-import { getAverageMMSE, getBestMMSEScore, getLatestSessions, getTotalSessions } from '../../utils/game/dashboardUtils';
 import { capitalizeWords, formatSmartDate } from '../../utils/helpers';
 
 export interface IGameSession {
@@ -16,36 +14,20 @@ export interface IGameSession {
   updatedAt: Date;
 }
 
-interface HomeProps {
-  user: User;
+export interface IStats {
+  totalSessions: number,
+  avgMMSEScore: number,
+  bestMMSEScore: number,
+  recentSessions: IGameSession[]
 }
 
-const UserStats: React.FC<HomeProps> = ({ user }) => {
-  const [gameSessions, setGameSessions] = useState<IGameSession[]>([]);
+interface HomeProps {
+  user: User;
+  stats: IStats;
+}
+
+const UserStats: React.FC<HomeProps> = ({ user, stats }) => {
   const isProfileComplete = user.age && user.educationLevel
-
-  useEffect(() => {
-    const fetchGameSessions = async () => {
-      try {
-        const response = await API.get(`/game-session/user/complete/${user.userId}`);
-        if (response.data?.gameSessions) {
-          setGameSessions(response.data.gameSessions);
-        } else {
-          console.log("Couldn't fetch game sessions");
-        }
-      } catch (error) {
-        console.error("Error fetching game sessions:", error);
-      }
-    };
-
-    fetchGameSessions();
-  }, [user]);
-
-  // Utility Computations
-  const totalSessions = getTotalSessions(gameSessions);
-  const avgMMSEScore = getAverageMMSE(gameSessions);
-  const bestMMSEScore = getBestMMSEScore(gameSessions);
-  const recentSessions = getLatestSessions(gameSessions);
 
   return (
     <div className="p-5 pt-10 flex flex-col">
@@ -70,22 +52,22 @@ const UserStats: React.FC<HomeProps> = ({ user }) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
           <h2 className="text-sm font-semibold mb-2">Games Played</h2>
-          <p className="text-3xl font-bold">{totalSessions}</p>
+          <p className="text-3xl font-bold">{stats.totalSessions}</p>
         </div>
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
           <h2 className="text-sm font-semibold mb-2">Average MMSE Score</h2>
-          <p className="text-3xl font-bold">{avgMMSEScore}</p>
+          <p className="text-3xl font-bold">{stats.avgMMSEScore}</p>
         </div>
         <div className="bg-base-100 p-10 rounded-sm shadow-md">
           <h2 className="text-sm font-semibold mb-2">Best MMSE Score</h2>
-          <p className="text-3xl font-bold">{bestMMSEScore}</p>
+          <p className="text-3xl font-bold">{stats.bestMMSEScore}</p>
         </div>
       </div>
 
       {/* Recent Activity */}
       <div className="bg-base-100 p-10 rounded-sm shadow-md mb-6 overflow-x-auto">
         <h2 className="text-2xl font-bold mb-4">Recent Games</h2>
-        {recentSessions ? (
+        {stats.recentSessions ? (
           <table className="table w-full">
             <thead>
               <tr className="text-left">
@@ -95,7 +77,7 @@ const UserStats: React.FC<HomeProps> = ({ user }) => {
               </tr>
             </thead>
             <tbody>
-              {recentSessions.map((session) => (
+              {stats.recentSessions.map((session) => (
                 <tr key={session._id} className="border-t">
                   <td className="py-2">
                     {formatSmartDate(new Date(session.updatedAt))}

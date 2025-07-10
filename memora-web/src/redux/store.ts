@@ -6,14 +6,16 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { stroopGameReducer } from "./slices/games-slice/stroop";
+import { contentReducer } from "./slices/content-slice/contentSlice";
 
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: ["auth", "guessWhat", "stroop"],
+    whitelist: ["content", "auth", "guessWhat", "stroop",],
 };
 
 const appReducer = combineReducers({
+    content: contentReducer,
     auth: authReducer,
     guessWhat: guessWhatGameReducer,
     stroop: stroopGameReducer
