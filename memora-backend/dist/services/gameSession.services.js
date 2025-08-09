@@ -36,7 +36,8 @@ class GameSessionService extends app_1.IService {
     getById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const gameSession = yield this.db.GameSessionModel.findById(id);
+                const gameSession = yield this.db.GameSessionModel.findById(id)
+                    .sort({ updatedAt: 1 });
                 if (!gameSession) {
                     throw new Error("GameSession not found");
                 }

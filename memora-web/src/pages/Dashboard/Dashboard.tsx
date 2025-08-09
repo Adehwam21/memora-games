@@ -81,7 +81,7 @@ const Dashboard: React.FC = () => {
         />
         <main className={`transition-all duration-300 p-4 w-full bg-[#F7FAF8] ${mainMargin}`}>
           <Routes>
-            <Route path="home" element={<Home user={user!} />} />
+            <Route path="home" element={<Home user={user!} stats={stats! || []} games={games! || []} />} />
             <Route path="games" element={<Games games={games || []} user={user!} />} />
             <Route path="stats" element={<UserStats user={user!} stats={stats! || []} />} />
             <Route path="settings" element={<Settings user={user!} />} />

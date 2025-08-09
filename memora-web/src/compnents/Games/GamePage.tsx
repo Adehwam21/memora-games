@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../../config/axiosConfig";
@@ -19,6 +19,7 @@ interface ParticipantInfo {
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [gameStarted, setGameStarted] = useState<boolean>(false);
     const { game } = useParams();
     const participantInfo: ParticipantInfo | any = JSON.parse(
         localStorage.getItem("participantInfo") || "{}"
@@ -30,6 +31,14 @@ export const GamePage: React.FC = () => {
     const selector = gameConfig ? gameConfig.getSlice : () => ({});
     const { config, isPlaying, sessionId, gameEnded, complete, metrics, totalScore } =
         useSelector(selector) as any;
+
+    useEffect(()=>{
+        setTimeout(()=>{
+            if (gameStarted === false){
+                setGameStarted(false)
+            }
+        }, (2000))
+    })
 
     useEffect(() => {
         if (gameEnded && !isPlaying && sessionId) {
@@ -66,7 +75,7 @@ export const GamePage: React.FC = () => {
             } as any)
         );
 
-        localStorage.removeItem("participantInfo");
+        localStorage.removeItem("participantInfo"); // Immediatelyy remove participant info from local storage
         } catch (error) {
         console.error("Failed to start game:", error);
         }
