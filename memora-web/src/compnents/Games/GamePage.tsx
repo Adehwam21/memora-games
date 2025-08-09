@@ -6,7 +6,6 @@ import API from "../../config/axiosConfig";
 
 import { GameRunner } from "./GameRunner";
 import { gameConfigs, GameKey } from "../../config/gameConfigs";
-import { Loader } from "../Loader";
 // import { MobileWarning } from "../MobilViewWarning";
 
 interface ParticipantInfo {
@@ -85,9 +84,6 @@ export const GamePage: React.FC = () => {
     return (
         <div className="relative flex flex-col items-center justify-center w-full h-screen bg-green-50 p-4">
         {/* <MobileWarning /> */}
-        {gameStarted === false && (
-            <Loader/>
-        )}
 
         {/* Overlay Start Panel */}
         {!isPlaying && (
