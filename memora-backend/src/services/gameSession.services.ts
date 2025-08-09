@@ -25,7 +25,8 @@ export default class GameSessionService extends IService {
      */
     async getById(id: string): Promise<IGameSession | null> {
         try {
-            const gameSession = await this.db.GameSessionModel.findById(id);
+            const gameSession = await this.db.GameSessionModel.findById(id)
+                .sort({updatedAt: 1});
             if (!gameSession) {
                 throw new Error("GameSession not found");
             }
