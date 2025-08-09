@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { differenceInCalendarDays, format, subDays, isSameDay} from "date-fns";
+
+
 export interface IGameSession {
   _id: string;
   userId: string;
@@ -5,9 +9,20 @@ export interface IGameSession {
   metrics?: [];
   sessionDate: string;
   gameTitle: string;
+  initConfig: any;
   totalScore: number;
   mmseScore: number;
   updatedAt: Date;
+}
+
+export interface AvgMMSEByGameType {
+  gameType: string;
+  avgMMSE: string;
+}
+
+export interface CalendarDay {
+  day: string;
+  completed: boolean;
 }
 
 // Get total number of sessions
@@ -80,6 +95,97 @@ export const computeStats = (gameSessions: IGameSession[]) => {
     totalSessions: getTotalSessions(gameSessions) || 0,
     avgMMSEScore : getAverageMMSE(gameSessions) || 0,
     bestMMSEScore: getBestMMSEScore(gameSessions) || 0,
-    recentSessions : getLatestSessions(gameSessions)
+    recentSessions : getLatestSessions(gameSessions),
+    trendData: gameSessions,
   }
 }
+
+export function countSessionsToday(sessions: IGameSession[], referenceDate = new Date()): number {
+  return sessions.filter(session => isSameDay(new Date(session.updatedAt), referenceDate)).length;
+}
+
+export function calculateBestStreak(sessions: IGameSession[]): number {
+  if (!sessions.length) return 0;
+
+  let bestStreak = 0;
+  let tempStreak = 1;
+
+  for (let i = 1; i < sessions.length; i++) {
+    const prevDate = new Date(sessions[i - 1].updatedAt);
+    const currDate = new Date(sessions[i].updatedAt);
+
+    const diff = differenceInCalendarDays(currDate, prevDate);
+
+    if (diff === 1) {
+      tempStreak++;
+    } else if (diff > 1) {
+      bestStreak = Math.max(bestStreak, tempStreak);
+      tempStreak = 1;
+    }
+  }
+
+  return Math.max(bestStreak, tempStreak);
+}
+
+
+export function calculateCurrentStreak(sessions: IGameSession[]): number {
+  if (!sessions.length) return 0;
+
+  let currentStreak = 1;
+
+  // Start from the newest (last in array) and go backwards
+  for (let i = sessions.length - 1; i > 0; i--) {
+    const currentDate = new Date(sessions[i].updatedAt);
+    const prevDate = new Date(sessions[i - 1].updatedAt);
+
+    const diff = differenceInCalendarDays(currentDate, prevDate);
+
+    if (diff === 1) {
+      currentStreak++;
+    } else if (diff > 1) {
+      break; // streak broken
+    }
+  }
+
+  return currentStreak;
+}
+
+export function generateCalendarData(
+  sessions: IGameSession[],
+  daysCount = 7,
+  referenceDate = new Date()
+): CalendarDay[] {
+  return Array.from({ length: daysCount }).map((_, i) => {
+    const date = subDays(referenceDate, daysCount - 1 - i);
+    const day = format(date, "EEE"); // e.g. Mon, Tue, Wed
+    const completed = sessions.some((session) =>
+      isSameDay(new Date(session.updatedAt), date)
+    );
+    return { day, completed };
+  });
+}
+
+export function calculateAvgMMSEByGameType(sessions: IGameSession[]): AvgMMSEByGameType[] {
+  if (!sessions.length) return [];
+
+  const totals: Record<string, { sum: number; count: number }> = {};
+
+  sessions.forEach(session => {
+    const key = session.initConfig.type || "Unknown";
+
+    if (!totals[key]) {
+      totals[key] = { sum: 0, count: 0 };
+    }
+
+    totals[key].sum += session.mmseScore;
+    totals[key].count++;
+  });
+
+  return Object.entries(totals).map(([gameType, { sum, count }]) => ({
+    gameType,
+    avgMMSE: (sum / count).toFixed(1),
+  }));
+}
+
+
+
