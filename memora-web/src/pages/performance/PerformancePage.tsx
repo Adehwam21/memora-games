@@ -1,14 +1,16 @@
-import React from 'react';
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import API from '../../config/axiosConfig';
 import { GuessWhatMetricsTable } from '../../compnents/Games/GuessWhatGame/components/GuessWhatMetricsTable';
 import { StroopMetricsTable } from '../../compnents/Games/StroopGame/components/StroopMetricsTable';
+import { FeedbackForm } from '../../compnents/Forms/FeedbackForm';
 import { useDispatch } from 'react-redux';
 import { forceEndGuessWhatGame } from '../../redux/slices/games-slice/guessWhat';
 import { forceEndStroopGame } from '../../redux/slices/games-slice/stroop';
 import { Loader } from '../../compnents/Loader';
-import { BsArrowBarLeft } from 'react-icons/bs';
+import { BsArrowLeft } from 'react-icons/bs';
+import toast from 'react-hot-toast';
+
 
 interface IGuessWhatMetric {
     level: number;
@@ -27,9 +29,7 @@ interface IStroopMetric {
     accuracy: number;
 }
 
-// Union type for metrics
 type IGameMetric = IGuessWhatMetric[] | IStroopMetric;
-
 
 interface IGameSession {
     _id: string;
@@ -46,21 +46,20 @@ interface IGameSession {
     __v: number;
 }
 
-
 export const PerformancePage: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { sessionId } = useParams<{ sessionId: string }>();
     const [session, setSession] = useState<IGameSession | null>(null);
-    const [showLoader, setShowLoader] = useState(true); // ✅ Add this line
-
+    const [showLoader, setShowLoader] = useState(true);
+    const [showFeedback, setShowFeedback] = useState(false);
 
     useEffect(() => {
         const fetchSessionData = async () => {
             try {
-                const response = await API.get(`/game-session/${sessionId}`)
-                if (response.status === 200){
-                    setSession(response.data!.gameSession);
+                const response = await API.get(`/game-session/${sessionId}`);
+                if (response.status === 200) {
+                    setSession({...response.data!.gameSession, gameType: response.data?.initConfig?.type});
                 }
             } catch (error) {
                 console.error("Error fetching session data:", error);
@@ -70,51 +69,58 @@ export const PerformancePage: React.FC = () => {
         if (sessionId) fetchSessionData();
     }, [sessionId]);
 
-    const handleReturnButtonClick = (gameTitle: string) => {
+    const endGameAndGoHome = () => {
         if (!session) return;
-        switch (gameTitle) {
+        switch (session.gameTitle) {
             case "guess what":
                 dispatch(forceEndGuessWhatGame());
-                navigate("/dashboard/stats");
                 break;
-
             case "stroop":
                 dispatch(forceEndStroopGame());
-                navigate("/dashboard/stats");
                 break;
-
             default:
                 break;
         }
-    }
+        navigate("/dashboard/stats");
+    };
+
+    const handleReturnButtonClick = () => {
+        setShowFeedback(true); // Show feedback form first
+    };
+
+    const handleFeedbackSubmit = () => {
+        toast.success("Thanks for your feedback!");
+        endGameAndGoHome();
+    };
+
+    const handleFeedbackSkip = () => {
+        endGameAndGoHome();
+    };
 
     const handleMetricTableChoice = (gameTitle: string) => {
-        if (!session) return;
+        if (!session) return null;
         switch (gameTitle) {
             case "guess what":
                 return <GuessWhatMetricsTable 
                     metrics={session.metrics as IGuessWhatMetric[]} 
                     totalScore={session.totalScore}
-                    mmseScore = {session.mmseScore}
-                />
-            
+                    mmseScore={session.mmseScore}
+                />;
             case "stroop":
                 return <StroopMetricsTable 
                     metrics={session.metrics as IStroopMetric} 
                     totalScore={session.totalScore}
                     mmseScore={session.mmseScore}
-                    />
-        
+                />;
             default:
-                break;
+                return null;
         }
-    }
+    };
 
     useEffect(() => {
         const timer = setTimeout(() => {
-        setShowLoader(false);
+            setShowLoader(false);
         }, 3000); 
-
         return () => clearTimeout(timer);
     }, []);
 
@@ -122,16 +128,27 @@ export const PerformancePage: React.FC = () => {
         return <Loader />;
     }
 
+    if (showFeedback && session) {
+        return (
+            <FeedbackForm
+                game={session.gameTitle}
+                mmseScore={String(session.mmseScore)}
+                onSubmit={handleFeedbackSubmit}
+                onSkip={handleFeedbackSkip}
+            />
+        );
+    }
+
     return (
         <div className='p-10 flex flex-col justify-center items-center'>
             { session && handleMetricTableChoice(session.gameTitle)}
 
             <button
-                className='mt-4 flex flex-row justify-center items-center bg-green-700 hover:bg-green-600 text-white font-semibold text-md rounded-md p-3 transition-colors'
-                onClick={() => handleReturnButtonClick(session.gameTitle)}
+                className='mt-4 flex flex-row justify-center gap-2 items-center bg-green-700 hover:bg-green-600 text-white font-semibold text-md rounded-md p-3 transition-colors'
+                onClick={handleReturnButtonClick}
             >
-                <BsArrowBarLeft style={{fontSize:30}}/> Games hub
+                <BsArrowLeft style={{fontSize:20}}/> View Stats
             </button>
         </div>
     );
-}
+};
