@@ -16,7 +16,7 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({
 }) => {
   // Group sessions by game title so we don't repeat the same game
   const uniqueGameTitles = Array.from(
-    new Set(recentSessions.map((s) => s.gameTitle.toLowerCase()))
+    new Set(recentSessions?.map((s) => s.gameTitle.toLowerCase()))
   );
 
   const recentlyPlayedGames = uniqueGameTitles

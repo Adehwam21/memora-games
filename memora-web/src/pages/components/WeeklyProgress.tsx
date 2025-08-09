@@ -3,23 +3,33 @@ import { IGameSession } from "../Dashboard/UserStats";
 import { calculateBestStreak, calculateCurrentStreak, generateCalendarData } from "../../utils/game/dashboardUtils"; // adjust path
 
 interface WeeklyProgressProps {
-  trend: IGameSession[];
+  trend?: IGameSession[]
 }
 
-export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({ trend }) => {
+const dummyCalendarDay = [
+  {day: "Mon", completed: false},
+  {day: "Tue", completed: false},
+  {day: "Wed", completed: false},
+  {day: "Thu", completed: false},
+  {day: "Fri", completed: false},
+  {day: "Sat", completed: false},
+  {day: "Sun", completed: false},
+]
 
+export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({ trend }) => {
+    const safeTrend = trend && trend.length ? trend : [];
   // Ensure trend sessions are sorted oldest to newest before passing
-  const sortedTrend = [...trend].sort(
+  const sortedTrend = [...safeTrend].sort(
     (a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
   );
 
   const today = new Date();
-  const calendarData = generateCalendarData(trend, 7, today)
-  const bestStreak = calculateBestStreak(sortedTrend);
-  const currentStreak = calculateCurrentStreak(sortedTrend);
+  const calendarData = generateCalendarData(safeTrend, 7, today) || dummyCalendarDay; 
+  const bestStreak = calculateBestStreak(sortedTrend) || 0;
+  const currentStreak = calculateCurrentStreak(sortedTrend) || 0;
 
   return (
-    <div className="hidden md:flex flex-col items-center justify-center gap-6 p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center">
+    <div className="flex flex-col items-center justify-center gap-6 p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center">
       {/* Streak Info */}
       <div className="flex justify-center items-center space-x-16">
         <div className="flex flex-col items-center">
@@ -41,7 +51,7 @@ export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({ trend }) => {
       </div>
 
       {/* Weekly Calendar */}
-      <div className="flex justify-between gap-5 w-full max-w-md">
+      <div className="flex justify-between gap-3 w-full max-w-md">
         {calendarData.map((day, idx) => (
           <div key={idx} className="flex flex-col items-center group">
             <span
