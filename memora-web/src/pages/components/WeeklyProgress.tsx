@@ -1,0 +1,68 @@
+import React from "react";
+import { IGameSession } from "../Dashboard/UserStats";
+import { calculateBestStreak, calculateCurrentStreak, generateCalendarData } from "../../utils/game/dashboardUtils"; // adjust path
+
+interface WeeklyProgressProps {
+  trend: IGameSession[];
+}
+
+export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({ trend }) => {
+
+  // Ensure trend sessions are sorted oldest to newest before passing
+  const sortedTrend = [...trend].sort(
+    (a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
+  );
+
+  const today = new Date();
+  const calendarData = generateCalendarData(trend, 7, today)
+  const bestStreak = calculateBestStreak(sortedTrend);
+  const currentStreak = calculateCurrentStreak(sortedTrend);
+
+  return (
+    <div className="hidden md:flex flex-col items-center justify-center gap-6 p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center">
+      {/* Streak Info */}
+      <div className="flex justify-center items-center space-x-16">
+        <div className="flex flex-col items-center">
+          <span className="text-sm text-gray-500 uppercase tracking-wide">
+            Current Streak
+          </span>
+          <span className="text-5xl font-extrabold text-gray-500 drop-shadow-sm">
+            {currentStreak}
+          </span>
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-sm text-gray-500 uppercase tracking-wide">
+            Best Streak
+          </span>
+          <span className="text-5xl font-extrabold text-green-700 drop-shadow-sm">
+            {bestStreak}
+          </span>
+        </div>
+      </div>
+
+      {/* Weekly Calendar */}
+      <div className="flex justify-between gap-5 w-full max-w-md">
+        {calendarData.map((day, idx) => (
+          <div key={idx} className="flex flex-col items-center group">
+            <span
+              className={`text-sm font-medium transition-colors duration-200 ${
+                day.completed
+                  ? "text-green-600"
+                  : "text-gray-400 group-hover:text-gray-500"
+              }`}
+            >
+              {day.day}
+            </span>
+            <div
+              className={`w-2 h-2 mt-2 rounded-full border-2 transition-all duration-300 ${
+                day.completed
+                  ? "bg-green-500 border-green-500 shadow-sm scale-110"
+                  : "bg-gray-200 border-gray-300"
+              }`}
+            ></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
