@@ -99,26 +99,28 @@ const Home: React.FC<HomeProps> = ({ user, stats, games }) => {
             Detailed Stats →
           </Link>
         </div>
-        <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
-          <table className="w-full">
-            <thead>
-              <tr className="text-gray-500 text-sm">
-                <th className="text-left py-1">Game Type</th>
-                <th className="text-right py-1">Avg MMSE</th>
-              </tr>
-            </thead>
-            <tbody>
-              {averageMmseByGameType.map((stat, idx) => (
-                <tr key={idx} className="border-t border-gray-200">
-                  <td className="py-2">{stat.gameType}</td>
-                  <td className="py-2 text-right font-medium">
-                    {stat.avgMMSE}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+          <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
+            {averageMmseByGameType.length > 0 ? (
+              <table className="w-full">
+                <thead>
+                  <tr className="text-gray-500 text-sm">
+                    <th className="text-left py-1">Game Type</th>
+                    <th className="text-right py-1">Avg MMSE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {averageMmseByGameType.map((stat, idx) => (
+                    <tr key={idx} className="border-t border-gray-200">
+                      <td className="py-2">{stat.gameType}</td>
+                      <td className="py-2 text-right font-medium">{stat.avgMMSE}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              ) : (
+                <p className="text-gray-500">No games played yet.</p>
+              )}
+          </div>
       </div>
     </div>
   );

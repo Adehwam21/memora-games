@@ -13,7 +13,7 @@ interface Props {
 
 const AverageMmseByGameType: React.FC<Props> = ({ gameSessions }) => {
   const { curretAverage, averages } = useMemo(() => {
-    if (!gameSessions.length) {
+    if (!gameSessions || !gameSessions.length) {
       return { curretAverage: 0, averages: [] };
     }
 

@@ -101,11 +101,11 @@ export const computeStats = (gameSessions: IGameSession[]) => {
 }
 
 export function countSessionsToday(sessions: IGameSession[], referenceDate = new Date()): number {
-  return sessions.filter(session => isSameDay(new Date(session.updatedAt), referenceDate)).length;
+  return sessions?.filter(session => isSameDay(new Date(session.updatedAt), referenceDate))?.length || 0;
 }
 
 export function calculateBestStreak(sessions: IGameSession[]): number {
-  if (!sessions.length) return 0;
+  if (!sessions || !sessions.length) return 0;
 
   let bestStreak = 0;
   let tempStreak = 1;
@@ -127,9 +127,8 @@ export function calculateBestStreak(sessions: IGameSession[]): number {
   return Math.max(bestStreak, tempStreak);
 }
 
-
 export function calculateCurrentStreak(sessions: IGameSession[]): number {
-  if (!sessions.length) return 0;
+  if (!sessions || !sessions.length) return 0;
 
   let currentStreak = 1;
 
@@ -166,7 +165,7 @@ export function generateCalendarData(
 }
 
 export function calculateAvgMMSEByGameType(sessions: IGameSession[]): AvgMMSEByGameType[] {
-  if (!sessions.length) return [];
+  if (!sessions || !sessions.length) return [];
 
   const totals: Record<string, { sum: number; count: number }> = {};
 
