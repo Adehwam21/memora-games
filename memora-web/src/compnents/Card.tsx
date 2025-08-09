@@ -5,10 +5,11 @@ import { motion } from 'framer-motion';
 
 interface CardProps {
   game: IGame;
+  text: string;
 }
 
 const Card: React.FC<CardProps> = ({
-  game: { title, gametype, description, coverPhoto },
+  game: { title, gametype, description, coverPhoto }, text
 }) => {
   const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ const Card: React.FC<CardProps> = ({
     <motion.div
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.98 }}
-      className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg overflow-hidden transition-shadow duration-300 h-full"
+      className="flex flex-col bg-white rounded-md shadow-md hover:shadow-lg overflow-hidden transition-shadow duration-300 h-full"
     >
       <figure className="w-full h-40 sm:h-44">
         <img
@@ -46,7 +47,7 @@ const Card: React.FC<CardProps> = ({
           onClick={handlePlayGame}
           className="mt-4 bg-green-500 hover:bg-green-400 text-white font-semibold text-lg py-2 rounded-md h-10 w-full transition-colors"
         >
-          Play
+          {text}
         </button>
       </div>
     </motion.div>
