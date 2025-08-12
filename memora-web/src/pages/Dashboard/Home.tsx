@@ -73,7 +73,7 @@ const Home: React.FC<HomeProps> = ({ user, stats, games }) => {
       </div>
 
       {/* Goals + Weekly Progress */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <TodaysGoal
           trend = {stats.trendData}
           total={3}

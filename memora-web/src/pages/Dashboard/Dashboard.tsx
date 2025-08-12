@@ -67,7 +67,7 @@ const Dashboard: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const mainMargin = isMobile ? 'ml-0' : collapsed ? 'ml-16' : 'ml-[21%]';
+  const mainMargin = isMobile ? 'ml-0' : collapsed ? 'ml-16' : 'ml-[18%]';
 
   return (
     <div className="flex flex-col min-h-screen">

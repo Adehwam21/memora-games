@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { differenceInCalendarDays, format, subDays, isSameDay} from "date-fns";
+import { differenceInCalendarDays, format, isSameDay, startOfWeek, addDays,} from "date-fns";
 
 
 export interface IGameSession {
@@ -21,6 +21,7 @@ export interface AvgMMSEByGameType {
 }
 
 export interface CalendarDay {
+  id: number;
   day: string;
   completed: boolean;
 }
@@ -149,20 +150,26 @@ export function calculateCurrentStreak(sessions: IGameSession[]): number {
   return currentStreak;
 }
 
+
 export function generateCalendarData(
   sessions: IGameSession[],
   daysCount = 7,
   referenceDate = new Date()
 ): CalendarDay[] {
+  
+  // Always start week on Monday
+  const weekStart = startOfWeek(referenceDate, { weekStartsOn: 1 });
+
   return Array.from({ length: daysCount }).map((_, i) => {
-    const date = subDays(referenceDate, daysCount - 1 - i);
-    const day = format(date, "EEE"); // e.g. Mon, Tue, Wed
+    const date = addDays(weekStart, i);
+    const day = format(date, "EEE"); // Mon, Tue, Wed...
     const completed = sessions.some((session) =>
       isSameDay(new Date(session.updatedAt), date)
     );
-    return { day, completed };
+    return { id: i, day, completed };
   });
 }
+
 
 export function calculateAvgMMSEByGameType(sessions: IGameSession[]): AvgMMSEByGameType[] {
   if (!sessions || !sessions.length) return [];

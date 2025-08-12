@@ -28,7 +28,7 @@ export const DateTimeDisplay: React.FC = () => {
   return (
     <div className="hidden md:flex flex-col items-start mt-3 md:mt-0 text-gray-600">
       <span className="text-2xl font-bold text-gray-800">{formattedTime} {timeZone}</span>
-      <span className="font-semibold text-lg">{formattedDate}</span>
+      <span className="font-semibold text-md">{formattedDate}</span>
     </div>
   );
 };
