@@ -31,7 +31,7 @@ export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({ trend }) => {
   return (
     <div className="flex flex-col items-center justify-center gap-6 p-6 bg-white rounded-xl shadow-lg border border-gray-100 text-center">
       {/* Streak Info */}
-      <div className="flex justify-center items-center space-x-16">
+      <div className="flex justify-center items-center space-x-10">
         <div className="flex flex-col items-center">
           <span className="text-sm text-gray-500 uppercase tracking-wide">
             Current Streak
@@ -51,11 +51,11 @@ export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({ trend }) => {
       </div>
 
       {/* Weekly Calendar */}
-      <div className="flex justify-between gap-3 w-full max-w-md">
+      <div className="flex justify-between gap-5 max-w-md">
         {calendarData.map((day, idx) => (
           <div key={idx} className="flex flex-col items-center group">
             <span
-              className={`text-sm font-medium transition-colors duration-200 ${
+              className={`text-sm font-medium duration-200 ${
                 day.completed
                   ? "text-green-600"
                   : "text-gray-400 group-hover:text-gray-500"
@@ -64,9 +64,9 @@ export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({ trend }) => {
               {day.day}
             </span>
             <div
-              className={`w-2 h-2 mt-2 rounded-full border-2 transition-all duration-300 ${
+              className={`w-2 h-2 mt-2 rounded-full border-2 ${
                 day.completed
-                  ? "bg-green-500 border-green-500 shadow-sm scale-110"
+                  ? "bg-green-500 border-green-500 scale-110"
                   : "bg-gray-200 border-gray-300"
               }`}
             ></div>

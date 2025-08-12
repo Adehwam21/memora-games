@@ -39,7 +39,7 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({
         </div>
 
         {recentlyPlayedGames.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 md:gap-60">
             {recentlyPlayedGames.map((game) => (
               <RecentGameCard key={game.title} game={game} text="Play again" />
             ))}
