@@ -38,12 +38,12 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({
           </Link>
         </div>
 
-        {recentlyPlayedGames.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 md:gap-60">
-            {recentlyPlayedGames.map((game) => (
-              <RecentGameCard key={game.title} game={game} text="Play again" />
-            ))}
-          </div>
+      {recentlyPlayedGames.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-5 md:gap-8">
+          {recentlyPlayedGames.map((game) => (
+            <RecentGameCard key={game.title} game={game} text="Play again" />
+          ))}
+        </div>
         ) : (
           <p className="text-gray-500">No games played yet.</p>
         )}

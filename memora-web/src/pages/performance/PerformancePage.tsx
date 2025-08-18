@@ -147,7 +147,7 @@ export const PerformancePage: React.FC = () => {
                 className='mt-4 flex flex-row justify-center gap-2 items-center bg-green-700 hover:bg-green-600 text-white font-semibold text-md rounded-md p-3 transition-colors'
                 onClick={handleReturnButtonClick}
             >
-                <BsArrowLeft style={{fontSize:20}}/> View Stats
+                <BsArrowLeft style={{fontSize:20}}/> View Detailed Stats
             </button>
         </div>
     );

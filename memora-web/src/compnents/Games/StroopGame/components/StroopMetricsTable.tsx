@@ -2,52 +2,70 @@
 import React from "react";
 
 interface IStroopMetric {
-    questions: number;
-    attempts: number;
-    averageResponseTime: number;
-    errors: number;
-    accuracy: number;
+  questions: number;
+  attempts: number;
+  averageResponseTime: number;
+  errors: number;
+  accuracy: number;
 }
 
 interface StroopMetricsTableProps {
-    metrics: IStroopMetric;
-    totalScore: number;
-    mmseScore: number;
+  metrics: IStroopMetric;
+  totalScore: number;
+  mmseScore: number;
 }
 
-export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({ metrics, totalScore, mmseScore }) => {
-    if (!metrics ) return <p className="text-center text-gray-500"></p>;
+export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({
+  metrics,
+  totalScore,
+  mmseScore,
+}) => {
+  if (!metrics)
+    return <p className="text-center text-gray-500">No metrics available.</p>;
 
-    return (
-        <div className="mt-10 w-full">
-            <h1 className="flex flex-col justify-center items-center p-4 max-w-lg mx-auto text-lg font-bold">Session Stats</h1>
-            <table className="w-full border-collapse border border-gray-300">
-                <thead>
-                    <tr className="bg-green-300">
-                        <th className="border p-2 text-center font-bold text-md">Number of Questions</th>
-                        <th className="border p-2 text-center font-bold text-md">Attempts</th>
-                        <th className="border p-2 text-center font-bold text-md">Average Respnse Time (s)</th>
-                        <th className="border p-2 text-center font-bold text-md">Errors</th>
-                        <th className="border p-2 text-center font-bold text-md">Accuracy (%)</th>
-                        <th className="border p-2 text-center font-bold text-md">Total Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td className="border p-2 text-center font-semibold text-md">{metrics.questions}</td>
-                        <td className="border p-2 text-center font-semibold text-md">{metrics.attempts}</td>
-                        <td className="border p-2 text-center font-semibold text-md">{metrics.averageResponseTime.toFixed(2)}</td>
-                        <td className="border p-2 text-center font-semibold text-md">{metrics.errors}</td>
-                        <td className="border p-2 text-center font-semibold text-md">{metrics.accuracy.toFixed(1)}%</td>
-                        <td className="border p-2 text-center font-semibold text-md">{totalScore}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div className="flex flex-col justify-center items-center p-10">
-                <h2 className="text-lg font-semibold mb-2">Predicted MMSE Score</h2>
-                <p className="text-5xl text-green-600 font-bold">{mmseScore.toFixed()}<span className="text-lg text-green-800">/30</span></p>
-            </div>
+  return (
+    <div className="mt-10 w-full">
+      {/* Header Stats Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-center bg-green-50 p-4 rounded-lg shadow-sm mb-6">
+        <p className="text-xl font-bold text-gray-700">Session Stats</p>
+        <div className="flex flex-col sm:flex-row gap-2 items-center">
+          <p className="text-lg font-semibold text-gray-600">
+            Predicted MMSE Score:
+          </p>
+          <p className="text-3xl text-green-600 font-bold">
+            {mmseScore.toFixed()}
+            <span className="text-lg text-green-800"> / 30</span>
+          </p>
         </div>
-    );
-};
+      </div>
 
+      {/* Table */}
+      <div className="overflow-x-auto rounded-lg shadow">
+        <table className="w-full border border-gray-200 text-sm text-gray-700">
+          <thead>
+            <tr className="bg-green-200 text-gray-800 text-sm sm:text-base">
+              <th className="p-3 text-left">Questions</th>
+              <th className="p-3 text-left">Attempts</th>
+              <th className="p-3 text-left">Avg Response Time (s)</th>
+              <th className="p-3 text-left">Errors</th>
+              <th className="p-3 text-left">Accuracy (%)</th>
+              <th className="p-3 text-left">Total Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="bg-white hover:bg-green-50 transition-colors">
+              <td className="p-3 font-medium">{metrics.questions}</td>
+              <td className="p-3 font-medium">{metrics.attempts}</td>
+              <td className="p-3 font-medium">
+                {metrics.averageResponseTime.toFixed(2)}
+              </td>
+              <td className="p-3 font-medium">{metrics.errors}</td>
+              <td className="p-3 font-medium">{metrics.accuracy.toFixed(1)}%</td>
+              <td className="p-3 font-semibold text-gray-800">{totalScore}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
