@@ -14,6 +14,7 @@ import Settings from './Settings';
 import UserStats from './UserStats';
 import { ParticipationForm } from './Participation';
 import { computeStats } from '../../utils/game/dashboardUtils';
+import { Footer } from './Footer';
 
 const Dashboard: React.FC = () => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const Dashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -87,6 +88,7 @@ const Dashboard: React.FC = () => {
             <Route path="settings" element={<Settings user={user!} />} />
             <Route path="facilitate" element={<ParticipationForm />} />
           </Routes>
+          <Footer/>
         </main>
       </div>
     </div>

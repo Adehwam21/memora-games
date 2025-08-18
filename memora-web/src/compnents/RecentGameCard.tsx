@@ -22,11 +22,11 @@ export const RecentGameCard: React.FC<CardProps> = ({
     <motion.div
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.98 }}
-      className="flex flex-col bg-white rounded-md shadow-md hover:shadow-lg overflow-hidden transition-all duration-300 w-44 sm:w-52 cursor-pointer"
+      className="flex flex-col bg-white rounded-md shadow-md hover:shadow-lg overflow-hidden transition-all duration-300 w-full sm:w-full cursor-pointer"
       onClick={handlePlayGame}
     >
       {/* Cover Image */}
-      <figure className="w-full h-28 sm:h-32">
+      <figure className="w-full h-28 sm:h-20">
         <img
           src={`/images/${coverPhoto}`}
           alt={title}
@@ -39,7 +39,7 @@ export const RecentGameCard: React.FC<CardProps> = ({
         <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wide text-center">
           {gametype}
         </p>
-        <h2 className="text-xs sm:text-sm font-semibold text-gray-800 text-center line-clamp-1 mt-1">
+        <h2 className="text-xs sm:text-sm font-semibold text-gray-800 text-center mt-1">
           {title}
         </h2>
         <p className="text-[11px] sm:text-xs text-gray-600 line-clamp-2 text-center mt-1">

@@ -22,12 +22,12 @@ const sections = [
 
 const SideBar: React.FC<SideBarProps> = ({ collapsed, setCollapsed, isMobileOpen, setIsMobileOpen }) => {
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
+      setIsMobile(window.innerWidth < 1024);
+      if (window.innerWidth >= 1024) {
         setIsMobileOpen(false); // Close mobile drawer if resizing to desktop
       }
     };

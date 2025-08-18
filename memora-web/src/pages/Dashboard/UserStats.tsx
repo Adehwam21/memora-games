@@ -67,7 +67,7 @@ const UserStats: React.FC<HomeProps> = ({ user, stats }) => {
 
       {/* Welcome */}
       <div className="mb-6">
-        <h1 className="text-3xl text-green-800 font-bold">Your Stats</h1>
+        <h1 className="text-3xl text-green-800 font-bold">Stats</h1>
         <p className="text-gray-500 mt-2">Here's a quick overview of your progress.</p>
       </div>
 
@@ -88,7 +88,7 @@ const UserStats: React.FC<HomeProps> = ({ user, stats }) => {
           </div>
 
           {/* Row 2: MMSE trend chart */}
-          <div className="bg-base-100 p-6 rounded-md shadow-md">
+          <div className="bg-base-100 p-5 rounded-md shadow-md">
             <h2 className="text-lg text-gray-500 font-bold mb-4">MMSE Score Trend</h2>
             {mmseTrendData && mmseTrendData.length > 0 ? (
               <ResponsiveContainer width="100%" height={350}>

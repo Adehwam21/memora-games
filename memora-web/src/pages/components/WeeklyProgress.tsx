@@ -51,11 +51,11 @@ export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({ trend }) => {
       </div>
 
       {/* Weekly Calendar */}
-      <div className="flex justify-between gap-5 max-w-md">
+      <div className="flex justify-between gap-2 sm:gap-5 w-full">
         {calendarData.map((day, idx) => (
           <div key={idx} className="flex flex-col items-center group">
             <span
-              className={`text-sm font-medium duration-200 ${
+              className={`text-xs sm:text-sm font-medium duration-200 ${
                 day.completed
                   ? "text-green-600"
                   : "text-gray-400 group-hover:text-gray-500"
@@ -64,15 +64,16 @@ export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({ trend }) => {
               {day.day}
             </span>
             <div
-              className={`w-2 h-2 mt-2 rounded-full border-2 ${
+              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 mt-2 rounded-full border-2 ${
                 day.completed
-                  ? "bg-green-500 border-green-500 scale-110"
+                  ? "bg-green-500 border-green-500 sm:scale-110"
                   : "bg-gray-200 border-gray-300"
               }`}
             ></div>
           </div>
         ))}
       </div>
+
     </div>
   );
 };

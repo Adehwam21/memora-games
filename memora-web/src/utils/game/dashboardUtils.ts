@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { differenceInCalendarDays, format, isSameDay, startOfWeek, addDays,} from "date-fns";
+import { differenceInCalendarDays, startOfDay, format,isYesterday, isToday, isSameDay, startOfWeek, addDays,} from "date-fns";
 
 
 export interface IGameSession {
@@ -128,27 +128,38 @@ export function calculateBestStreak(sessions: IGameSession[]): number {
   return Math.max(bestStreak, tempStreak);
 }
 
+
 export function calculateCurrentStreak(sessions: IGameSession[]): number {
-  if (!sessions || !sessions.length) return 0;
+  if (!sessions?.length) return 0;
 
-  let currentStreak = 1;
+  // Reduce to unique calendar days (local time), sorted ascending
+  const uniqueDays: Date[] = Array.from(
+    new Set(
+      sessions.map(s => startOfDay(new Date(s.updatedAt)).getTime())
+    )
+  )
+    .sort((a, b) => a - b)
+    .map(t => new Date(t));
 
-  // Start from the newest (last in array) and go backwards
-  for (let i = sessions.length - 1; i > 0; i--) {
-    const currentDate = new Date(sessions[i].updatedAt);
-    const prevDate = new Date(sessions[i - 1].updatedAt);
+  const lastDay = uniqueDays[uniqueDays.length - 1];
 
-    const diff = differenceInCalendarDays(currentDate, prevDate);
+  // Streak is only active if last play was today or yesterday
+  if (!(isToday(lastDay) || isYesterday(lastDay))) return 0;
 
+  // Count back through consecutive days
+  let streak = 1; // include lastDay
+  for (let i = uniqueDays.length - 1; i > 0; i--) {
+    const diff = differenceInCalendarDays(uniqueDays[i], uniqueDays[i - 1]);
     if (diff === 1) {
-      currentStreak++;
+      streak++;
     } else if (diff > 1) {
-      break; // streak broken
-    }
+      break; // gap → streak ends
+    } // diff === 0 can't occur due to uniqueDays
   }
 
-  return currentStreak;
+  return streak;
 }
+
 
 
 export function generateCalendarData(
