@@ -51,7 +51,7 @@ const AverageMmseByGameType: React.FC<Props> = ({ gameSessions }) => {
       {/* Overall Average */}
       <div className="mb-6">
         <p className="text-gray-500 font-semibold text-sm mb-2">Overall MMSE Score</p>
-        <p className="text-4xl font-bold">{curretAverage.toFixed(1)}</p>
+        <p className="text-4xl font-bold">{curretAverage.toFixed(0)}</p>
       </div>
 
       {/* Per Game Type */}
