@@ -2,11 +2,9 @@
 FROM node:18-slim AS backend-builder
 WORKDIR /backend
 
-# Copy backend package files and install dependencies
 COPY memora-backend/package*.json ./
 RUN npm ci --omit=dev
 
-# Copy backend source
 COPY memora-backend ./
 
 
@@ -14,47 +12,35 @@ COPY memora-backend ./
 FROM python:3.11-slim AS ai-builder
 WORKDIR /ai
 
-# System deps (for numpy, pandas, scikit-learn, etc.)
-RUN apt-get update && apt-get install -y \
-    build-essential \
+RUN apt-get update && apt-get install -y build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
 COPY memora-ai-server/requirements.txt ./
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy AI server source
 COPY memora-ai-server ./
 
 
 # ------------ Final runtime image ------------
 FROM node:18-slim
-
-# Install Python 3.11 + pip
-RUN apt-get update && apt-get install -y \
-    python3.11 python3.11-venv python3-pip \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
+
+# Install system deps for Python libs to run
+RUN apt-get update && apt-get install -y python3.11 python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy backend (with node_modules from builder)
 COPY --from=backend-builder /backend ./memora-backend
 
-# Copy AI server code and dependencies
+# Copy Python site-packages + scripts (includes uvicorn) directly
+COPY --from=ai-builder /usr/local /usr/local
 COPY --from=ai-builder /ai ./memora-ai-server
-COPY --from=ai-builder /usr/local/lib/python3.11 /usr/local/lib/python3.11
-COPY --from=ai-builder /usr/local/bin /usr/local/bin
-
-# Ensure Python + uvicorn is callable
-ENV PATH="/usr/local/bin:$PATH"
 
 # Copy start script
-COPY start.sh ./
-RUN chmod +x start.sh
+COPY start.sh ./start.sh
+RUN chmod +x ./start.sh
 
-# Expose only backend port (Render routes to $PORT)
 EXPOSE 3000
 
-# Start both services
 CMD ["./start.sh"]
