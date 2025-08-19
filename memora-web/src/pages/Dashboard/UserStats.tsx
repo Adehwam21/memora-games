@@ -83,7 +83,7 @@ const UserStats: React.FC<HomeProps> = ({ user, stats }) => {
             </div>
             <div className="bg-base-100 p-6 rounded-lg shadow-md">
               <h2 className="text-sm text-gray-500 font-semibold mb-2">Best MMSE Score</h2>
-              <p className="text-4xl font-bold">{stats.bestMMSEScore || 0}</p>
+              <p className="text-4xl font-bold">{stats.bestMMSEScore.toFixed(0) || 0}</p>
             </div>
           </div>
 
