@@ -8,11 +8,11 @@ interface StroopQuestion {
 }
 
 const stroopColors: Record<string, string> = {
-    Red: '#FF0000',
-    Blue: '#0000FF',
-    Green: '#008000',
-    Yellow: '#FFFF00',
-    Black: '#000000',
+  Red: '#FF0000',
+  Blue: '#0000FF',
+  Green: '#008000',
+  Yellow: '#FFFF00',
+  Black: '#000000',
 };
 
 export interface StpMMSEScoreDto {

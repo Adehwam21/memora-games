@@ -33,7 +33,7 @@ export const GameInitialConfig = {
     stroop: {
         title: "stroop",
         type: "Executive Function",
-        duration: 90000,
+        duration: 20000, // For demo, make game last for 20 seconds
         questions: generateStroopQuestions(150),
     }
 }
