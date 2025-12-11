@@ -17,9 +17,18 @@ export default class UserService extends IService {
         }
     }
 
-    async getOne(input: { username: string }): Promise<IUser | any> {
+    async getByUsername(input: { username: string }): Promise<IUser | any> {
         try {
             const user = await this.db.UserModel.findOne({ username: input.username });
+            return user || null; // Explicitly returning null if no user is found
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async getByEmail(input: { email: string }): Promise<IUser | any> {
+        try {
+            const user = await this.db.UserModel.findOne({ email: input.email });
             return user || null; // Explicitly returning null if no user is found
         } catch (e) {
             throw e;

@@ -10,7 +10,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const { username, password, email } = req.body;
 
     try {
-        const existingUser = await req.context!.services!.user.getOne({ username });
+        const existingUser = await req.context!.services!.user.getByUsername({ username });
         if (existingUser) {
             res.status(409).json({ message: 'User already exists' });
             return;
@@ -58,9 +58,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     let user
     try {
         if (email) {
-            user = await req.context!.services!.user!.getOne({ email })
+            user = await req.context!.services!.user!.getByEmail({ email })
         } else if (username) {
-            user = await req.context!.services!.user!.getOne({ username })
+            user = await req.context!.services!.user!.getByUsername({ username })
         }
         ;
         if (!user) {
@@ -116,7 +116,7 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
             return;
         }
 
-        const _user = await req.context!.services!.user!.getOne({ username: user!.username });
+        const _user = await req.context!.services!.user!.getByUsername({ username: user!.username });
         if (!_user) {
             res.status(404).json({ message: 'User not found' });
             return;
