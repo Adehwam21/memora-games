@@ -9,8 +9,15 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     // const { username, email, password, age, gender, smokingStatus, medicalCondition, educationLevel, drinkingStatus }: IRegisterUserInput = req.body;
     const { username, password, email } = req.body;
 
+    let existingUser: any;
+
     try {
-        const existingUser = await req.context!.services!.user.getByUsername({ username });
+        if (username) {
+            existingUser = await req.context!.services!.user.getByUsername({ username });
+        } else if (email) {
+            existingUser = await req.context!.services!.user.getByEmail({ email });
+        }
+
         if (existingUser) {
             res.status(409).json({ message: 'User already exists' });
             return;
@@ -43,7 +50,6 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                 expiresIn: config.auth.expiresIn
             });
 
-
         res.status(201).json({ message: 'User registered successfully', user, token });
     } catch (error) {
         console.error(error);
@@ -55,57 +61,66 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 // Login User
 export const login = async (req: Request, res: Response): Promise<void> => {
     const { username, email, password } = req.body;
-    let user
+    console.log(username, email, password)
+
     try {
-        if (email) {
-            user = await req.context!.services!.user!.getByEmail({ email })
-        } else if (username) {
-            user = await req.context!.services!.user!.getByUsername({ username })
-        }
-        ;
-        if (!user) {
-            res.status(400).json({ message: 'User not found' });
+        if (!email && !username) {
+            res.status(400).json({ message: "Please provide email or username" });
             return;
         }
 
-        const isPasswordValid = await comparePassword(password, user.password);
-        if (!isPasswordValid) {
-            res.status(400).json({ message: 'Invalid credentials' });
+        const user = email
+            ? await req.context!.services!.user!.getByEmail({ email })
+            : await req.context!.services!.user!.getByUsername({ username });
+        console.log(user);
+
+        if (!user) {
+            res.status(400).json({ message: "User not found" });
             return;
         }
-        ;
-        const token = jwt.sign({
-            _id: user!._id,
-            userId: user!.userId,
-            email: user!.email,
-            username: user!.username,
-            age: user.age,
-            educationLevel: user.educationLevel,
-            role: user!.role
-        },
-            config.auth.secret,
+
+        // check password
+        const isPasswordValid = await comparePassword(password, user.password);
+        if (!isPasswordValid) {
+            res.status(400).json({ message: "Invalid credentials" });
+            return;
+        }
+
+        // create token
+        const token = jwt.sign(
             {
-                expiresIn: config.auth.expiresIn
-            });
+                _id: user._id,
+                userId: user.userId,
+                email: user.email,
+                username: user.username,
+                age: user.age,
+                educationLevel: user.educationLevel,
+                role: user.role
+            },
+            config.auth.secret,
+            { expiresIn: config.auth.expiresIn }
+        );
 
         res.status(200).json({
             token,
             user: {
-                userId: user!.userId,
-                email: user!.email,
-                username: user!.username,
+                _id: user._id,
+                userId: user.userId,
+                email: user.email,
+                username: user.username,
                 age: user.age,
                 educationLevel: user.educationLevel,
-                role: user!.role
+                role: user.role
             },
-            message: 'Logged in successfully'
+            message: "Logged in successfully"
         });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
-        return;
+        res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 // Get User Profile
 export const getUserProfile = async (req: Request, res: Response): Promise<void> => {
