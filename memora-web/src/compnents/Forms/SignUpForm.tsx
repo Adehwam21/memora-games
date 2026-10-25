@@ -60,11 +60,11 @@ const SignUp: React.FC<FormProps> = () => {
       const token = response.data.token;
       const user = response.data.user;
 
-      dispatch(loginSuccess({token, user}))
-      setTimeout(()=>{
+      dispatch(loginSuccess({ token, user }))
+      setTimeout(() => {
         navigate("/dashboard/home")
       }, 900)
-      
+
     } catch (error: any) {
       if (error.response?.status === 409) {
         toast.error("The email or username is already registered.");

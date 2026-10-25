@@ -19,11 +19,11 @@ export const MainScreen: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const [showExitConfirm, setShowExitConfirm] = useState(false);
-    const { isPaused, gameState, config } = useSelector((state: RootState) => state.guessWhat); 
+    const { isPaused, gameState, config } = useSelector((state: RootState) => state.guessWhat);
     const score = useSelector((state: RootState) => state.guessWhat.totalScore);
 
     const handleResume = () => {
-        dispatch(resumeGuessWhatGame()); 
+        dispatch(resumeGuessWhatGame());
     };
 
     const handleRestart = () => {
@@ -51,7 +51,7 @@ export const MainScreen: React.FC = () => {
 
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
-            };
+        };
     }, [gameState]);
 
 
@@ -68,68 +68,68 @@ export const MainScreen: React.FC = () => {
 
     if (!gameState) return <p>Loading...</p>;
 
-return (
-    <div className="flex flex-col rounded-md text-[#EADEB8] bg-[#9c6144cc] w-full h-full relative">
+    return (
+        <div className="flex flex-col rounded-md text-[#EADEB8] bg-[#9c6144cc] w-full h-full relative">
 
-        {/* Pause screen overlay */}
-        {isPaused && (
-        <PauseScreen
-            onResume={handleResume}
-            onRestart={handleRestart}
-            onExit={handleQuitGame} // <- now triggers modal
-        />
-        )}
-
-        {/* HUD */}
-        <div>
-        <GameHUD gameTitle={config!.title} score={score} />
-        </div>
-
-        {/* Main game area with animation */}
-        <div className="relative max-w-full h-[46rem] overflow-hidden flex justify-center items-center">
-        <AnimatePresence mode="wait">
-            {gameState.isMemorizationPhase ? (
-            <motion.div
-                key="screen1"
-                initial={{ opacity: 0, x: -100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 100 }}
-                transition={{ duration: 0.5 }}
-                className="absolute w-full h-full"
-            >
-                <Screen1 imagesToMemorize={gameState.cards} />
-            </motion.div>
-            ) : (
-            <motion.div
-                key="screen2"
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.5 }}
-                className="absolute w-full h-full"
-            >
-                <Screen2
-                currentImagesToFind={gameState.currentImagesToFind}
-                cards={gameState.cards}
+            {/* Pause screen overlay */}
+            {isPaused && (
+                <PauseScreen
+                    onResume={handleResume}
+                    onRestart={handleRestart}
+                    onExit={handleQuitGame} // <- now triggers modal
                 />
-            </motion.div>
             )}
-        </AnimatePresence>
+
+            {/* HUD */}
+            <div>
+                <GameHUD gameTitle={config!.title} score={score} />
+            </div>
+
+            {/* Main game area with animation */}
+            <div className="relative max-w-full h-[46rem] overflow-hidden flex justify-center items-center">
+                <AnimatePresence mode="wait">
+                    {gameState.isMemorizationPhase ? (
+                        <motion.div
+                            key="screen1"
+                            initial={{ opacity: 0, x: -100 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 100 }}
+                            transition={{ duration: 0.5 }}
+                            className="absolute w-full h-full"
+                        >
+                            <Screen1 imagesToMemorize={gameState.cards} />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="screen2"
+                            initial={{ opacity: 0, x: 100 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -100 }}
+                            transition={{ duration: 0.5 }}
+                            className="absolute w-full h-full"
+                        >
+                            <Screen2
+                                currentImagesToFind={gameState.currentImagesToFind}
+                                cards={gameState.cards}
+                            />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/* Confirmation PopUp goes here */}
+            <PopUp
+                isOpen={showExitConfirm}
+                type="warning"
+                title="Are you sure?"
+                message="Quitting now will discard your progress."
+                onClose={() => setShowExitConfirm(false)}
+                onConfirm={confirmQuit}
+                confirmText="Yes, Quit"
+                cancelText="Cancel"
+                showCancel
+            />
+
         </div>
-
-        {/* Confirmation PopUp goes here */}
-        <PopUp
-            isOpen={showExitConfirm}
-            type="warning"
-            title="Are you sure?"
-            message="Quitting now will discard your progress."
-            onClose={() => setShowExitConfirm(false)}
-            onConfirm={confirmQuit}
-            confirmText="Yes, Quit"
-            cancelText="Cancel"
-            showCancel
-        />
-
-    </div>
     );
 }
