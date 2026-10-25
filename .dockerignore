@@ -1,0 +1,20 @@
+# Dependencies and build output are recreated inside the image
+**/node_modules
+**/dist
+**/__pycache__
+**/*.pyc
+memora-ai-server/venv
+memora-ai-server/.venv
+
+# Secrets stay in Render's environment settings
+**/.env
+**/.env.*
+
+# Not needed at runtime
+.git
+modeling
+memora-backend/logs
+**/*.log
+**/*.ipynb
+memora-ai-server/tests
+memora-ai-server/models/cogni_decline_prediction_best.pkl
