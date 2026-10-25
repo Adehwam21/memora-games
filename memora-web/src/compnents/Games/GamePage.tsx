@@ -50,10 +50,14 @@ export const GamePage: React.FC = () => {
             },
             gameKey
         })
-            .then(() => navigate(`/game/performance/${sessionId}`))
+            .then(() => {
+                // Clear the saved game, or the persisted state resubmits it next time the lobby opens
+                dispatch(gameConfig!.resetGameAction());
+                navigate(`/game/performance/${sessionId}`);
+            })
             .catch((err) => console.error("Failed to update session", err));
         }
-    }, [gameEnded, isPlaying, sessionId, metrics, totalScore, complete, navigate, gameKey]);
+    }, [gameEnded, isPlaying, sessionId, metrics, totalScore, complete, navigate, gameKey, dispatch, gameConfig]);
 
     if (!gameConfig) return;
 

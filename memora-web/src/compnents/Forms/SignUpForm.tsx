@@ -60,6 +60,8 @@ const SignUp: React.FC<FormProps> = () => {
       const token = response.data.token;
       const user = response.data.user;
 
+      // ProtectedRoute reads the token from local storage, same as after login
+      localStorage.setItem('token', token);
       dispatch(loginSuccess({ token, user }))
       setTimeout(() => {
         navigate("/dashboard/home")

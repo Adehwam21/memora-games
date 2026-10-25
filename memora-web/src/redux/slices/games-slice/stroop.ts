@@ -145,11 +145,17 @@ const stroopGameSlice = createSlice({
       state.gameState = null;
       state.complete = true;
     },
+
+    // Clear a saved session so the persisted state doesn't resubmit it on the next visit
+    resetStroopGame() {
+      return initialState;
+    },
   },
 });
 
-export const { 
+export const {
   startStroopGame,
+  resetStroopGame,
   restartGame,
   pauseStroopGame,
   forceEndStroopGame,

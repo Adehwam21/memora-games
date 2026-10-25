@@ -22,11 +22,13 @@ const AverageMmseByGameType: React.FC<Props> = ({ gameSessions }) => {
     let totalMmse = 0;
 
     for (const session of gameSessions) {
-      totalMmse += session.mmseScore;
+      // A session without an mmseScore would turn every average into NaN
+      const mmseScore = session.mmseScore ?? 0;
+      totalMmse += mmseScore;
       if (!groups[session.initConfig?.type]) {
         groups[session.initConfig?.type] = { total: 0, count: 0 };
       }
-      groups[session.initConfig?.type].total += session.mmseScore;
+      groups[session.initConfig?.type].total += mmseScore;
       groups[session.initConfig?.type].count += 1;
     }
 
