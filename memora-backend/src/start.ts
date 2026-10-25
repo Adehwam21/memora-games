@@ -2,6 +2,9 @@ import "dotenv/config";
 
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
+import fs from "fs";
+import path from "path";
+import axios from "axios";
 import { Config } from "./types/config";
 import customError from "./types/error";
 import { IAppContext } from "./types/app";
@@ -58,9 +61,27 @@ export default async function start(config: Config) {
     //use routes
     app.use("/api/v1", routes);
 
-    app.use("/health", (req, res) => {
-      res.status(200).send("Greeeeeen!");
+    // Render polls this; report unhealthy if the model server is down,
+    // otherwise games silently fail at the scoring step
+    app.use("/health", async (req, res) => {
+      try {
+        await axios.get(`${config.aiServer.baseUrl}/`, { timeout: 3000 });
+        res.status(200).send("Greeeeeen!");
+      } catch {
+        res.status(503).send("AI server unreachable");
+      }
     });
+
+    // In the Docker image the React build is served from the same origin as the API
+    const webDist = process.env.WEB_DIST;
+    if (webDist && fs.existsSync(webDist)) {
+      app.use(express.static(webDist));
+
+      // Let React Router handle every other page, so refreshing /dashboard/stats works
+      app.get(/^\/(?!api\/).*/, (req, res) => {
+        res.sendFile(path.join(webDist, "index.html"));
+      });
+    }
 
     app.use(customError);
 
@@ -70,5 +91,7 @@ export default async function start(config: Config) {
     });
   } catch (err) {
     console.error(err);
+    // Exit so the container stops and Render restarts it, instead of idling with no server
+    process.exit(1);
   }
 }
