@@ -9,7 +9,7 @@ const config: Config = {
         port: process.env.PORT as unknown as number,
     },
     auth: {
-        secret: process.env.JWT_SECRET as string || "00606060",
+        secret: process.env.JWT_SECRET as string,
         expiresIn: "1d",
     },
     db: {

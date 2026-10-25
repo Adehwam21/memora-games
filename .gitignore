@@ -27,3 +27,6 @@ yarn-debug.log
 
 # Database files (if using SQLite)
 *.db
+
+# Compiled backend (built inside the Docker image)
+memora-backend/dist/
