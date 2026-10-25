@@ -88,11 +88,6 @@ export const getGameSessionsByUser = async (req: Request, res: Response): Promis
     try {
         const gameSessions = await req.context!.services!.gameSession!.getByUserId(userId);
 
-        if (gameSessions.length === 0) {
-            res.status(404).json({ message: "No game sessions found for this user" });
-            return;
-        }
-
         res.status(200).json({ gameSessions });
     } catch (error) {
         console.error(error);
@@ -108,11 +103,6 @@ export const getCompleteGameSessionsByUser = async (req: Request, res: Response)
 
     try {
         const gameSessions = await req.context!.services!.gameSession!.getCompleteSessionsByUserId(userId);
-
-        if (gameSessions.length === 0) {
-            res.status(404).json({ message: "No game sessions found for this user" });
-            return;
-        }
 
         res.status(200).json({ gameSessions });
     } catch (error) {
@@ -154,21 +144,28 @@ export const updateGameSession = async (req: Request, res: Response): Promise<vo
         return;
         }
 
-        const { age, educationLevel } = req.user;
+        // Read the profile from the database: the JWT holds age and education as they were
+        // at login, so they are missing for new users and stale after a profile update
+        const profile = await req.context!.services!.user.getById(req.user._id.toString());
+        const demographics = {
+            ...(profile.age != null && { age: profile.age }),
+            ...(profile.educationLevel && { educationLevel: profile.educationLevel }),
+        };
         const { updateData, gameKey } = req.body;
 
         let metrics: GWmmseScoreDto | StpMMSEScoreDto | any;
         let mmseScore: number;
 
+        // Only override the formatter's fallbacks (age 68, no education) with values that exist
         switch (gameKey) {
         case "guess-what":
             metrics = formatGuessWhatSessionForMMSEPrediction(updateData);
-            mmseScore = await requestMMSEScore({ ...metrics, educationLevel, age }, gameKey);
+            mmseScore = await requestMMSEScore({ ...metrics, ...demographics }, gameKey);
             break;
 
         case "stroop":
             metrics = formatStroopSessionForMMSEPrediction(updateData);
-            mmseScore = await requestMMSEScore({ ...metrics, educationLevel, age }, gameKey);
+            mmseScore = await requestMMSEScore({ ...metrics, ...demographics }, gameKey);
             break;
 
         default:

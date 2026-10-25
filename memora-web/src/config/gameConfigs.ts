@@ -1,6 +1,6 @@
 import { RootState } from "../redux/store";
-import { startGuessWhatGame } from "../redux/slices/games-slice/guessWhat";
-import { startStroopGame } from "../redux/slices/games-slice/stroop";
+import { resetGuessWhatGame, startGuessWhatGame } from "../redux/slices/games-slice/guessWhat";
+import { resetStroopGame, startStroopGame } from "../redux/slices/games-slice/stroop";
 import { getGuessWhatMMSEScore } from "../utils/game/guessWhatUtils";
 // import { getStroopMMSEScore } from "../utils/game/stroopUtils";
 
@@ -13,6 +13,7 @@ export const gameConfigs = {
     description: "A memory recognition game to evaluate visual attention and recall.",
     startGameAction: (payload: { sessionId: string; guessWhatConfig: GuessWhatInitConfig }) =>
       startGuessWhatGame(payload),
+    resetGameAction: resetGuessWhatGame,
     getSlice: (state: RootState) => state.guessWhat,
     computeScore: getGuessWhatMMSEScore,
     rules: [
@@ -31,6 +32,7 @@ export const gameConfigs = {
     description: "A test of cognitive control using color-word interference.",
     startGameAction: (payload: { sessionId: string; stroopGameConfig: IStroopGameConfig }) =>
       startStroopGame(payload),
+    resetGameAction: resetStroopGame,
     getSlice: (state: RootState) => state.stroop,
     computeScore: getGuessWhatMMSEScore, // TODO: replace with getStroopMMSEScore
     rules: [

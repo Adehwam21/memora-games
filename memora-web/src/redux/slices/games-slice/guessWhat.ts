@@ -211,12 +211,18 @@ const guessWhatGameSlice = createSlice({
             state.gameState = null;
             state.complete = true;
         },
+
+        // Clear a saved session so the persisted state doesn't resubmit it on the next visit
+        resetGuessWhatGame() {
+            return initialState;
+        },
     },
 });
 
 
-export const { 
-    startGuessWhatGame, 
+export const {
+    startGuessWhatGame,
+    resetGuessWhatGame,
     revealCards, 
     selectCard, 
     nextLevel, 
